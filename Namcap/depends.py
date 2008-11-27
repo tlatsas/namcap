@@ -249,7 +249,7 @@ class package:
 			# and ((there are provides for i
 			# and those provides aren't included in the package's dependencies)
 			# or there are no provides for i))
-			all_dependencies = getattr(pkginfo, 'depends', []) + getattr(pkginfo, 'optdepends', [])
+			all_dependencies = getattr(pkginfo, 'depends', []) + getattr(pkginfo, 'optdepends', []) + pkgcovered.keys()
 			if (i not in all_dependencies and i != pkginfo.name and ((smartprovides.has_key(i) and len([c for c in smartprovides[i] if c in pkgcovered.keys()]) == 0) or not smartprovides.has_key(i))):
 					if type(dependlist[i]) == dict:
 						ret[0].append(("dependency-detected-not-included %s from files %s", (i, str([x[len(data)+1:] for x in dependlist[i].keys()])) ))
