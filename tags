@@ -48,7 +48,4 @@ specific-sourceforge-mirror :: Attempting to use specific sourceforge mirror, us
 using-dl-sourceforge :: Attempting to use dl sourceforge domain, use downloads.sourceforge.net instead
 missing-contributor :: Missing Contributor tag
 missing-maintainer :: Missing Maintainer tag
-missing-cvs-id :: Missing CVS Id tag
-maintainer-tags-for-tus-devs :: 'Maintainer tags for TUs and devs only
-cvs-id-for-tus-devs :: CVS Id tags for TUs and devs only
 missing-url :: Missing url

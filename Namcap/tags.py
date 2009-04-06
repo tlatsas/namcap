@@ -23,7 +23,7 @@ class package:
 	def short_name(self):
 		return "tags"
 	def long_name(self):
-		return "Looks for Maintainer and CVS Id tags"
+		return "Looks for Maintainer and Contributor comments"
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
@@ -36,21 +36,13 @@ class package:
 				contributortag = 1
 			if re.match("#\s*Maintainer\s*:",i) != None:
 				maintainertag = 1
-			if re.match("#\s*\$Id.*\$",i) != None:
-				idtag = 1
 
 		if contributortag != 1:
-			ret[1].append(("missing-contributor", ()))
+			ret[2].append(("missing-contributor", ()))
 
 		if maintainertag != 1:
 			ret[1].append(("missing-maintainer", ()))
-		else:
-			ret[2].append(("maintainer-tags-for-tus-devs", ()))
 
-		if idtag != 1:
-			ret[1].append(("missing-cvs-id", ()))
-		else:
-			ret[2].append(("cvs-id-for-tus-devs", ()))
 		return ret
 	def type(self):
 		return "pkgbuild"
