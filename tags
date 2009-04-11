@@ -22,6 +22,7 @@ file-in-non-standard-dir %s :: File (%s) exists in a non-standard directory.
 empty-directory %s :: Directory (%s) is empty
 extra-var-begins-without-underscore %s :: Non standard variable '%s' doesn't start with an underscore
 non-fhs-man-page %s :: Non-FHS man page (%s) found. Use /usr/share/man instead
+non-fhs-info-page %s :: Non-FHS info page (%s) found. Use /usr/share/info instead
 potential-non-fhs-man-page %s :: Potential non-FHS man page (%s) found.
 incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions.
 info-dir-file-present %s :: Info directory file (%s) needs removed.
