@@ -50,3 +50,4 @@ using-dl-sourceforge :: Attempting to use dl sourceforge domain, use downloads.s
 missing-contributor :: Missing Contributor tag
 missing-maintainer :: Missing Maintainer tag
 missing-url :: Missing url
+gnome-mime-file %s :: File (%s) is an auto-generated GNOME mime file

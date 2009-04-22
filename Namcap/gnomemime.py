@@ -28,18 +28,19 @@ class package:
         return "tar"
     def analyze(self, pkginfo, tar):
         mime_files = [
-                'opt/gnome/share/applications/mimeinfo.cache',
-                'opt/gnome/share/mime/XMLnamespaces', 
-                'opt/gnome/share/mime/aliases', 
-                'opt/gnome/share/mime/globs', 
-                'opt/gnome/share/mime/magic', 
-                'opt/gnome/share/mime/subclasses'
+                'usr/share/applications/mimeinfo.cache',
+                'usr/share/mime/XMLnamespaces', 
+                'usr/share/mime/aliases', 
+                'usr/share/mime/globs', 
+                'usr/share/mime/magic', 
+                'usr/share/mime/subclasses'
                 ]
 
         ret = [[],[],[]]
         for i in tar.getnames():
             if i in mime_files:
-                ret[0].append("File (" + i + ") is an auto-generated GNOME mime file.")
+                ret[0].append(("gnome-mime-file %s", i))
+                
         return ret
     def type(self):
         return "tarball"
