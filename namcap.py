@@ -46,6 +46,9 @@ def verify_package(filename):
 	try:
 		tar = tarfile.open(package, "r")
 		if not tar:
+			return 0		
+		if not len(tar.getmembers()) > 0:
+			tar.close()
 			return 0
 		if not '.PKGINFO' in tar.getnames():
 			tar.close()
@@ -119,11 +122,14 @@ for package in packages:
 	if package[-7:] == '.tar.gz':
 		pkgtar = verify_package(package)
 
-		if not pkgtar:
-			print "Error: " + package + " is not a package"
+		if not pkgtar:			
+			print "Error: " + package + " is empty or is not a valid package"
 			if len(packages) > 1:
 				continue
-
+			else:
+				sys.exit(2)
+			
+		
 		pkginfo = pacman.load(package)
 
 		# No rules selected?  Then select them all!
