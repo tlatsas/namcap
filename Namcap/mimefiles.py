@@ -27,10 +27,15 @@ class package:
     def prereq(self):
         return "tar"
     def analyze(self, pkginfo, tar):        
-        ret = [[],[],[]]
-        for i in tar.getnames():
-            if i.startswith('usr/share/mime/'):
-                ret[1].append(("mime-files %s", i))            
+        ret = [[],[],[]]        
+        if 'usr/share/mime' in tar.getnames():
+            if ".INSTALL" not in tar.getnames():
+                ret[0].append(("mime-files", ()))            
+                
+            else:
+                f = tar.extractfile(".INSTALL")                    
+                if "update-mime-database" not in "\n".join(f.readlines()):
+                    ret[0].append(("mime-files",()))
                 
         return ret
     def type(self):
