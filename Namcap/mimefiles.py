@@ -1,6 +1,6 @@
 # 
-# namcap rules - __init__
-# Copyright (C) 2003-2007 Jason Chu <jason@archlinux.org>
+# namcap rules - mimefiles
+# Copyright (C) 2009 Hugo Doria <hugo@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -14,44 +14,24 @@
 #
 #   You should have received a copy of the GNU General Public License
 #   along with this program; if not, write to the Free Software
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
 # 
 
-__tarball__ = """
-  capsnamespkg
-  depends
-  directoryname
-  emptydir
-  fhsmanpages
-  fhsinfopages
-  fileownership
-  gnomemime
-  infodirectory
-  libtool
-  licensepkg
-  mimefiles
-  perllocal
-  permissions
-  scrollkeeper
-  symlink
-  urlpkg
+import tarfile
 
-""".split()
-
-__pkgbuild__ = """
-  arrays
-  badbackups
-  capsnames
-  carch
-  invalidstartdir
-  license
-  md5sums
-  sfurl
-  tags
-  url
-
-""".split()
-
-__all__ = __tarball__ + __pkgbuild__
-
-# vim: set ts=4 sw=4 noet:
+class package:
+    def short_name(self):
+        return "mimefiles"
+    def long_name(self):
+        return "Check for files in /usr/share/mime"
+    def prereq(self):
+        return "tar"
+    def analyze(self, pkginfo, tar):        
+        ret = [[],[],[]]
+        for i in tar.getnames():
+            if i.startswith('usr/share/mime/'):
+                ret[1].append(("mime-files %s", i))            
+                
+        return ret
+    def type(self):
+        return "tarball"

@@ -51,3 +51,4 @@ missing-contributor :: Missing Contributor tag
 missing-maintainer :: Missing Maintainer tag
 missing-url :: Missing url
 gnome-mime-file %s :: File (%s) is an auto-generated GNOME mime file
+mime-files %s :: Mime-file found (%s). Add "update-mime-database usr/share/mime" to the install file
