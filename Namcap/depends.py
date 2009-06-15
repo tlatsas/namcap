@@ -83,7 +83,10 @@ def scanlibs(data, dirname, names):
 						pass
 				# But we can check to see if it's a script we know about
 				else:
-					fd = open(dirname+'/'+i)
+					try:
+						fd = open(dirname+'/'+i)
+					except:
+						continue
 					firstline = fd.readline()
 					if re.match('#!.*python',firstline) != None:
 						scripts.setdefault('python', {})[dirname+'/'+i] = 1
