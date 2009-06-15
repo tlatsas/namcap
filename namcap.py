@@ -32,9 +32,10 @@ def get_modules():
 
 # Display usage information
 def usage():
-	print "usage: " + sys.argv[0] + " [-r rulelist | --rules=rulelist] [-i | --info] package .."
+	print "usage: " + sys.argv[0] + " [-r rulelist | --rules=rulelist] [-i | --info] [-m | --machine-readable] package .."
 	print "       -r list    : returns list of available rules"
 	print "       -i         : prints information responses from rules"
+	print "       -m         : makes the output parseable (machine-readable)"
 	sys.exit(2)
 
 # Is the package a valid package file?
