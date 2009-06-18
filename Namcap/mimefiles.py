@@ -28,10 +28,12 @@ class package:
         return "tar"
     def analyze(self, pkginfo, tar):        
         ret = [[],[],[]]        
-        if 'usr/share/mime' in tar.getnames():
+        if 'usr/share/mime' in tar.getnames():            
+            if hasattr(pkginfo, "depends"):
+                if "shared-mime-info" not in pkginfo.depends:
+                    ret[0].append(("dependency-detected-not-included %s", ("shared-mime-info",)))
             if ".INSTALL" not in tar.getnames():
-                ret[0].append(("mime-files", ()))            
-                
+                ret[0].append(("mime-files", ()))                
             else:
                 f = tar.extractfile(".INSTALL")                    
                 if "update-mime-database" not in "\n".join(f.readlines()):
