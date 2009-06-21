@@ -26,6 +26,7 @@ __tarball__ = """
   fhsinfopages
   fileownership
   gnomemime
+  hicoloricons
   infodirectory
   libtool
   licensepkg
