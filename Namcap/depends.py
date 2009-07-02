@@ -19,6 +19,9 @@
 
 import re, os, os.path, pacman, subprocess
 
+supported_scripts = ['python', 'ruby', 'wish', 'expect',
+	'tk', 'bash', 'sh', 'dash', 'tcsh', 'pdksh' ]
+
 pkgcache = {}
 
 def load(name, path=None):
@@ -62,6 +65,7 @@ def scanlibs(data, dirname, names):
 	If they depend on a library, store that library's path in sharedlibs
 	"""
 	sharedlibs, scripts = data
+	global supported_scripts
 	for i in names:
 		if os.path.isfile(dirname+'/'+i):
 			var = subprocess.Popen('readelf -d ' + dirname+'/'+i,
@@ -88,18 +92,12 @@ def scanlibs(data, dirname, names):
 					except:
 						continue
 					firstline = fd.readline()
-					if re.match('#!.*python',firstline) != None:
-						scripts.setdefault('python', {})[dirname+'/'+i] = 1
-					elif re.match('#!.*perl',firstline) != None:
-						scripts.setdefault('perl', {})[dirname+'/'+i] = 1
-					elif re.match('#!.*ruby',firstline) != None:
-						scripts.setdefault('ruby', {})[dirname+'/'+i] = 1
-					elif re.match('#!.*bash',firstline) != None or re.match('#!.*sh',firstline) != None:
-						scripts.setdefault('bash', {})[dirname+'/'+i] = 1
-					elif re.match('#!.*wish',firstline) != None:
-						scripts.setdefault('tk', {})[dirname+'/'+i] = 1
-					elif re.match('#!.*expect',firstline) != None:
-						scripts.setdefault('expect', {})[dirname+'/'+i] = 1
+					firstlinere = re.match('#!.*/(.*)', firstline)
+					if firstlinere != None:
+						cmdname = firstlinere.group(1).split()[0]
+						if cmdname in supported_scripts:
+							scripts.setdefault(cmdname, {})[dirname+'/'+i] = 1
+
 					fd.close()
 	return
 			
