@@ -47,6 +47,7 @@ __pkgbuild__ = """
   invalidstartdir
   license
   md5sums
+  rpath
   sfurl
   tags
   url
