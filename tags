@@ -27,6 +27,7 @@ potential-non-fhs-man-page %s :: Potential non-FHS man page (%s) found.
 potential-non-fhs-info-page %s :: Potential non-FHS info page (%s) found.
 incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions.
 info-dir-file-present %s :: Info directory file (%s) needs removed.
+invalid-elffile %s :: ELF file (%s) outside of a valid path.
 file-referred-in-startdir :: File referenced in $startdir outside of $startdir/src or $startdir/pkg
 recommend-use-pkgdir :: Recommend use of $pkgdir instead of $startdir/pkg
 recommend-use-srcdir :: Recommend use of $srcdir instead of $startdir/src

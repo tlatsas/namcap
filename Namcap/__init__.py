@@ -21,6 +21,7 @@ __tarball__ = """
   capsnamespkg
   depends
   directoryname
+  elffiles
   emptydir
   fhsmanpages
   fhsinfopages
