@@ -1,6 +1,6 @@
 # 
-# namcap rules - __init__
-# Copyright (C) 2003-2007 Jason Chu <jason@archlinux.org>
+# namcap rules - pkgname
+# Copyright (C) 2009 Hugo Doria <hugo@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -17,45 +17,20 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-__tarball__ = """
-  capsnamespkg
-  depends
-  directoryname
-  elffiles
-  emptydir
-  fhsmanpages
-  fhsinfopages
-  fileownership
-  gnomemime
-  hicoloricons
-  infodirectory
-  libtool
-  licensepkg
-  mimefiles
-  perllocal
-  permissions
-  scrollkeeper
-  symlink
-  urlpkg
+import pacman
 
-""".split()
-
-__pkgbuild__ = """
-  arrays
-  badbackups
-  capsnames
-  carch
-  invalidstartdir
-  license
-  md5sums
-  pkgname
-  rpath
-  sfurl
-  tags
-  url
-
-""".split()
-
-__all__ = __tarball__ + __pkgbuild__
-
-# vim: set ts=4 sw=4 noet:
+class package:
+	def short_name(self):
+		return "pkgname"
+	def long_name(self):
+		return "Verifies if the package name is included on package description"
+	def prereq(self):
+		return ""
+	def analyze(self, pkginfo, tar):
+		ret = [[],[],[]]	
+		if hasattr(pkginfo, 'name') and hasattr(pkginfo, 'desc'):
+			if pkginfo.name.lower() in pkginfo.desc.lower().split():
+				ret[1].append(("pkgname-in-description", ()))
+		return ret
+	def type(self):
+		return "pkgbuild"

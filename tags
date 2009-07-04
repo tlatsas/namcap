@@ -38,6 +38,7 @@ missing-custom-license-file usr/share/licenses/%s/* :: Missing custom license fi
 not-a-common-license %s :: %s is not a common license (it's not in /usr/share/licenses/common/)
 missing-md5sums :: Missing md5sums
 not-enough-md5sums %i needed :: Not enough md5sums: %i needed
+pkgname-in-description :: Description should not contain the package name.
 too-many-md5sums %i needed :: Too Many md5sums: %i needed
 improper-md5sum %s :: Improper md5sum: '%s'
 perllocal-pod-present %s :: perllocal.pod found in %s.
