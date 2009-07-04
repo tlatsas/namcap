@@ -27,7 +27,7 @@ potential-non-fhs-man-page %s :: Potential non-FHS man page (%s) found.
 potential-non-fhs-info-page %s :: Potential non-FHS info page (%s) found.
 incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions.
 info-dir-file-present %s :: Info directory file (%s) needs removed.
-invalid-elffile %s :: ELF file (%s) outside of a valid path.
+elffile-not-in-allowed-dirs %s :: ELF file (%s) outside of a valid path.
 file-referred-in-startdir :: File referenced in $startdir outside of $startdir/src or $startdir/pkg
 recommend-use-pkgdir :: Recommend use of $pkgdir instead of $startdir/pkg
 recommend-use-srcdir :: Recommend use of $srcdir instead of $startdir/src
@@ -52,6 +52,6 @@ missing-contributor :: Missing Contributor tag
 missing-maintainer :: Missing Maintainer tag
 missing-url :: Missing url
 gnome-mime-file %s :: File (%s) is an auto-generated GNOME mime file
-mime-files :: Mime-file found. Add "update-mime-database usr/share/mime" to the install file
+mime-cache-not-updated :: Mime-file found. Add "update-mime-database usr/share/mime" to the install file
 hicolor-icon-cache-not-updated :: The hicolor icon cache has not been updated even though there are files in /usr/share/icons/hicolor. Use gtk-update-icon-theme or xdg-icon-resource to update the icon cache.
 insecure-rpath %s :: Insecure RPATH (%s). If present, RPATH should be only /usr/lib.

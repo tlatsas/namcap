@@ -37,7 +37,7 @@ class package:
             else:
                 f = tar.extractfile(".INSTALL")                    
                 if "update-mime-database" not in "\n".join(f.readlines()):
-                    ret[0].append(("mime-files",()))
+                    ret[0].append(("mime-cache-not-updated",()))
                 
         return ret
     def type(self):

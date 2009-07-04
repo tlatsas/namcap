@@ -60,7 +60,7 @@ class package:
 		os.path.walk(data, scanelf, invalid_elffiles)		
 		if len(invalid_elffiles) > 0:			
 			for i in invalid_elffiles:
-				ret[0].append(("invalid-elffile %s", i))
+				ret[0].append(("elffile-not-in-allowed-dirs %s", i))
 					
 		return ret
 	
