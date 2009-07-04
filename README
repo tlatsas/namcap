@@ -1,11 +1,154 @@
-This is where I'm going to put notes.
 
-The idea is that namcap.py takes the package name as an arguement and can also take the list of rules to run on it... later.  It then runs through all the modules in Namcap.__all__ variable and tests them against the package looking for flaws.
+WHAT IS IT?
+-----------------------------
 
-The modules in Namcap.__all__ will contain a class (called package) containing certain functions:
+Namcap is a tool for pacman checks binary packages and source PKGBUILDs for 
+common packaging errors.
 
-short_name -- returns a string of the identifying name
-long_name -- returns a string of the description
-prereq -- return either "tarfile" or "extract" to signify 
-analyze(pkginfo, data) -- does its analysis (if type is "tarball" then data is a TarFile if prereq returns "tar", from the tarfile module, if it's pkg, no data is sent, and if it's extract then the sandbox directory else if type is "pkgbuild" then data is filename). Returns a list containing three lists.  First list is the list of errors, second list is the list of warnings, third list is information/notices (not warnings, but more like "did you know"s).
-type -- return either "pkgbuild" or "tarball"
+
+HOW CAN I HELP?
+-----------------------------
+
+There are several ways that you can contribute and help namcap's development. 
+You can contribute with code, patchs, bugs and feature requests.
+
+To report a bug or a feature request for namcap, file a bug in the 
+Packages:Extra section of the Arch Linux bugtracker and the set the importance 
+accordingly. If you're reporting a bug, please give concrete examples of 
+packages where the problem occurs.
+
+If you've a patch (fixing a bug or a new namcap module), then you can send it 
+to the arch-general mailing list. Namcap development is managed with git, so 
+git-formatted patches are preferred. 
+
+Namcap's source is available on:
+
+http://projects.archlinux.org/?p=namcap.git;a=summary
+
+
+HOW TO USE
+-----------------------------
+
+To run namcap on a PKGBUILD or a binary pkg.tar.gz:
+
+$ namcap FILENAME
+
+If you want to see extra informational messages, then invoke namcap with 
+the -i flag:
+
+$ namcap -i FILENAME
+
+You can also see the namcap(1) manual by typing man namcap at the command line 
+or see the usage help:
+
+$ namcap -h 
+
+
+UNDERSTANDING THE OUTPUT
+-----------------------------
+
+Namcap uses a system of tags to classify the output. Currently, tags are of 
+three types, errors (denoted by E), warnings (denoted by W) and informational 
+(denoted by I). 
+
+An error is important and should be fixed immediately; mostly they relate to 
+insufficient security, missing licenses or permission problems.
+
+Normally namcap prints a human-readable explanation (sometimes with suggestions 
+on how to fix the problem). If you want output which can be easily parsed by a 
+program, then pass the -m (machine-readable) flag to namcap. 
+
+
+HOW IT WORKS
+-----------------------------
+
+Namcap takes the package name (or a PKGBUILD) as an arguement then runs through 
+all the modules in Namcap.__all__ variable and tests them against the arguement 
+looking for flaws.
+
+
+HOW TO CREATE A MODULE
+-----------------------------
+
+This section documents the innards of namcap and specifies how to create a new 
+namcap module.
+
+The main namcap program namcap.py takes as parameters the filename of a package 
+or a PKGBUILD and makes a pkginfo object, which it passes to a list of rules 
+defined in __tarball__ and __pkgbuild__.
+
+	* __tarball__ defines the rules which process binary packages.
+	* __pkgbuild__ defines the rules which process PKGBUILDs. 
+
+Once your module is finalized, remember to add it to the appropriate array 
+(__tarball__ or __pkgbuild__) defined in Namcap/__init__.py
+
+A sample namcap module is like this (Namcap/url.py):
+
+import pacman
+
+  class package:
+  	def short_name(self):
+		return "url"
+	def long_name(self):
+		return "Verifies url is included in a PKGBUILD"
+	def prereq(self):
+		return ""
+	def analyze(self, pkginfo, tar):
+		ret = [[],[],[]]
+		if not hasattr(pkginfo, 'url'):
+			ret[0].append(("missing-url", ()))
+		return ret
+	def type(self):
+		return "pkgbuild"
+
+Mostly, the code is self-explanatory. The following are the list of the methods 
+that each namcap module must have:
+
+	* short_name(self) 
+	Returns a string containing a short name of the module. Usually,this is the 
+	same as the basename of the module file.
+	
+	* long_name(self) 
+	Returns a string containing a concise description of the module. This 
+	description is used when listing all the rules using namcap -r list.
+	
+	* prereq(self) 
+	Return a string containing the prerequisites needed for the module to 
+	operate properly. Usually "" for modules processing PKGBUILDs and "tar" 
+	for modules processing package files. "extract" should be specified if 
+	the package contents should be extracted to a temporary directory before 
+	further processing.
+	
+	* analyze(self, pkginfo, tar) 
+	Should return a list comprising in turn of three lists: of error tags, 
+	warning tags and information tags respectively. 
+	Each member of these tag lists should be a tuple consisting of two 
+	components: the short, hyphenated form of the tag with the appropriate 
+	format specifiers (%s, etc.) The first word of this string must be the tag 
+	name. The human readable form of the tag should be put in the tags file. 
+	The format of the tags file is described below; and the parameters which 
+	should replace the format specifier tokens in the final output. 
+	
+	* type(self) 
+	"pkgbuild" for a module processing PKGBUILDs
+	"tarball" for a module processing a binary package file. 
+
+
+The tags file consists of lines specifying the human readable form of the 
+hyphenated tags used in the namcap code. A line beginning with a '#' is 
+treated as a comment. Otherwise the format of the file is:
+
+	machine-parseable-tag %s :: This is machine parseable tag %s
+
+Note that a double colon (::) is used to separate the hyphenated tag from the 
+human readable description.
+
+
+MORE INFORMATION
+-----------------------------
+
+You can find more information about namcap on namcap's wiki page:
+
+http://wiki.archlinux.org/index.php/Namcap
+
