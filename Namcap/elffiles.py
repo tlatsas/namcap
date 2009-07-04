@@ -20,11 +20,15 @@
 import os
 import re
 
+
 process = lambda s: re.search("/tmp/namcap\.[0-9]*/(.*)", s).group(1)
 
+
 def scanelf(invalid_elffiles,dirname,names):
-	valid_dirs = ['/bin', '/sbin', '/usr/bin', '/usr/sbin'
-					  '/lib', '/usr/lib']	
+	'''Method to scan for ELF files in invalid directories'''
+
+	# Valid directories for ELF files
+	valid_dirs = ['/bin', '/sbin', '/usr/bin', '/usr/sbin', '/lib', '/usr/lib']	
 	
 	for i in names:
 		file_path = os.path.join(dirname, i)
@@ -33,7 +37,7 @@ def scanelf(invalid_elffiles,dirname,names):
 		# Checking for ELF files
 		if os.path.isfile(file_path) and file(file_path).read(4)=='\x7fELF':			
 			for f in valid_dirs:
-				if re.search(f, '/' + process(file_path)):
+				if ('/' + process(file_path)).startswith(f):
 					valid_dir_found = True
 					break 
 					
