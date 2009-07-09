@@ -1,0 +1,27 @@
+VERSION         DESCRIPTION
+-----------------------------------------------------------------------------
+2.3             - add rule to look for .a files with wrong permissions
+                - report dangling symlinks as an error
+                - added sf.net urls in sfurl.py
+                - fixed bug: incorrect parsing of symlinks
+                - move to machine-parseable tags
+                - add covered packages to dependencies
+                - add module to verify info pages
+                - remove warning for missing CVS tags
+                - tags and namcap.1 files updated
+                - gnomemime module is now using /usr/share/
+                - gnomemenu module removed
+                - fix some errors and omissions in tags and namcap.1
+                - namcap now prints a warning if a package is empty
+                - add a module to check for files in /usr/share/mime
+                - fix FS#14371 - crash when namcap can't open a file
+                - add the -m flag to the usage() method
+                - mimefiles checks for share-mime-info as dependency
+                - fix FS#15028 add hicoloricons module
+                - add a TODO file
+                - generalise script detection, fixes FS#15160
+                - add tag insecure-rpath, fixes FS#14049
+                - check for ELF files outside valid paths. FS#15299
+                - elffiles.py improved
+                - add a module to check if pkgname is in pkgdesc
+                - AUTHORS, README and tags file updated
