@@ -1,27 +1,27 @@
-VERSION         DESCRIPTION
------------------------------------------------------------------------------
-2.3             - add rule to look for .a files with wrong permissions
-                - report dangling symlinks as an error
-                - added sf.net urls in sfurl.py
-                - fixed bug: incorrect parsing of symlinks
-                - move to machine-parseable tags
-                - add covered packages to dependencies
-                - add module to verify info pages
-                - remove warning for missing CVS tags
-                - tags and namcap.1 files updated
-                - gnomemime module is now using /usr/share/
-                - gnomemenu module removed
-                - fix some errors and omissions in tags and namcap.1
-                - namcap now prints a warning if a package is empty
-                - add a module to check for files in /usr/share/mime
-                - fix FS#14371 - crash when namcap can't open a file
-                - add the -m flag to the usage() method
-                - mimefiles checks for share-mime-info as dependency
-                - fix FS#15028 add hicoloricons module
-                - add a TODO file
-                - generalise script detection, fixes FS#15160
-                - add tag insecure-rpath, fixes FS#14049
-                - check for ELF files outside valid paths. FS#15299
-                - elffiles.py improved
-                - add a module to check if pkgname is in pkgdesc
-                - AUTHORS, README and tags file updated
+namcap (2.3)
+    - New tags:
+        elffile-not-in-allowed-dirs (FS#15299)
+        gnome-mime-file (checks for GNOME mime files)
+        mime-cache-not-updated (checks for update-mime-database calls)
+        hicolor-icon-cache-not-updated (FS#15028)
+        insecure-rpath (FS#14049)
+        non-fhs-info-page (FHS compliance of installed info pages)
+        pkgname-in-description (pkgname should not be in description)
+        potential-non-fhs-info-page
+
+    - Removed tags:
+        missing-cvs-id
+        maintainer-tags-for-tus-devs
+        cvs-id-for-tus-devs
+
+    - Added rule to look for .a files with wrong permissions
+    - Report dangling symlinks as an error (dangling-symlink)
+    - Added sf.net urls in sfurl module.
+    - Support machine-parseable tags (use -m to see them)
+    - Add covered packages to dependencies
+    - gnomemime uses /usr/share/ directory now
+    - Removed obsolete module gnomemenu
+    - Namcap now prints a warning if a package is empty
+    - Prevent crash when namcap fails to open a file (FS#14371)
+    - Script detection generalised, supports more scripts (FS#15160)
+    - Documentation updates (manual page, AUTHORS, README)

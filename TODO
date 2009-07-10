@@ -1,11 +1,6 @@
-For the 2.3 version namcap should:
-
-* Check about ELF files outside some know paths. FS#15299
-* Check about insecure RPATH in ELF files. FS#14049
-* Report dependency on sh instead of bash. FS#15160
-* Fix FS#15110
-
 For the 2.4 version and near future:
 
 * Add support for splitted packages. FS#15027
-* Fix FS#9396
+* Improve depends.py. Fix FS#9396 FS#14124
+* Improve namcap speed
+* Share informations between modules
