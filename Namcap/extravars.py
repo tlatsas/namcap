@@ -1,6 +1,6 @@
 # 
 # namcap rules - extravars
-# Copyright (C) 2003-2007 Jesse Young <jesseyoung@gmail.com>
+# Copyright (C) 2003-2009 Jesse Young <jesseyoung@gmail.com>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by

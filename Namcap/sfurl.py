@@ -1,6 +1,6 @@
 # 
 # namcap rules - sfurl
-# Copyright (C) 2004-2007 Ben Mazer <ben@benmazer.net>
+# Copyright (C) 2004-2009 Ben Mazer <ben@benmazer.net>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by

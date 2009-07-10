@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # 
 # namcap - A Pacman package analyzer
-# Copyright (C) 2003-2007 Jason Chu <jason@archlinux.org>
+# Copyright (C) 2003-2009 Jason Chu <jason@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
