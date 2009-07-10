@@ -1,4 +1,4 @@
-.TH namcap 1 "April 19, 2009" "namcap 2.2" "User Commands"
+.TH namcap 1 "July 10, 2009" "namcap 2.3" "User Commands"
 .SH NAME
 namcap \- package analysis utility
 .SH SYNOPSIS
@@ -45,8 +45,14 @@ Some cases where namcap fails are dlopen() and obscure links.  dlopen()'d librar
 .B directoryname
 directoryname checks all of the directory names for standard directories (i.e. /etc, /usr/bin, /usr/lib).  All files in directories that are non-standard are returned
 .TP
+.B elffiles
+elffiles looks for ELF files outside some know paths.
+.TP
 .B emptydir
 emptydir looks for directories in a package that don't contain any files
+.TP
+.B extravars
+extravars verifies that extra variables start with an underscore
 .TP
 .B fhsinfopages
 fhsinfopages verifies correct installation of info pages
@@ -59,6 +65,9 @@ fileownership verifies that all files are owned by root:root and not some other 
 .TP
 .B gnomemime
 gnomemime checks for generated GNOME mime files
+.TP
+.B hicoloricons
+hicoloricons checks whether the hicolor icon cache is updated.
 .TP
 .B infodirectory
 infodirectory verifies that a package does not contain the info directory file (/usr/share/info/dir)
@@ -77,6 +86,9 @@ licensepkg verifies that the licenses variable has been filled in in a package
 .TP
 .B md5sums
 md5sums makes sure that a PKGBUILD includes the md5sums
+.TP
+.B mimefiles
+mimefiles checks for files in /usr/share/mime
 .TP
 .B perllocal
 perllocal searches for perllocal.pod.  perllocal.pod is a nasty file that's included during most perl module installations
@@ -100,7 +112,7 @@ tags is for package maintainers.  It verifies that we have remembered to add a M
 url verifies that we have a url variable set in the PKGBUILD
 .TP
 .B urlpkg
-url verifies that we have a url variable set in the package file
+urlpkg verifies that we have a url variable set in the package file
 .SH EXAMPLES
 .TP
 .B namcap foo.pkg.tar.gz
@@ -121,7 +133,9 @@ This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 .SH AUTHORS
 .nf
+Abhishek Dasgupta <abhidg@gmail.com>
+Hugo Doria <hugo@archlinux.org>
 Jason Chu <jason@archlinux.org>
-JJDaNiMoTh <jjdanimoth@gmail.com>
 Jesse Young <jesseyoung@gmail.com>
+JJDaNiMoTh <jjdanimoth@gmail.com>
 .fi
