@@ -1,4 +1,4 @@
-.TH namcap 1 "July 10, 2009" "namcap 2.3" "User Commands"
+.TH namcap 1 "July 11, 2009" "namcap 2.3" "User Commands"
 .SH NAME
 namcap \- package analysis utility
 .SH SYNOPSIS
@@ -23,96 +23,102 @@ RULELIST is a comma-separated list of rule names; if RULELIST=list then namcap r
 .SH RULES
 .TP
 .B arrays
-arrays verifies that array variables are actually arrays and not strings
+Verifies that array variables are actually arrays and not strings
 .TP
 .B badbackups
-badbackups verifies that backup entries don't have a / at the beginning of them
+Verifies that backup entries don't begin with /
 .TP
 .B carch
-carch looks for references to i686 and i586 and tells you to use $CARCH instead
+Looks for references to i686 and i586 and tells you to use $CARCH instead
 .TP
 .B capsnames
-capsnames checks a PKGBUILD to verify the package name does not include upper case characters
+Checks a PKGBUILD to verify that the package name has no upper case characters
 .TP
 .B capsnamespkg
-capsnamespkg checks a package to verify the package name does not include upper case characters
+Checks a package to verify that the package name has no upper case characters
 .TP
 .B depends
-depends runs ldd on all executables, gets the link-level dependencies, finds the smallest subset of dependencies that cover the link-level dependencies, and compares that list to the depends of the package.  It returns messages in three cases: dependency detected and not included, dependency included but already satisfied, and dependency included and not needed.  These suggestions are just guidelines and all package builders should take this into account (i.e. you're smarter than namcap is)
+This module runs ldd on all executables, gets the link-level dependencies, finds the smallest subset of dependencies that cover the link-level dependencies, and compares that list to the depends of the package.  It returns messages in three cases: dependency detected and not included, dependency included but already satisfied, and dependency included and not needed.  These suggestions are just guidelines and all package builders should take this into account (i.e. you're smarter than namcap is)
 
 Some cases where namcap fails are dlopen() and obscure links.  dlopen()'d libraries don't show up because they are loaded at run time: in the case of a program that loads plugins.  Obscure links are the cases where only a small portion of the package needs something to run; usually, the small portion won't be accessed unless that thing is installed (i.e. a java plugin for mozilla included in the java package).
 .TP
 .B directoryname
-directoryname checks all of the directory names for standard directories (i.e. /etc, /usr/bin, /usr/lib).  All files in directories that are non-standard are returned
+Checks the directory names in the package file list for standard directories (i.e. /etc, /usr/bin, /usr/lib).  All files in directories that are non-standard are returned
 .TP
 .B elffiles
-elffiles looks for ELF files outside some know paths.
+Gives an error if it finds ELF (binary) files outside the standard paths (/bin, /usr/bin, etc.)
 .TP
 .B emptydir
-emptydir looks for directories in a package that don't contain any files
+Looks for directories in a package that don't contain any files
 .TP
 .B extravars
-extravars verifies that extra variables start with an underscore
+Verifies that extra variables start with an underscore
 .TP
 .B fhsinfopages
-fhsinfopages verifies correct installation of info pages
+Verifies correct installation of info pages
 .TP
 .B fhsmanpages
-fhsmanpages verifies correct installation of man pages
+Verifies correct installation of man pages
 .TP
 .B fileownership
-fileownership verifies that all files are owned by root:root and not some other user or group
+Verifies that all files are owned by root:root and not some other user or group
 .TP
 .B gnomemime
-gnomemime checks for generated GNOME mime files
+Checks for generated GNOME mime files
 .TP
 .B hicoloricons
-hicoloricons checks whether the hicolor icon cache is updated.
+Checks whether the hicolor icon cache is updated when a package installs
+files in /usr/share/icons/hicolor
 .TP
 .B infodirectory
-infodirectory verifies that a package does not contain the info directory file (/usr/share/info/dir)
+Verifies that a package does not contain the info directory file (/usr/share/info/dir)
 .TP
 .B invalidstartdir
 Any PKGBUILDs that refer to files not stored in $startdir/pkg or $startdir/src are incorrect
 .TP
 .B libtool
-libtool checks for libtool (*.la) files
+Warns if libtool (*.la) files are present
 .TP
 .B license
-license verifies that the licenses variable has been filled in in a PKGBUILD
+Verifies that the licenses variable has been filled in in a PKGBUILD.
 .TP
 .B licensepkg
-licensepkg verifies that the licenses variable has been filled in in a package
+Verifies that the licenses variable has been filled in in a package. For packages with a custom license it
+checks whether the license file has been installed in
+/usr/share/licenses/$pkgname/
 .TP
 .B md5sums
-md5sums makes sure that a PKGBUILD includes the md5sums
+Makes sure that a PKGBUILD includes the md5sums
 .TP
 .B mimefiles
-mimefiles checks for files in /usr/share/mime
+Checks whether update-mime-database is called when the package installs files in /usr/share/mime
 .TP
 .B perllocal
-perllocal searches for perllocal.pod.  perllocal.pod is a nasty file that's included during most perl module installations
+Searches for perllocal.pod.  perllocal.pod is a nasty file that's included during most perl module installations
 .TP
 .B permissions
-permissions checks basic file and and directory permissions.  It returns warnings about world readable bits not being set, world writable bits being set, and world executable bit not being set for directories
+Checks basic file and and directory permissions.  It returns warnings about world readable bits not being set, world writable bits being set, and world executable bit not being set for directories
+.TP
+.B rpath
+Gives an error if a binary has RPATH set to something other than /usr/lib
 .TP
 .B scrollkeeper
-scrollkeeper verifies that there aren't any scrollkeeper directories
+Verifies that there aren't any scrollkeeper directories
 .TP
 .B sfurl
-sfurl verifies that a PKGBUILD is downloading from a specific sourceforge mirror
+Warns if a PKGBUILD is downloading from a specific sourceforge mirror instead of the generic downloads.sourceforge.net
 .TP
 .B symlink
-symlink points out symlinks that point to $startdir/pkg instead of where the files will actually be installed to
+Finds out symbolic and hard links which do not point to a valid path in the package
 .TP
 .B tags
-tags is for package maintainers.  It verifies that we have remembered to add a Maintainer and Contributor comment.
+For package maintainers, this module verifies that we have remembered to add a Maintainer and Contributor comment.
 .TP
 .B url
-url verifies that we have a url variable set in the PKGBUILD
+Verifies that we have the url variable set in the PKGBUILD
 .TP
 .B urlpkg
-urlpkg verifies that we have a url variable set in the package file
+Verifies that we have the url variable set in the package file
 .SH EXAMPLES
 .TP
 .B namcap foo.pkg.tar.gz

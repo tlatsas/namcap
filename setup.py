@@ -2,10 +2,11 @@
 from distutils.core import setup
 
 DATAFILES = [('/usr/share/man/man1', ['namcap.1']),
-		('/usr/share/namcap', ['tags'])]
+		('/usr/share/namcap', ['tags']),
+		('/usr/share/doc/namcap',['README','AUTHORS','TODO'])]
 
 setup(name="namcap",
-	version="2.0",
+	version="2.3",
 	description="Pacman package analyzer",
 	author="Jason Chu",
 	author_email="jason@archlinux.org",

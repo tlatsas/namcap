@@ -50,7 +50,7 @@ class package:
 	def short_name(self):
 		return "elffiles"
 	def long_name(self):
-		return "Check about ELF files outside some know paths."
+		return "Check about ELF files outside some standard paths."
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):
