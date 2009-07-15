@@ -10,6 +10,9 @@ namcap \- package analysis utility
 Rules return lists of messages.  Each message can be one of three types: error, warning, or information (think of them as notes or comments).  Errors (designated by 'E:') are things that namcap is very sure are wrong and need to be fixed.  Warnings (designated by 'W:') are things that namcap thinks should be changed but if you know what you're doing then you can leave them.  Information (designated 'I:') are only shown when you use the info argument.  Information messages give information that might be helpful but isn't anything that needs changing.
 .SH OPTIONS
 .TP
+\fB\-e\fR RULELIST, \fB\-\-exclude=\fRRULELIST
+Do not run RULELIST rules on the package
+.TP
 .B "\-i, \-\-info"
 display information messages
 .TP

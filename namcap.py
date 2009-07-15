@@ -32,8 +32,8 @@ def get_modules():
 
 # Display usage information
 def usage():
-	print "usage: " + sys.argv[0] + " [-r rulelist | --rules=rulelist] [-i | --info] [-m | --machine-readable] package .."
-	print "       -r list    : returns list of available rules"
+	print "usage: " + sys.argv[0] + " [-r rulelist | --rules=rulelist] [--exclude=rulelist] [-i | --info] [-m | --machine-readable] package .."
+	print "       -r list    : returns list of available rules"	
 	print "       -i         : prints information responses from rules"
 	print "       -m         : makes the output parseable (machine-readable)"
 	sys.exit(2)
@@ -77,7 +77,7 @@ info_reporting = 0
 
 # get our options and process them
 try:
-	optlist, args = getopt.getopt(sys.argv[1:], "ihmr:", ["rules=","info","help","machine-readable"])
+	optlist, args = getopt.getopt(sys.argv[1:], "ihmr:e:", ["rules=", "exclude=", "info","help","machine-readable"])
 except getopt.GetoptError:
 	usage()
 
@@ -85,6 +85,7 @@ active_modules = []
 m = lambda s: tags[s]
 
 for i, k in optlist:
+			
 	if i in ('-r', '--rules') and active_modules == []:
 		if k == 'list':
 			print "-"*20 + " Namcap rule list " + "-"*20
@@ -99,11 +100,25 @@ for i, k in optlist:
 			else:
 				print "Error: Rule '" + j + "' does not exist"
 				usage()
+		
+	# Used to exclude some rules from the check			
+	if i in ('-e', '--exclude') and active_modules == []:		
+		module_list = k.split(',')
+		active_modules = modules
+		for j in module_list:			
+			if j in modules:
+				active_modules.remove(j)
+			else:
+				print "Error: Rule '" + j + "' does not exist"
+				usage()	
+				
 	if i in ('-i', '--info'):
 		info_reporting = 1
+		
 	if i in ('-m', '--machine-readable'):
 		machine_readable = 1
 		m = lambda s: s
+		
 	if i in ('-h', '--help'):
 		usage()
 
