@@ -25,3 +25,4 @@ namcap (2.3)
     - Prevent crash when namcap fails to open a file (FS#14371)
     - Script detection generalised, supports more scripts (FS#15160)
     - Documentation updates (manual page, AUTHORS, README)
+    - Add a option to exclude some rules from the checks
