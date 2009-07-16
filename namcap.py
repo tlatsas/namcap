@@ -32,10 +32,16 @@ def get_modules():
 
 # Display usage information
 def usage():
-	print "usage: " + sys.argv[0] + " [-r rulelist | --rules=rulelist] [-e rulelist | --exclude=rulelist] [-i | --info] [-m | --machine-readable] package .."
-	print "       -r list    : returns list of available rules"	
-	print "       -i         : prints information responses from rules"
-	print "       -m         : makes the output parseable (machine-readable)"
+	print
+	print "Usage: " + sys.argv[0] + " [OPTIONS] packages"
+	print 
+	print "Options are:"
+	print "    -i                               : prints information responses from rules"
+	print "    -m                               : makes the output parseable (machine-readable)"
+	print "    -e rulelist, --exclude=rulelist  : don't apply RULELIST rules to the package"	
+	print "    -r rulelist, --rules=rulelist    : only apply RULELIST rules to the package"
+	
+	
 	sys.exit(2)
 
 # Is the package a valid package file?
@@ -78,8 +84,7 @@ def check_rules_exclude(optlist):
 		if '-r' in i or '-e' in i:
 			args_used += 1
 		if '--rules' in i or '--exclude' in i:
-			args_used += 1
-			
+			args_used += 1			
 	return args_used
 
 # Main
@@ -119,19 +124,15 @@ for i, k in optlist:
 		
 	# Used to exclude some rules from the check			
 	if i in ('-e', '--exclude') and active_modules == []:
-		if use_specific_rules:
-			print "Error: You cannot use -r"
-			usage()
-		else:
-			module_list = k.split(',')
-			active_modules = modules
-			for j in module_list:			
-				if j in modules:
-					active_modules.remove(j)
-				else:
-					print "Error: Rule '" + j + "' does not exist"
-					usage()	
-				
+		module_list = k.split(',')
+		active_modules = modules
+		for j in module_list:			
+			if j in modules:
+				active_modules.remove(j)
+			else:
+				print "Error: Rule '" + j + "' does not exist"
+				usage()	
+			
 	if i in ('-i', '--info'):
 		info_reporting = 1
 		
