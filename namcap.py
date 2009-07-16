@@ -32,7 +32,7 @@ def get_modules():
 
 # Display usage information
 def usage():
-	print "usage: " + sys.argv[0] + " [-r rulelist | --rules=rulelist] [--exclude=rulelist] [-i | --info] [-m | --machine-readable] package .."
+	print "usage: " + sys.argv[0] + " [-r rulelist | --rules=rulelist] [-e rulelist | --exclude=rulelist] [-i | --info] [-m | --machine-readable] package .."
 	print "       -r list    : returns list of available rules"	
 	print "       -i         : prints information responses from rules"
 	print "       -m         : makes the output parseable (machine-readable)"
@@ -70,6 +70,18 @@ def process_tags(filename="/usr/share/namcap/tags"):
 
 	return tags
 
+def check_rules_exclude(optlist):	
+	'''Check if the -r (--rules) and the -r (--exclude) options
+	are being used at same time'''
+	args_used = 0
+	for i in optlist:	
+		if '-r' in i or '-e' in i:
+			args_used += 1
+		if '--rules' in i or '--exclude' in i:
+			args_used += 1
+			
+	return args_used
+
 # Main
 modules = get_modules()
 tags = process_tags()
@@ -84,9 +96,13 @@ except getopt.GetoptError:
 active_modules = []
 m = lambda s: tags[s]
 
-for i, k in optlist:
-			
-	if i in ('-r', '--rules') and active_modules == []:
+# Verifying if we are using the -r and -r options at same time
+if check_rules_exclude(optlist) > 1:
+	print "You cannot use '-r' (--rules) and '-e' (-exclude) options at same time"
+	usage()
+
+for i, k in optlist:	
+	if i in ('-r', '--rules') and active_modules == []:		
 		if k == 'list':
 			print "-"*20 + " Namcap rule list " + "-"*20
 			for j in modules:
@@ -102,15 +118,19 @@ for i, k in optlist:
 				usage()
 		
 	# Used to exclude some rules from the check			
-	if i in ('-e', '--exclude') and active_modules == []:		
-		module_list = k.split(',')
-		active_modules = modules
-		for j in module_list:			
-			if j in modules:
-				active_modules.remove(j)
-			else:
-				print "Error: Rule '" + j + "' does not exist"
-				usage()	
+	if i in ('-e', '--exclude') and active_modules == []:
+		if use_specific_rules:
+			print "Error: You cannot use -r"
+			usage()
+		else:
+			module_list = k.split(',')
+			active_modules = modules
+			for j in module_list:			
+				if j in modules:
+					active_modules.remove(j)
+				else:
+					print "Error: Rule '" + j + "' does not exist"
+					usage()	
 				
 	if i in ('-i', '--info'):
 		info_reporting = 1
