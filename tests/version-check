@@ -1,0 +1,26 @@
+#!/bin/sh
+# This file is part of the namcap test suite.
+# It checks whether the version in namcap is the
+# same throughout the program and documentation.
+# Author: Abhishek Dasgupta <abhidg@gmail.com>
+# License: GPL
+
+VERSION=2.3
+
+die() {	echo "$1"; exit 1; }
+
+setup_version() {
+   grep version ../setup.py | awk -F '=' '{print $2}' | sed "s/\"//g;s/,//g"
+}
+
+manpage_version() {
+    head -n 1 ../namcap.1 | awk -F '\"' '{print $4}' | awk '{print $2}'
+}
+
+if [ "$VERSION" != "$(setup_version)" ]; then
+    die "setup.py version not updated to $VERSION."
+fi
+
+if [ "$VERSION" != "$(manpage_version)" ]; then
+    die "Manual page version not updated to $VERSION."
+fi
