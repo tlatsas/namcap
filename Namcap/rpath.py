@@ -25,7 +25,8 @@ process = lambda s: re.search("/tmp/namcap\.[0-9]*/(.*)", s).group(1)
 def checkrpath(insecure_rpaths, dirname, names):
 	"Checks if secure RPATH."
 
-	allowed = ['/usr/lib']
+	allowed = ['/usr/lib','/lib']
+	allowed_toplevels = map(lambda s: s + '/', allowed)
 	warn = ['/usr/local/lib']
 	libpath = re.compile('Library rpath: \[(.*)\]')
 
@@ -45,7 +46,11 @@ def checkrpath(insecure_rpaths, dirname, names):
 					else:
 						rpaths=[n.group(1)]
 					for path in rpaths:
-						if path not in allowed:
+						path_ok = path in allowed
+						for allowed_toplevel in allowed_toplevels:
+							if path.startswith(allowed_toplevel):
+								path_ok = True
+						if not path_ok:
 							insecure_rpaths[0].append(process(mypath))
 							break
 						if path in warn and process(mypath) not in insecure_rpaths:
