@@ -152,12 +152,12 @@ packages = args
 
 # Go through each package, get the info, and apply the rules
 for package in packages:
-	extracted = 0
 	if not os.access(package, os.R_OK):
 		print "Error: Problem reading " + package
 		usage()
 
 	if package[-7:] == '.tar.gz':
+		extracted = 0
 		pkgtar = verify_package(package)
 
 		if not pkgtar:			
@@ -166,7 +166,6 @@ for package in packages:
 				continue
 			else:
 				sys.exit(2)
-			
 		
 		pkginfo = pacman.load(package)
 
@@ -205,7 +204,6 @@ for package in packages:
 				if ret[2] != [] and info_reporting:
 					for j in ret[2]:
 						print string.ljust(pkginfo.name, 10) + " I: " +  m(j[0]) % j[1]
-
 
 		# Clean up if we extracted anything
 		if extracted:
