@@ -89,6 +89,10 @@ def check_rules_exclude(optlist):
 			args_used += 1			
 	return args_used
 
+def show_messages(name, key, messages):
+	for msg in messages:
+		print "%s %s: %s" % (name, key, m(msg[0]) % msg[1])
+
 def process_realpackage(package, modules):
 	extracted = 0
 	pkgtar = verify_package(package)
@@ -121,15 +125,10 @@ def process_realpackage(package, modules):
 				ret = [['Error running rule (' + i + ')'],[],[]]
 
 			# Output the three types of messages
-			if ret[0] != []:
-				for j in ret[0]:
-					print string.ljust(pkginfo.name, 10) + " E: " + m(j[0]) % j[1]
-			if ret[1] != []:
-				for j in ret[1]:
-					print string.ljust(pkginfo.name, 10) + " W: " +  m(j[0]) % j[1]
-			if ret[2] != [] and info_reporting:
-				for j in ret[2]:
-					print string.ljust(pkginfo.name, 10) + " I: " +  m(j[0]) % j[1]
+			show_messages(pkginfo.name, 'E', ret[0])
+			show_messages(pkginfo.name, 'W', ret[1])
+			if info_reporting:
+				show_messages(pkginfo.name, 'I', ret[2])
 
 	# Clean up if we extracted anything
 	if extracted:
@@ -151,15 +150,11 @@ def process_pkgbuild(package, modules):
 			ret = pkg.analyze(pkginfo, package)
 
 		# Output the PKGBUILD messages
-		if ret[0] != []:
-			for j in ret[0]:
-				print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " E: " + m(j[0]) % j[1]
-		if ret[1] != []:
-			for j in ret[1]:
-				print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " W: " + m(j[0]) % j[1]
-		if ret[2] != [] and info_reporting:
-			for j in ret[2]:
-				print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " I: " + m(j[0]) % j[1]
+		name = "PKGBUILD (" + pkginfo.name + ")"
+		show_messages(name, 'E', ret[0])
+		show_messages(name, 'W', ret[1])
+		if info_reporting:
+			show_messages(name, 'I', ret[2])
 
 
 # Main
