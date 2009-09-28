@@ -89,6 +89,52 @@ def check_rules_exclude(optlist):
 			args_used += 1			
 	return args_used
 
+def process_realpackage(package, modules):
+	extracted = 0
+	pkgtar = verify_package(package)
+
+	if not pkgtar:
+		print "Error: " + package + " is empty or is not a valid package"
+		return 1
+
+	pkginfo = pacman.load(package)
+
+	# Loop through each one, load them apply if possible
+	for i in modules:
+		cur_class = __import__('Namcap.' + i, globals(), locals(), [Namcap])
+		pkg = cur_class.package()
+		ret = [[],[],[]]
+		if pkg.type() == "tarball":
+			if pkg.prereq() == "extract":
+				# If it's not extracted, then extract it and then analyze the package
+				if not extracted:
+					os.mkdir(sandbox_directory)
+					for j in pkgtar.getmembers():
+						pkgtar.extract(j, sandbox_directory)
+					extracted = 1
+				ret = pkg.analyze(pkginfo, sandbox_directory)
+			elif pkg.prereq() == "pkg":
+				ret = pkg.analyze(pkginfo, None)
+			elif pkg.prereq() == "tar":
+				ret = pkg.analyze(pkginfo, pkgtar)
+			else:
+				ret = [['Error running rule (' + i + ')'],[],[]]
+
+			# Output the three types of messages
+			if ret[0] != []:
+				for j in ret[0]:
+					print string.ljust(pkginfo.name, 10) + " E: " + m(j[0]) % j[1]
+			if ret[1] != []:
+				for j in ret[1]:
+					print string.ljust(pkginfo.name, 10) + " W: " +  m(j[0]) % j[1]
+			if ret[2] != [] and info_reporting:
+				for j in ret[2]:
+					print string.ljust(pkginfo.name, 10) + " I: " +  m(j[0]) % j[1]
+
+	# Clean up if we extracted anything
+	if extracted:
+		shutil.rmtree(sandbox_directory)
+
 def process_pkgbuild(package, modules):
 	# We might want to do some verifying in here... but really... isn't that what pacman.load is for?
 	pkginfo = pacman.load(package)
@@ -188,54 +234,10 @@ for package in packages:
 		usage()
 
 	if package[-7:] == '.tar.gz':
-		extracted = 0
-		pkgtar = verify_package(package)
-
-		if not pkgtar:			
-			print "Error: " + package + " is empty or is not a valid package"
-			if len(packages) > 1:
-				continue
-			else:
-				sys.exit(2)
-		
-		pkginfo = pacman.load(package)
-
-		# Loop through each one, load them apply if possible
-		for i in active_modules:
-			cur_class = __import__('Namcap.' + i, globals(), locals(), [Namcap])
-			pkg = cur_class.package()
-			ret = [[],[],[]]
-			if pkg.type() == "tarball":
-				if pkg.prereq() == "extract":
-					# If it's not extracted, then extract it and then analyze the package
-					if not extracted:
-						os.mkdir(sandbox_directory)
-						for j in pkgtar.getmembers():
-							pkgtar.extract(j, sandbox_directory)
-						extracted = 1
-					ret = pkg.analyze(pkginfo, sandbox_directory)
-				elif pkg.prereq() == "pkg":
-					ret = pkg.analyze(pkginfo, None)
-				elif pkg.prereq() == "tar":
-					ret = pkg.analyze(pkginfo, pkgtar)
-				else:
-					ret = [['Error running rule (' + i + ')'],[],[]]
-
-				# Output the three types of messages
-				if ret[0] != []:
-					for j in ret[0]:
-						print string.ljust(pkginfo.name, 10) + " E: " + m(j[0]) % j[1]
-				if ret[1] != []:
-					for j in ret[1]:
-						print string.ljust(pkginfo.name, 10) + " W: " +  m(j[0]) % j[1]
-				if ret[2] != [] and info_reporting:
-					for j in ret[2]:
-						print string.ljust(pkginfo.name, 10) + " I: " +  m(j[0]) % j[1]
-
-		# Clean up if we extracted anything
-		if extracted:
-			shutil.rmtree(sandbox_directory)
+		process_realpackage(package, active_modules)
 	elif package[-8:] == 'PKGBUILD':
 		process_pkgbuild(package, active_modules)
+	else:
+		print "Error: Cannot process %s" % package
 
 # vim: set ts=4 sw=4 noet:
