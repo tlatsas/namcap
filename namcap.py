@@ -150,6 +150,10 @@ if (args == []):
 m = process_tags(machine=machine_readable)
 packages = args
 
+# No rules selected?  Then select them all!
+if active_modules == []:
+	active_modules = modules
+
 # Go through each package, get the info, and apply the rules
 for package in packages:
 	if not os.access(package, os.R_OK):
@@ -168,10 +172,6 @@ for package in packages:
 				sys.exit(2)
 		
 		pkginfo = pacman.load(package)
-
-		# No rules selected?  Then select them all!
-		if active_modules == []:
-			active_modules = modules
 
 		# Loop through each one, load them apply if possible
 		for i in active_modules:
@@ -215,9 +215,6 @@ for package in packages:
 		if pkginfo == None:
 			print "Error: " + package + " is not a valid PKGBUILD"
 			continue
-
-		if active_modules == []:
-			active_modules = modules
 
 		for i in active_modules:
 			cur_class = __import__('Namcap.' + i, globals(), locals(), [Namcap])
