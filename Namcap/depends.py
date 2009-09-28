@@ -19,7 +19,7 @@
 
 import re, os, os.path, pacman, subprocess
 
-supported_scripts = ['python', 'ruby', 'wish', 'expect',
+supported_scripts = ['python', 'perl', 'ruby', 'wish', 'expect',
 	'tk', 'bash', 'sh', 'dash', 'tcsh', 'pdksh' ]
 
 pkgcache = {}
@@ -50,7 +50,8 @@ def getcovered(current, dependlist, covereddepend):
 
 def figurebitsize(line):
 	"""
-	Given a line of output from readelf (usually Shared library:) return 'i686' or 'x86-64' if the binary is a 32bit or 64bit binary
+	Given a line of output from readelf (usually Shared library:) return
+	'i686' or 'x86-64' if the binary is a 32bit or 64bit binary
 	"""
 
 	address = line.split()[0]
@@ -59,6 +60,22 @@ def figurebitsize(line):
 	else:
 		return 'i686'
 
+def is_elf(path):
+	"""
+	Given a file path, ensure it exists and peek at the first few bytes
+	to determine if it is an ELF file.
+	"""
+	if not os.path.isfile(path):
+		return False
+	fd = open(path)
+	bytes = fd.read(4)
+	fd.close()
+	# magic elf header, present in binaries and libraries
+	if bytes == "\x7FELF":
+		return True
+	else:
+		return False
+
 def scanlibs(data, dirname, names):
 	"""
 	Walk over all the files in the package and run "readelf -d" on them.
@@ -66,41 +83,39 @@ def scanlibs(data, dirname, names):
 	"""
 	sharedlibs, scripts = data
 	global supported_scripts
+	shared = re.compile('Shared library: \[(.*)\]')
+	script = re.compile('#!.*/(.*)')
 	for i in names:
-		if os.path.isfile(dirname+'/'+i):
-			var = subprocess.Popen('readelf -d ' + dirname+'/'+i,
+		path = dirname + '/' + i
+		if is_elf(path):
+			var = subprocess.Popen('readelf -d ' + path,
 					shell=True,
 					stdout=subprocess.PIPE,
 					stderr=subprocess.PIPE).communicate()
 			for j in var[0].split('\n'):
-				n = re.search('Shared library: \[(.*)\]', j)
+				n = shared.search(j)
 				# Is this a Shared library: line?
 				if n != None:
 					# Find out its architecture
 					architecture = figurebitsize(j)
 					try:
 						libpath = os.path.abspath(libcache[architecture][n.group(1)])[1:]
-						sharedlibs.setdefault(libpath, {})[dirname+'/'+i] = 1
+						sharedlibs.setdefault(libpath, {})[path] = 1
 					except KeyError:
 						# Ignore that library if we can't find it
 						# TODO: review it
 						pass
-				# But we can check to see if it's a script we know about
-				else:
-					try:
-						fd = open(dirname+'/'+i)
-					except:
-						continue
-					firstline = fd.readline()
-					firstlinere = re.match('#!.*/(.*)', firstline)
-					if firstlinere != None:
-						cmdname = firstlinere.group(1).split()[0]
-						if cmdname in supported_scripts:
-							scripts.setdefault(cmdname, {})[dirname+'/'+i] = 1
+		# Maybe it is a script file
+		elif os.path.isfile(path):
+			fd = open(path)
+			firstline = fd.readline()
+			fd.close()
+			firstlinere = script.match(firstline)
+			if firstlinere != None:
+				cmdname = firstlinere.group(1).split()[0]
+				if cmdname in supported_scripts:
+					scripts.setdefault(cmdname, {})[path] = 1
 
-					fd.close()
-	return
-			
 def finddepends(liblist):
 	dependlist = {}
 	foundlist = []
@@ -108,24 +123,28 @@ def finddepends(liblist):
 	somatches = {}
 	actualpath = {}
 
-	for j in liblist.keys():
+	knownlibs = liblist.keys()
+
+	for j in knownlibs:
 		actualpath[j] = os.path.realpath('/'+j)[1:]
 
 	# Sometimes packages don't include all so .so, .so.1, .so.1.13, .so.1.13.19 files
 	# They rely on ldconfig to create all the symlinks
 	# So we will strip off the matching part of the files and use this regexp to match the rest
 	so_end = re.compile('(\.\d+)*')
+	# Whether we should even look at a particular file
+	is_so = re.compile('\.so')
 
 	pacmandb = '/var/lib/pacman/local'
 	for i in os.listdir(pacmandb):
 		if os.path.isfile(pacmandb+'/'+i+'/files'):
 			file = open(pacmandb+'/'+i+'/files')
 			for j in file.readlines():
-				if j[len(j)-1:]=='\n':
-					j = j[:len(j)-1]
+				if not is_so.search(j):
+					continue
 
-				for k in liblist.keys():
-					# If the file is an exact match, so it's a match up to a point and everything after that point matches a the regexp
+				for k in knownlibs:
+					# File must be an exact match or have the right .so ending numbers
 					# i.e. gpm includes libgpm.so and libgpm.so.1.19.0, but everything links to libgpm.so.1
 					# We compare find libgpm.so.1.19.0 startswith libgpm.so.1 and .19.0 matches the regexp
 					if j == actualpath[k] or (j.startswith(actualpath[k]) and so_end.match(j[len(actualpath[k]):])):
@@ -134,13 +153,14 @@ def finddepends(liblist):
 							dependlist[n.group(1)] = {}
 						for x in liblist[k]:
 							dependlist[n.group(1)][x] = 1
+						knownlibs.remove(k)
 						foundlist.append(k)
 			file.close()
 
 	ret = []
-	for i in liblist.keys():
-		if i not in foundlist:
-			ret.append('Library ' + i + ' has no package associated')
+	# knownlibs only contains what hasn't been found at this point
+	for i in knownlibs:
+		ret.append('Library ' + i + ' has no package associated')
 	return dependlist, ret
 
 def getprovides(depends, provides):
@@ -155,8 +175,9 @@ def filllibcache():
 			shell=True,
 			stdout=subprocess.PIPE,
 			stderr=subprocess.PIPE).communicate()
+	libline = re.compile('\s*(.*) \((.*)\) => (.*)')
 	for j in var[0].split('\n'):
-		g = re.match('\s*(.*) \((.*)\) => (.*)',j)
+		g = libline.match(j)
 		if g != None:
 			if g.group(2).startswith('libc6,x86-64'):
 				libcache['x86-64'][g.group(1)] = g.group(3)
@@ -190,6 +211,16 @@ class package:
 		for i in tmpret:
 			ret[1].append(i)
 
+		# Remove the package name from that list, we can't depend on ourselves.
+		if dependlist.has_key(pkginfo.name):
+			del dependlist[pkginfo.name]
+
+		# Print link-level deps
+		for i, v in dependlist.iteritems():
+			if type(v) == dict:
+				files = [x[len(data)+1:] for x in v.keys()]
+				ret[2].append(("link-level-dependence %s in %s", (i, str(files))))
+
 		# Do the script handling stuff
 		for i, v in liblist[1].iteritems():
 			if not dependlist.has_key(i):
@@ -198,16 +229,6 @@ class package:
 				dependlist[i][j] = 1
 			files = [x[len(data)+1:] for x in v.keys()]
 			ret[2].append(("script-link-detected %s in %s", (i, str(files))))
-
-		# Remove the package name from that list, we can't depend on ourselves.
-		if dependlist.has_key(pkginfo.name):
-			del dependlist[pkginfo.name]
-
-		# Do the info stuff
-		for i, v in dependlist.iteritems():
-			if type(v) == dict:
-				files = [x[len(data)+1:] for x in v.keys()]
-				ret[2].append(("link-level-dependence %s on %s", (str(files), i)))
 
 		# Check for packages in testing
 		if os.path.isdir('/var/lib/pacman/sync/testing'):
@@ -267,4 +288,5 @@ class package:
 		return ret
 	def type(self):
 		return "tarball"
+
 # vim: set ts=4 sw=4 noet:
