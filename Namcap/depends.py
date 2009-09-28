@@ -18,6 +18,7 @@
 # 
 
 import re, os, os.path, pacman, subprocess
+from Namcap.util import is_elf
 
 supported_scripts = ['python', 'perl', 'ruby', 'wish', 'expect',
 	'tk', 'bash', 'sh', 'dash', 'tcsh', 'pdksh' ]
@@ -59,22 +60,6 @@ def figurebitsize(line):
 		return 'x86-64'
 	else:
 		return 'i686'
-
-def is_elf(path):
-	"""
-	Given a file path, ensure it exists and peek at the first few bytes
-	to determine if it is an ELF file.
-	"""
-	if not os.path.isfile(path):
-		return False
-	fd = open(path)
-	bytes = fd.read(4)
-	fd.close()
-	# magic elf header, present in binaries and libraries
-	if bytes == "\x7FELF":
-		return True
-	else:
-		return False
 
 def scanlibs(data, dirname, names):
 	"""
