@@ -18,6 +18,7 @@
 #
 
 import pacman, os, subprocess, re
+from Namcap.util import is_elf
 
 process = lambda s: re.search("/tmp/namcap\.[0-9]*/(.*)", s).group(1)
 
@@ -26,15 +27,17 @@ def checkrpath(insecure_rpaths, dirname, names):
 
 	allowed = ['/usr/lib']
 	warn = ['/usr/local/lib']
+	libpath = re.compile('Library rpath: \[(.*)\]')
 
 	for i in names:
-		if os.path.isfile(dirname+'/'+i):
-			var = subprocess.Popen('readelf -d ' + dirname+'/'+i,
+		mypath = dirname + '/' + i
+		if is_elf(mypath):
+			var = subprocess.Popen('readelf -d ' + mypath,
 					shell=True,
 					stdout=subprocess.PIPE,
 					stderr=subprocess.PIPE).communicate()
 			for j in var[0].split('\n'):
-				n = re.search('Library rpath: \[(.*)\]', j)
+				n = libpath.search(j)
 				# Is this a Library rpath: line?
 				if n != None:
 					if ":" in n.group(1):
@@ -43,10 +46,10 @@ def checkrpath(insecure_rpaths, dirname, names):
 						rpaths=[n.group(1)]
 					for path in rpaths:
 						if path not in allowed:
-							insecure_rpaths[0].append(process(dirname+'/'+i))
+							insecure_rpaths[0].append(process(mypath))
 							break
-						if path in warn and process(dirname + "/" + i) not in insecure_rpaths:
-							insecure_rpaths[1].append(process(dirname+'/'+i))
+						if path in warn and process(mypath) not in insecure_rpaths:
+							insecure_rpaths[1].append(process(mypath))
 
 class package:
 	def short_name(self):
