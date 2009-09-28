@@ -89,6 +89,33 @@ def check_rules_exclude(optlist):
 			args_used += 1			
 	return args_used
 
+def process_pkgbuild(package, modules):
+	# We might want to do some verifying in here... but really... isn't that what pacman.load is for?
+	pkginfo = pacman.load(package)
+
+	if pkginfo == None:
+		print "Error: " + package + " is not a valid PKGBUILD"
+		return 1
+
+	for i in modules:
+		cur_class = __import__('Namcap.' + i, globals(), locals(), [Namcap])
+		pkg = cur_class.package()
+		ret = [[],[],[]]
+		if pkg.type() == "pkgbuild":
+			ret = pkg.analyze(pkginfo, package)
+
+		# Output the PKGBUILD messages
+		if ret[0] != []:
+			for j in ret[0]:
+				print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " E: " + m(j[0]) % j[1]
+		if ret[1] != []:
+			for j in ret[1]:
+				print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " W: " + m(j[0]) % j[1]
+		if ret[2] != [] and info_reporting:
+			for j in ret[2]:
+				print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " I: " + m(j[0]) % j[1]
+
+
 # Main
 modules = get_modules()
 info_reporting = 0
@@ -209,29 +236,6 @@ for package in packages:
 		if extracted:
 			shutil.rmtree(sandbox_directory)
 	elif package[-8:] == 'PKGBUILD':
-		# We might want to do some verifying in here... but really... isn't that what pacman.load is for?
-		pkginfo = pacman.load(package)
-
-		if pkginfo == None:
-			print "Error: " + package + " is not a valid PKGBUILD"
-			continue
-
-		for i in active_modules:
-			cur_class = __import__('Namcap.' + i, globals(), locals(), [Namcap])
-			pkg = cur_class.package()
-			ret = [[],[],[]]
-			if pkg.type() == "pkgbuild":
-				ret = pkg.analyze(pkginfo, package)
-
-			# Output the PKGBUILD messages
-			if ret[0] != []:
-				for j in ret[0]:
-					print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " E: " + m(j[0]) % j[1]
-			if ret[1] != []:
-				for j in ret[1]:
-					print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " W: " + m(j[0]) % j[1]
-			if ret[2] != [] and info_reporting:
-				for j in ret[2]:
-					print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " I: " + m(j[0]) % j[1]
+		process_pkgbuild(package, active_modules)
 
 # vim: set ts=4 sw=4 noet:
