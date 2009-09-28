@@ -66,7 +66,9 @@ def verify_package(filename):
 		return 0
 	return tar
 
-def process_tags(filename="/usr/share/namcap/namcap-tags"):
+def process_tags(filename="/usr/share/namcap/namcap-tags", machine=False):
+	if machine:
+		return lambda s: s
 	tags = {}
 	f = open(filename)
 	for i in f.readlines():
@@ -74,7 +76,7 @@ def process_tags(filename="/usr/share/namcap/namcap-tags"):
 		tagdata = i[:-1].split("::")
 		tags[tagdata[0].strip()] = tagdata[1].strip()
 
-	return tags
+	return lambda s: tags[s]
 
 def check_rules_exclude(optlist):	
 	'''Check if the -r (--rules) and the -r (--exclude) options
@@ -89,8 +91,8 @@ def check_rules_exclude(optlist):
 
 # Main
 modules = get_modules()
-tags = process_tags()
 info_reporting = 0
+machine_readable = False
 
 # get our options and process them
 try:
@@ -99,7 +101,6 @@ except getopt.GetoptError:
 	usage()
 
 active_modules = []
-m = lambda s: tags[s]
 
 # Verifying if we are using the -r and -r options at same time
 if check_rules_exclude(optlist) > 1:
@@ -137,8 +138,7 @@ for i, k in optlist:
 		info_reporting = 1
 		
 	if i in ('-m', '--machine-readable'):
-		machine_readable = 1
-		m = lambda s: s
+		machine_readable = True
 		
 	if i in ('-h', '--help'):
 		usage()
@@ -147,6 +147,7 @@ for i, k in optlist:
 if (args == []):
 	usage()
 
+m = process_tags(machine=machine_readable)
 packages = args
 
 # Go through each package, get the info, and apply the rules
@@ -237,4 +238,5 @@ for package in packages:
 			if ret[2] != [] and info_reporting:
 				for j in ret[2]:
 					print string.ljust("PKGBUILD (" + pkginfo.name + ")", 20) + " I: " + m(j[0]) % j[1]
+
 # vim: set ts=4 sw=4 noet:
