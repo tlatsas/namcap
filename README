@@ -126,17 +126,17 @@ that each namcap module must have:
 	Each member of these tag lists should be a tuple consisting of two 
 	components: the short, hyphenated form of the tag with the appropriate 
 	format specifiers (%s, etc.) The first word of this string must be the tag 
-	name. The human readable form of the tag should be put in the tags file. 
-	The format of the tags file is described below; and the parameters which 
-	should replace the format specifier tokens in the final output. 
+	name. The human readable form of the tag should be put in the namcap-tags
+	file. The format of the tags file is described below; and the parameters
+	which should replace the format specifier tokens in the final output. 
 	
 	* type(self) 
 	"pkgbuild" for a module processing PKGBUILDs
 	"tarball" for a module processing a binary package file. 
 
 
-The tags file consists of lines specifying the human readable form of the 
-hyphenated tags used in the namcap code. A line beginning with a '#' is 
+The namcap-tags file consists of lines specifying the human readable form of
+the hyphenated tags used in the namcap code. A line beginning with a '#' is
 treated as a comment. Otherwise the format of the file is:
 
 	machine-parseable-tag %s :: This is machine parseable tag %s

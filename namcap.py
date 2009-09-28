@@ -66,7 +66,7 @@ def verify_package(filename):
 		return 0
 	return tar
 
-def process_tags(filename="/usr/share/namcap/tags"):
+def process_tags(filename="/usr/share/namcap/namcap-tags"):
 	tags = {}
 	f = open(filename)
 	for i in f.readlines():
