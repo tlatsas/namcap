@@ -1,3 +1,18 @@
+namcap (2.4)
+    - Added some vim modelines
+    - Small fixes in mimefiles
+    - Check for tags and version consistency
+    - Rename 'tags' to 'namcap-tags'
+    - Only process tags if necessary
+    - Move extracted variable to the correct scope
+    - Only do active_modules check once
+    - Move PKGBUILD processing to a function
+    - Move real package processing to a function
+    - Make the depends module not suck
+    - Move is_elf function to a utility file
+    - Use the is_elf function in other modules where it makes sense
+    - Clean up output methods
+
 namcap (2.3)
     - New tags:
         elffile-not-in-allowed-dirs (FS#15299)
