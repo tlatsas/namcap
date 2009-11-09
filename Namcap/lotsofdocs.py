@@ -1,6 +1,6 @@
 # 
-# namcap rules - __init__
-# Copyright (C) 2003-2009 Jason Chu <jason@archlinux.org>
+# namcap rules - lotsofdocs
+# Copyright (C) 2009 Dan McGee <dan@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -17,46 +17,36 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-__tarball__ = """
-  capsnamespkg
-  depends
-  directoryname
-  elffiles
-  emptydir
-  fhsmanpages
-  fhsinfopages
-  fileownership
-  gnomemime
-  hicoloricons
-  infodirectory
-  libtool
-  licensepkg
-  lotsofdocs
-  mimefiles
-  perllocal
-  permissions
-  scrollkeeper
-  symlink
-  urlpkg
+import os
+import tarfile
 
-""".split()
+class package:
+	def short_name(self):
+		return "lots-of-docs"
+	def long_name(self):
+		return "See if a package is carrying more documentation than it should"
+	def prereq(self):
+		return "tar"
+	def analyze(self, pkginfo, tar):
+		ret = [[],[],[]]
+		if hasattr(pkginfo, 'name'):
+			if pkginfo.name.endswith('-doc'):
+				return ret
+		docdir = 'usr/share/doc'
+		size = 0
+		docsize = 0
 
-__pkgbuild__ = """
-  arrays
-  badbackups
-  capsnames
-  carch
-  invalidstartdir
-  license
-  md5sums
-  pkgname
-  rpath
-  sfurl
-  tags
-  url
+		for i in tar.getmembers():
+			if i.name.startswith(docdir):
+				docsize += i.size
+			size += i.size
 
-""".split()
+		if size > 0:
+			ratio = docsize / float(size)
+			if ratio > 0.50:
+				ret[1].append(("lots-of-docs %f", ratio * 100))
 
-__all__ = __tarball__ + __pkgbuild__
-
+		return ret
+	def type(self):
+		return "tarball"
 # vim: set ts=4 sw=4 noet:
