@@ -31,10 +31,10 @@ hardlink-found %s points to %s :: Hard link (%s) found that points to %s
 hicolor-icon-cache-not-updated :: Files in /usr/share/icons/hicolor but no call to gtk-update-icon-cache or xdg-icon-resource to update the icon cache
 improper-md5sum %s :: Improper md5sum: '%s'
 incorrect-library-permissions %s :: Library (%s) does not have permission set to 644 or 444
-incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions.
-info-dir-file-present %s :: Info directory file (%s) needs removed.
-insecure-rpath %s :: Insecure RPATH (%s). If present, RPATH should be only /usr/lib.
-libtool-file-present %s :: File (%s) is a libtool file.
+incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions
+info-dir-file-present %s :: Info directory file (%s) should not be present
+insecure-rpath %s :: Insecure RPATH (%s)
+libtool-file-present %s :: File (%s) is a libtool file
 library-no-package-associated %s :: Referenced library '%s' is an uninstalled dependency
 link-level-dependence %s in %s :: Link-level dependence (%s) in file %s
 lots-of-docs %f :: Package was %.0f%% docs by size; maybe you should split out a docs package
