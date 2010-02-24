@@ -22,7 +22,7 @@ from Namcap.util import is_elf
 
 process = lambda s: re.search("/tmp/namcap\.[0-9]*/(.*)", s).group(1)
 
-allowed = ['/usr/lib','/lib']
+allowed = ['/usr/lib','/lib', '$ORIGIN', '${ORIGIN}']
 allowed_toplevels = map(lambda s: s + '/', allowed)
 warn = ['/usr/local/lib']
 libpath = re.compile('Library rpath: \[(.*)\]')
