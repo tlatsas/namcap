@@ -35,6 +35,7 @@ incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions.
 info-dir-file-present %s :: Info directory file (%s) needs removed.
 insecure-rpath %s :: Insecure RPATH (%s). If present, RPATH should be only /usr/lib.
 libtool-file-present %s :: File (%s) is a libtool file.
+library-no-package-associated %s :: Referenced library '%s' is an uninstalled dependency
 link-level-dependence %s in %s :: Link-level dependence (%s) in file %s
 lots-of-docs %f :: Package was %.0f%% docs by size; maybe you should split out a docs package
 mime-cache-not-updated :: Mime-file found. Add "update-mime-database usr/share/mime" to the install file

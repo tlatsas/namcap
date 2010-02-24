@@ -87,9 +87,8 @@ def scanlibs(data, dirname, names):
 						libpath = os.path.abspath(libcache[architecture][n.group(1)])[1:]
 						sharedlibs.setdefault(libpath, {})[path] = 1
 					except KeyError:
-						# Ignore that library if we can't find it
-						# TODO: review it
-						pass
+						# We didn't know about the library, so add it for fail later
+						sharedlibs.setdefault(n.group(1), {})[path] = 1
 		# Maybe it is a script file
 		elif os.path.isfile(path):
 			fd = open(path)
@@ -145,7 +144,7 @@ def finddepends(liblist):
 	ret = []
 	# knownlibs only contains what hasn't been found at this point
 	for i in knownlibs:
-		ret.append('Library ' + i + ' has no package associated')
+		ret.append(("library-no-package-associated %s", i))
 	return dependlist, ret
 
 def getprovides(depends, provides):
