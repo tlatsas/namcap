@@ -28,7 +28,7 @@ file-referred-in-startdir :: File referenced in $startdir outside of $startdir/s
 file-world-writable %s :: File (%s) has the world writable bit set.
 gnome-mime-file %s :: File (%s) is an auto-generated GNOME mime file
 hardlink-found %s points to %s :: Hard link (%s) found that points to %s
-hicolor-icon-cache-not-updated :: The hicolor icon cache has not been updated even though there are files in /usr/share/icons/hicolor. Use gtk-update-icon-theme or xdg-icon-resource to update the icon cache.
+hicolor-icon-cache-not-updated :: Files in /usr/share/icons/hicolor but no call to gtk-update-icon-cache or xdg-icon-resource to update the icon cache
 improper-md5sum %s :: Improper md5sum: '%s'
 incorrect-library-permissions %s :: Library (%s) does not have permission set to 644.
 incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions.
