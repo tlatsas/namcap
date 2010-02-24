@@ -66,7 +66,7 @@ def load(package, root=None):
 	if root == None:
 		root = pacmandb
 	# We know it's a local package
-	if package[-7:] == '.tar.gz':
+	if os.path.isfile(package) and tarfile.is_tarfile(package):
 		pkgtar = tarfile.open(package, "r")
 		if not pkgtar:
 			return None

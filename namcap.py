@@ -234,7 +234,7 @@ for package in packages:
 		print "Error: Problem reading " + package
 		usage()
 
-	if package[-7:] == '.tar.gz':
+	if os.path.isfile(package) and tarfile.is_tarfile(package):
 		process_realpackage(package, active_modules)
 	elif package[-8:] == 'PKGBUILD':
 		process_pkgbuild(package, active_modules)
