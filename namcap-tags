@@ -33,7 +33,7 @@ improper-md5sum %s :: Improper md5sum: '%s'
 incorrect-library-permissions %s :: Library (%s) does not have permission set to 644 or 444
 incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions
 info-dir-file-present %s :: Info directory file (%s) should not be present
-insecure-rpath %s :: Insecure RPATH (%s)
+insecure-rpath %s %s :: Insecure RPATH '%s' in file ('%s')
 libtool-file-present %s :: File (%s) is a libtool file
 library-no-package-associated %s :: Referenced library '%s' is an uninstalled dependency
 link-level-dependence %s in %s :: Link-level dependence (%s) in file %s

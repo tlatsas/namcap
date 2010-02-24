@@ -22,13 +22,13 @@ from Namcap.util import is_elf
 
 process = lambda s: re.search("/tmp/namcap\.[0-9]*/(.*)", s).group(1)
 
+allowed = ['/usr/lib','/lib']
+allowed_toplevels = map(lambda s: s + '/', allowed)
+warn = ['/usr/local/lib']
+libpath = re.compile('Library rpath: \[(.*)\]')
+
 def checkrpath(insecure_rpaths, dirname, names):
 	"Checks if secure RPATH."
-
-	allowed = ['/usr/lib','/lib']
-	allowed_toplevels = map(lambda s: s + '/', allowed)
-	warn = ['/usr/local/lib']
-	libpath = re.compile('Library rpath: \[(.*)\]')
 
 	for i in names:
 		mypath = dirname + '/' + i
@@ -51,10 +51,10 @@ def checkrpath(insecure_rpaths, dirname, names):
 							if path.startswith(allowed_toplevel):
 								path_ok = True
 						if not path_ok:
-							insecure_rpaths[0].append(process(mypath))
+							insecure_rpaths[0].append((path, process(mypath)))
 							break
 						if path in warn and process(mypath) not in insecure_rpaths:
-							insecure_rpaths[1].append(process(mypath))
+							insecure_rpaths[1].append((path, process(mypath)))
 
 class package:
 	def short_name(self):
@@ -71,7 +71,8 @@ class package:
 		if len(insecure_rpaths) > 0:
 			for j in (0,1):
 				for f in insecure_rpaths[j]:
-					ret[j].append(("insecure-rpath %s", f))
+					# f is already a tuple of (badrpath, badbinary)
+					ret[j].append(("insecure-rpath %s %s", f))
 		return ret
 	def type(self):
 		return "tarball"
