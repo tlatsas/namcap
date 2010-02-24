@@ -66,10 +66,12 @@ def verify_package(filename):
 		return 0
 	return tar
 
-def process_tags(filename="/usr/share/namcap/namcap-tags", machine=False):
+def process_tags(filename=None, machine=False):
 	if machine:
 		return lambda s: s
 	tags = {}
+	if not filename:
+		filename="/usr/share/namcap/namcap-tags"
 	f = open(filename)
 	for i in f.readlines():
 		if i[0] == "#" or i.strip() == "": continue
@@ -161,10 +163,12 @@ def process_pkgbuild(package, modules):
 modules = get_modules()
 info_reporting = 0
 machine_readable = False
+filename = None
 
 # get our options and process them
 try:
-	optlist, args = getopt.getopt(sys.argv[1:], "ihmr:e:", ["rules=", "exclude=", "info","help","machine-readable"])
+	optlist, args = getopt.getopt(sys.argv[1:], "ihmr:e:t:",
+			["info", "help", "machine-readable", "rules=", "exclude=", "tags="])
 except getopt.GetoptError:
 	usage()
 
@@ -175,14 +179,14 @@ if check_rules_exclude(optlist) > 1:
 	print "You cannot use '-r' (--rules) and '-e' (-exclude) options at same time"
 	usage()
 
-for i, k in optlist:	
-	if i in ('-r', '--rules') and active_modules == []:		
+for i, k in optlist:
+	if i in ('-r', '--rules') and active_modules == []:
 		if k == 'list':
 			print "-"*20 + " Namcap rule list " + "-"*20
 			for j in modules:
 				print string.ljust(j, 20) + ": " + __import__('Namcap.' + j, globals(), locals(), [Namcap]).package().long_name()
 			sys.exit(2)
-			
+
 		module_list = k.split(',')
 		for j in module_list:
 			if j in modules:
@@ -190,32 +194,34 @@ for i, k in optlist:
 			else:
 				print "Error: Rule '" + j + "' does not exist"
 				usage()
-		
-	# Used to exclude some rules from the check			
+
+	# Used to exclude some rules from the check
 	if i in ('-e', '--exclude') and active_modules == []:
 		module_list = k.split(',')
 		active_modules = modules
-		for j in module_list:			
+		for j in module_list:
 			if j in modules:
 				active_modules.remove(j)
 			else:
 				print "Error: Rule '" + j + "' does not exist"
-				usage()	
-			
+				usage()
+
 	if i in ('-i', '--info'):
 		info_reporting = 1
-		
-	if i in ('-m', '--machine-readable'):
-		machine_readable = True
-		
+
 	if i in ('-h', '--help'):
 		usage()
+	if i in ('-m', '--machine-readable'):
+		machine_readable = True
+
+	if i in ('-t', '--tags'):
+		filename = k
 
 # If there are no args, print usage
 if (args == []):
 	usage()
 
-m = process_tags(machine=machine_readable)
+m = process_tags(filename=filename, machine=machine_readable)
 packages = args
 
 # No rules selected?  Then select them all!
