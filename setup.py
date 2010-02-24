@@ -10,9 +10,9 @@ setup(name="namcap",
 	description="Pacman package analyzer",
 	author="Jason Chu",
 	author_email="jason@archlinux.org",
-	py_modules=["pacman"],
+	py_modules=["pacman", "namcap"],
 	packages=["Namcap"],
-	scripts=["namcap.py", 'parsepkgbuild'],
+	scripts=["namcap", 'parsepkgbuild'],
 	data_files=DATAFILES)
 
 # vim: set ts=4 sw=4 noet:

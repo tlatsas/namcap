@@ -1,0 +1,29 @@
+#!/bin/bash
+
+args=''
+tmp=$(mktemp -d /tmp/namcap.XXXXXXXXXX)
+cleanup() {
+	rm -rf "${tmp}"
+}
+trap 'cleanup' 0
+
+for arg in "${@}"; do
+	if echo "${arg}" | grep -q -E "^.+\.pkg\.tar\..+$" && [ -f "${arg}" ]; then
+
+		case "${arg##*.}" in
+			gz|z|Z) cmd='gzip' ;;
+			bz2|bz) cmd='bzip2' ;;
+			xz)     cmd='xz' ;;
+			*)      echo 'Unsupported compression'; exit 1;;
+		esac
+
+		tar="${tmp}/$(basename "${arg%.*}")"
+		$cmd -dcf "${arg}" > "${tar}"
+
+		args="${args} ${tar}"
+	else
+		args="${args} ${arg}"
+	fi
+done
+
+python -m namcap ${args}
