@@ -1,0 +1,3 @@
+include namcap.1
+include namcap-tags
+include README AUTHORS TODO
