@@ -1,3 +1,11 @@
+namcap (2.5)
+    - Turn namcap into a wrapper script that handles the compression;
+      this allows us to use XZ-compressed packages without Python support
+    - New warning- packages over 50% docs
+    - Fix up rpath module a bit; ensure more paths are seen as valid
+    - Improve checking for tarfiles; don't assume .pkg.tar.gz ending
+    - Allow static libraries to have 644 or 444 permissions
+
 namcap (2.4)
     - Added some vim modelines
     - Small fixes in mimefiles
