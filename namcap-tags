@@ -19,7 +19,8 @@ dependency-is-testing-release %s :: Dependency '%s' on your system is a testing 
 dependency-not-needed %s :: Dependency included and not needed ('%s')
 depends-by-namcap-sight depends=(%s) :: Depends as namcap sees them: depends=(%s)
 directory-not-world-executable %s :: Directory (%s) does not have the world executable bit set.
-elffile-not-in-allowed-dirs %s :: ELF file (%s) outside of a valid path.
+elffile-in-any-package %s :: ELF file ('%s') found in an 'any' package.
+elffile-not-in-allowed-dirs %s :: ELF file ('%s') outside of a valid path.
 empty-directory %s :: Directory (%s) is empty
 extra-var-begins-without-underscore %s :: Non standard variable '%s' doesn't start with an underscore
 file-in-non-standard-dir %s :: File (%s) exists in a non-standard directory.

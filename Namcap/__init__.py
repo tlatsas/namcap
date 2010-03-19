@@ -18,6 +18,7 @@
 # 
 
 __tarball__ = """
+  anyelf
   capsnamespkg
   depends
   directoryname
