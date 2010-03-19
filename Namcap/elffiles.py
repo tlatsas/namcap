@@ -18,11 +18,7 @@
 #
 
 import os
-import re
-from Namcap.util import is_elf
-
-process = lambda s: re.search("/tmp/namcap\.[0-9]*/(.*)", s).group(1)
-
+from Namcap.util import is_elf, clean_filename
 
 def scanelf(invalid_elffiles,dirname,names):
 	'''Method to scan for ELF files in invalid directories'''
@@ -37,14 +33,13 @@ def scanelf(invalid_elffiles,dirname,names):
 		# Checking for ELF files
 		if is_elf(file_path):
 			for f in valid_dirs:
-				if ('/' + process(file_path)).startswith(f):
+				if ('/' + clean_filename(file_path)).startswith(f):
 					valid_dir_found = True
 					break 
-					
+
 			if not valid_dir_found:
-				invalid_elffiles.append(process(file_path))
-					
-				
+				invalid_elffiles.append(clean_filename(file_path))
+
 
 class package:
 	def short_name(self):

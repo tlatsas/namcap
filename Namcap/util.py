@@ -18,6 +18,7 @@
 #
 
 import os
+import re
 
 def is_elf(path):
 	"""
@@ -34,5 +35,7 @@ def is_elf(path):
 		return True
 	else:
 		return False
+
+clean_filename = lambda s: re.search(r"/tmp/namcap\.[0-9]*/(.*)", s).group(1)
 
 # vim: set ts=4 sw=4 noet:

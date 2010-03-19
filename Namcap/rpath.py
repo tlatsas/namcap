@@ -18,9 +18,7 @@
 #
 
 import pacman, os, subprocess, re
-from Namcap.util import is_elf
-
-process = lambda s: re.search("/tmp/namcap\.[0-9]*/(.*)", s).group(1)
+from Namcap.util import is_elf, clean_filename
 
 allowed = ['/usr/lib','/lib', '$ORIGIN', '${ORIGIN}']
 allowed_toplevels = map(lambda s: s + '/', allowed)
@@ -50,11 +48,12 @@ def checkrpath(insecure_rpaths, dirname, names):
 						for allowed_toplevel in allowed_toplevels:
 							if path.startswith(allowed_toplevel):
 								path_ok = True
+						fname = clean_filename(mypath)
 						if not path_ok:
-							insecure_rpaths[0].append((path, process(mypath)))
+							insecure_rpaths[0].append((path, fname))
 							break
-						if path in warn and process(mypath) not in insecure_rpaths:
-							insecure_rpaths[1].append((path, process(mypath)))
+						if path in warn and fname not in insecure_rpaths:
+							insecure_rpaths[1].append((path, fname))
 
 class package:
 	def short_name(self):
