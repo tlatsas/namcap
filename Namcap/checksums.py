@@ -1,5 +1,5 @@
 # 
-# namcap rules - md5sums
+# namcap rules - checksums
 # Copyright (C) 2003-2009 Jason Chu <jason@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
@@ -19,25 +19,34 @@
 
 class package:
 	def short_name(self):
-		return "md5sums"
+		return "checksums"
 	def long_name(self):
-		return "Verifies md5sums are included in a PKGBUILD"
+		return "Verifies checksums are included in a PKGBUILD"
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
+		checksums=[('md5', 32), ('sha1', 40), ('sha256', 63), ('sha384', 96), ('sha512', 128)]
+
 		if hasattr(pkginfo, 'source'):
-			if not hasattr(pkginfo, 'md5sums'):
-				ret[0].append(("missing-md5sums", ()))
-			else:
-				if len(pkginfo.source) > len(pkginfo.md5sums):
-					ret[0].append(("not-enough-md5sums %i needed", len(pkginfo.source)))
-				elif len(pkginfo.source) < len(pkginfo.md5sums):
-					ret[0].append(("too-many-md5sums %i needed", len(pkginfo.source)))
-		if hasattr(pkginfo, 'md5sums'):
-			for sum in pkginfo.md5sums:
-				if len(sum) != 32:
-					ret[0].append(("improper-md5sum %s", sum))
+			haschecksums = False
+			for sumname, sumlen in checksums:
+				if hasattr(pkginfo, sumname + 'sums'):
+					haschecksums = True
+			if not haschecksums:
+				ret[0].append(("missing-checksums", ()))
+
+		for sumname, sumlen in checksums:
+			sumname += 'sums'
+			if hasattr(pkginfo, sumname):
+				if len(pkginfo.source) > len(getattr(pkginfo, sumname)):
+					ret[0].append(("not-enough-checksums %s %i needed", (sumname, len(pkginfo.source))))
+				elif len(pkginfo.source) < len(getattr(pkginfo, sumname)):
+					ret[0].append(("too-many-checksums %s %i needed", (sumname, len(pkginfo.source))))
+				for sum in getattr(pkginfo, sumname):
+					if len(sum) != sumlen:
+						ret[0].append(("improper-checksum %s %s", (sumname, sum)))
+
 		return ret
 	def type(self):
 		return "pkgbuild"

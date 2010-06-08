@@ -40,6 +40,9 @@ Checks a PKGBUILD to verify that the package name has no upper case characters
 .B capsnamespkg
 Checks a package to verify that the package name has no upper case characters
 .TP
+.B checksums
+Makes sure that a PKGBUILD includes valid checksums
+.TP
 .B depends
 This module runs ldd on all executables, gets the link-level dependencies, finds the smallest subset of dependencies that cover the link-level dependencies, and compares that list to the depends of the package.  It returns messages in three cases: dependency detected and not included, dependency included but already satisfied, and dependency included and not needed.  These suggestions are just guidelines and all package builders should take this into account (i.e. you're smarter than namcap is)
 
@@ -89,9 +92,6 @@ Verifies that the licenses variable has been filled in in a PKGBUILD.
 Verifies that the licenses variable has been filled in in a package. For packages with a custom license it
 checks whether the license file has been installed in
 /usr/share/licenses/$pkgname/
-.TP
-.B md5sums
-Makes sure that a PKGBUILD includes the md5sums
 .TP
 .B mimefiles
 Checks whether update-mime-database is called when the package installs files in /usr/share/mime

@@ -29,7 +29,8 @@ class package:
 	def analyze(self, pkginfo, tar):
 		arrayvars = ['arch', 'license', 'depends', 'makedepends',
 			 'optdepends', 'provides', 'conflicts' , 'replaces',
-			 'backup', 'source', 'noextract', 'md5sums']
+			 'backup', 'source', 'noextract', 'md5sums',
+			 'sha1sums', 'sha256sums', 'sha384sums', 'sha512sums']
 		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
 			m = re.match('\s*(.*)\s*=\s*(.*)\n', i)

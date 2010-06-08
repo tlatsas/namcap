@@ -94,6 +94,27 @@ if [ -n "\$md5sums" ]; then
 	for i in \${md5sums[@]}; do echo \$i; done
 	echo ""
 fi
+if [ -n "\$sha1sums" ]; then
+	echo "%SHA1SUMS%"
+	for i in \${sha1sums[@]}; do echo \$i; done
+	echo ""
+fi
+if [ -n "\$sha256sums" ]; then
+	echo "%SHA256SUMS%"
+	for i in \${sha256sums[@]}; do echo \$i; done
+	echo ""
+fi
+if [ -n "\$sha384sums" ]; then
+	echo "%SHA384SUMS%"
+	for i in \${sha384sums[@]}; do echo \$i; done
+	echo ""
+fi
+if [ -n "\$sha512sums" ]; then
+	echo "%SHA512SUMS%"
+	for i in \${sha512sums[@]}; do echo \$i; done
+	echo ""
+fi
+
 
 [ -n "\$install" ] && echo -e "%INSTALL%\n\$install\n"
 

@@ -47,9 +47,9 @@ __pkgbuild__ = """
   badbackups
   capsnames
   carch
+  checksums
   invalidstartdir
   license
-  md5sums
   pkgname
   rpath
   sfurl

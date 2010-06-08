@@ -29,7 +29,8 @@ class package:
 	def analyze(self, pkginfo, tar):
 		stdvars = ['arch', 'license', 'depends', 'makedepends',
 				 'provides', 'conflicts' , 'replaces', 'backup',
-				 'source', 'noextract', 'md5sums', 'pkgname',
+				 'source', 'noextract', 'md5sums', 'sha1sums',
+				 'sha256sums', 'sha384sums', 'sha512sums', 'pkgname',
 				 'pkgver', 'pkgrel', 'pkgdesc', 'url', 'install']
 		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:

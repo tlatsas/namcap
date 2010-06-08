@@ -30,7 +30,7 @@ file-world-writable %s :: File (%s) has the world writable bit set.
 gnome-mime-file %s :: File (%s) is an auto-generated GNOME mime file
 hardlink-found %s points to %s :: Hard link (%s) found that points to %s
 hicolor-icon-cache-not-updated :: Files in /usr/share/icons/hicolor but no call to gtk-update-icon-cache or xdg-icon-resource to update the icon cache
-improper-md5sum %s :: Improper md5sum: '%s'
+improper-checksum %s %s :: Improper %s: '%s'
 incorrect-library-permissions %s :: Library (%s) does not have permission set to 644 or 444
 incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions
 info-dir-file-present %s :: Info directory file (%s) should not be present
@@ -45,12 +45,12 @@ missing-custom-license-dir usr/share/licenses/%s :: Missing custom license direc
 missing-custom-license-file usr/share/licenses/%s/* :: Missing custom license file in package (usr/share/licenses/%s/*)
 missing-license :: Missing license
 missing-maintainer :: Missing Maintainer tag
-missing-md5sums :: Missing md5sums
+missing-checksums :: Missing checksums
 missing-url :: Missing url
 non-fhs-info-page %s :: Non-FHS info page (%s) found. Use /usr/share/info instead
 non-fhs-man-page %s :: Non-FHS man page (%s) found. Use /usr/share/man instead
 not-a-common-license %s :: %s is not a common license (it's not in /usr/share/licenses/common/)
-not-enough-md5sums %i needed :: Not enough md5sums: %i needed
+not-enough-checksums %s %i needed :: Not enough %s: %i needed
 package-name-in-uppercase :: No upper case letters in package names
 perllocal-pod-present %s :: perllocal.pod found in %s.
 pkgname-in-description :: Description should not contain the package name.
@@ -61,7 +61,7 @@ scrollkeeper-dir-exists %s :: Scrollkeeper directory exists (%s). Remember to no
 specific-host-type-used %s :: Reference to one of %s should be changed to $CARCH
 specific-sourceforge-mirror :: Attempting to use specific sourceforge mirror, use downloads.sourceforge.net instead
 symlink-found %s points to %s :: Symlink (%s) found that points to %s
-too-many-md5sums %i needed :: Too Many md5sums: %i needed
+too-many-checksums %s %i needed :: Too many %s: %i needed
 use-pkgdir :: Use $pkgdir instead of $startdir/pkg
 use-srcdir :: Use $srcdir instead of $startdir/src
 using-dl-sourceforge :: Attempting to use dl sourceforge domain, use downloads.sourceforge.net instead
