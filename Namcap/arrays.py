@@ -30,7 +30,7 @@ class package:
 		arrayvars = ['arch', 'license', 'depends', 'makedepends',
 			 'optdepends', 'provides', 'conflicts' , 'replaces',
 			 'backup', 'source', 'noextract', 'md5sums']
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
 			m = re.match('\s*(.*)\s*=\s*(.*)\n', i)
 			for j in arrayvars:

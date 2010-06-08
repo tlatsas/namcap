@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		contributortag = 0
 		maintainertag = 0
 		idtag = 0

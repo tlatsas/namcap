@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if hasattr(pkginfo, 'backup'):
 			for item in pkginfo.backup:
 				if re.match('^/',item) != None:

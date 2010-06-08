@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
 			startdirs = re.split('\$startdir',i)
 			for j in startdirs[1:]:

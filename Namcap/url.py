@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if not hasattr(pkginfo, 'url'):
 			ret[0].append(("missing-url", ()))
 		return ret

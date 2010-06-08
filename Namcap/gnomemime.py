@@ -36,7 +36,7 @@ class package:
                 'usr/share/mime/subclasses'
                 ]
 
-        ret = [[],[],[]]
+        ret = [[], [], []]
         for i in tar.getnames():
             if i in mime_files:
                 ret[0].append(("gnome-mime-file %s", i))

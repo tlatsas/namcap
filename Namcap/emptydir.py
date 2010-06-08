@@ -33,7 +33,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 
 		# Strip trailing directory slashes (since python 2.5.1)
 		dirs = [x.rstrip('/') + '/' for x in tar.getnames() if x.endswith('/')]

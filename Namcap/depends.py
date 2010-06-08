@@ -177,13 +177,13 @@ class package:
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):
-		liblist = [{},{}]
+		liblist = [{}, {}]
 		dependlist = {}
 		smartdepend = {}
 		smartprovides = {}
 		covereddepend = {}
 		pkgcovered = {}
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		filllibcache()
 		os.environ['LC_ALL'] = 'C'
 		os.path.walk(data, scanlibs, liblist)

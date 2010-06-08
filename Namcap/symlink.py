@@ -26,7 +26,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		filenames = map(lambda s: s.name, tar)
 		for i in tar:
 			if i.issym():

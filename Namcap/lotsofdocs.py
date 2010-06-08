@@ -28,7 +28,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if hasattr(pkginfo, 'name'):
 			if pkginfo.name.endswith('-doc'):
 				return ret

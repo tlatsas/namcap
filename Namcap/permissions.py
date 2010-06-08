@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in tar.getmembers():
 			if not i.mode & 4 and not (i.issym() or i.islnk()):
 				ret[1].append(("file-not-world-readable %s", i.name))

@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in tar.getnames():
 			if re.search('\.la$',i) != None:
 				ret[1].append(("libtool-file-present %s", i))

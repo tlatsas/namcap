@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in tar.getnames():
 			if i == "usr/share/info/dir":
 				ret[0].append(("info-dir-file-present %s", i))

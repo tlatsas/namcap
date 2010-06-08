@@ -27,7 +27,7 @@ class package:
     def prereq(self):
         return "tar"
     def analyze(self, pkginfo, tar):        
-        ret = [[],[],[]]        
+        ret = [[], [], []]
         if 'usr/share/mime' in tar.getnames():            
             if hasattr(pkginfo, "depends"):
                 if "shared-mime-info" not in pkginfo.depends:
@@ -38,7 +38,7 @@ class package:
                 f = tar.extractfile(".INSTALL")                    
                 if "update-mime-database" not in "\n".join(f.readlines()):
                     ret[0].append(("mime-cache-not-updated",()))
-                
+
         return ret
     def type(self):
         return "tarball"

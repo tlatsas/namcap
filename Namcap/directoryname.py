@@ -28,7 +28,7 @@ class package:
 		return "tar"
 	def analyze(self, pkginfo, tar):
 		valid_paths = ['bin/', 'etc/', 'usr/bin/', 'usr/sbin/', 'usr/lib', 'usr/include/', 'usr/share/', 'opt/', '.PKGINFO', '.INSTALL', '.FILELIST', '._install', 'lib/', 'sbin/', 'srv/', 'var/lib/', 'var/opt/', 'var/spool/', 'var/lock/', 'var/state/', 'var/run/', 'var/log/', '.CHANGELOG']
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in tar.getnames():
 			# Replace multiple /'s at the end of a string with a single /
 			# Not sure if this is a python bug or a makepkg bug

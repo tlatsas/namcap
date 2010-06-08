@@ -49,7 +49,7 @@ class package:
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		invalid_elffiles = []
 		
 		os.path.walk(data, scanelf, invalid_elffiles)		

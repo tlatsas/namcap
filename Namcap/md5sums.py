@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if hasattr(pkginfo, 'source'):
 			if not hasattr(pkginfo, 'md5sums'):
 				ret[0].append(("missing-md5sums", ()))

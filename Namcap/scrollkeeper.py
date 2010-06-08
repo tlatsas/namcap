@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		scroll = re.compile("var.*/scrollkeeper/$")
 		for i in tar.getnames():
 			n = scroll.search(i)

@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		arches = ['i686','i586','x86_64']
 		archmatch = re.compile('%s' % '|'.join(arches))
 		# Match an arch=(i686) line

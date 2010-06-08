@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		j = 'perllocal.pod'
 		for i in tar.getnames():
 			if i[-len(j):] == j:

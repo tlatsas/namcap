@@ -31,7 +31,7 @@ class package:
 				 'provides', 'conflicts' , 'replaces', 'backup',
 				 'source', 'noextract', 'md5sums', 'pkgname',
 				 'pkgver', 'pkgrel', 'pkgdesc', 'url', 'install']
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
 			m = re.match('[\s]*([^\s=]*)\s*=', i)
 			if m:

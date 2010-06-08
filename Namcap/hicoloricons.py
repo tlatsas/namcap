@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if "usr/share/icons/hicolor" in tar.getnames():
 			if hasattr(pkginfo, "depends"):
 				if "hicolor-icon-theme" not in pkginfo.depends:

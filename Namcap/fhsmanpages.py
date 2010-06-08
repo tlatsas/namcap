@@ -30,7 +30,7 @@ class package:
 	def analyze(self, pkginfo, tar):
 		gooddir = 'usr/share/man'
 		bad_dir = 'usr/man'
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in tar.getmembers():
 			if i.name.startswith(bad_dir):
 				ret[0].append(("non-fhs-man-page %s", i.name))

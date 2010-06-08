@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in tar.getmembers():
 			if i.uname != 'root' or i.gname != 'root':
 				uname = ""

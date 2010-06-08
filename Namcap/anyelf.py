@@ -37,7 +37,7 @@ class package:
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if pkginfo.arch and pkginfo.arch[0] != 'any':
 			return ret
 		found_elffiles = []

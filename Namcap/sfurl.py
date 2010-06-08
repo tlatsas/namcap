@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if hasattr(pkginfo, 'source'):
 			for source in pkginfo.source:
 				if re.match('(http://|ftp://)\w+.dl.(sourceforge|sf).net',source) != None:

@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if not hasattr(pkginfo, 'license') or len(pkginfo.license) == 0:
 			ret[0].append(("missing-license", ()))
 		return ret

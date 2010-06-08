@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]	
+		ret = [[], [], []]
 		if hasattr(pkginfo, 'name') and hasattr(pkginfo, 'desc'):
 			if pkginfo.name.lower() in pkginfo.desc.lower().split():
 				ret[1].append(("pkgname-in-description", ()))

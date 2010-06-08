@@ -27,7 +27,7 @@ class package:
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if re.search('[A-Z]', pkginfo.name) != None:
 			ret[0].append(("package-name-in-uppercase", ()))
 		return ret

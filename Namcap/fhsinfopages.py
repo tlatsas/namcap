@@ -28,7 +28,7 @@ class package:
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		for i in tar.getmembers():
 			if i.name.startswith('usr/info'):
 				ret[0].append(("non-fhs-info-page %s", i.name))

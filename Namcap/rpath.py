@@ -20,7 +20,7 @@
 import pacman, os, subprocess, re
 from Namcap.util import is_elf, clean_filename
 
-allowed = ['/usr/lib','/lib', '$ORIGIN', '${ORIGIN}']
+allowed = ['/usr/lib', '/lib', '$ORIGIN', '${ORIGIN}']
 allowed_toplevels = map(lambda s: s + '/', allowed)
 warn = ['/usr/local/lib']
 libpath = re.compile('Library rpath: \[(.*)\]')
@@ -63,12 +63,12 @@ class package:
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):
-		ret = [[],[],[]]
-		insecure_rpaths = [[],[]]
+		ret = [[], [], []]
+		insecure_rpaths = [[], []]
 		os.path.walk(data, checkrpath, insecure_rpaths)
 
 		if len(insecure_rpaths) > 0:
-			for j in (0,1):
+			for j in (0, 1):
 				for f in insecure_rpaths[j]:
 					# f is already a tuple of (badrpath, badbinary)
 					ret[j].append(("insecure-rpath %s %s", f))

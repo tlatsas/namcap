@@ -109,7 +109,7 @@ def process_realpackage(package, modules):
 	for i in modules:
 		cur_class = __import__('Namcap.' + i, globals(), locals(), [Namcap])
 		pkg = cur_class.package()
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if pkg.type() == "tarball":
 			if pkg.prereq() == "extract":
 				# If it's not extracted, then extract it and then analyze the package
@@ -124,7 +124,7 @@ def process_realpackage(package, modules):
 			elif pkg.prereq() == "tar":
 				ret = pkg.analyze(pkginfo, pkgtar)
 			else:
-				ret = [['Error running rule (' + i + ')'],[],[]]
+				ret = [['Error running rule (' + i + ')'], [], []]
 
 			# Output the three types of messages
 			show_messages(pkginfo.name, 'E', ret[0])
@@ -147,7 +147,7 @@ def process_pkgbuild(package, modules):
 	for i in modules:
 		cur_class = __import__('Namcap.' + i, globals(), locals(), [Namcap])
 		pkg = cur_class.package()
-		ret = [[],[],[]]
+		ret = [[], [], []]
 		if pkg.type() == "pkgbuild":
 			ret = pkg.analyze(pkginfo, package)
 
