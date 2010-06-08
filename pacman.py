@@ -104,7 +104,7 @@ def load(package, root=None):
 		if workingdir == '':
 			workingdir = None
 		filename = os.path.basename(package)
-		process = subprocess.Popen(['/usr/bin/parsepkgbuild',filename], stdout=subprocess.PIPE, cwd=workingdir)
+		process = subprocess.Popen(['parsepkgbuild',filename], stdout=subprocess.PIPE, cwd=workingdir)
 		data = process.stdout.read()
 		ret = loaddb(None, data)
 
