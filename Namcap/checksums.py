@@ -26,7 +26,7 @@ class package:
 		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
-		checksums=[('md5', 32), ('sha1', 40), ('sha256', 63), ('sha384', 96), ('sha512', 128)]
+		checksums=[('md5', 32), ('sha1', 40), ('sha256', 64), ('sha384', 96), ('sha512', 128)]
 
 		if hasattr(pkginfo, 'source'):
 			haschecksums = False
