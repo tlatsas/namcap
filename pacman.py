@@ -51,14 +51,19 @@ class PacmanPackage(object):
 		Also clean our optdepends and remove any trailing description.
 		The original arrays are copied to orig_depends and orig_optdepends respectively.
 		"""
+		def strip_depend_info(l):
+			for item, value in enumerate(l):
+				l[item] = value.split(':')[0].split('>')[0].split('<')[0].split('=')[0]
+
 		if hasattr(self, 'depends'):
 			self.orig_depends = self.depends[:]
-			for item, value in enumerate(self.depends):
-				self.depends[item] = value.split('>')[0].split('<')[0].split('=')[0]
+			strip_depend_info(self.depends)
+		if hasattr(self, 'makedepends'):
+			self.orig_makedepends = self.makedepends[:]
+			strip_depend_info(self.makedepends)
 		if hasattr(self, 'optdepends'):
 			self.orig_optdepends = self.optdepends[:]
-			for item, value in enumerate(self.optdepends):
-				self.optdepends[item] = value.split(':')[0].split('>')[0].split('<')[0].split('=')[0]
+			strip_depend_info(self.optdepends)
 
 	def process(self):
 		"""
