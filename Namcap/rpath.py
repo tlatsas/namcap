@@ -17,7 +17,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-import pacman, os, subprocess, re
+import os, subprocess, re
 from Namcap.util import is_elf, clean_filename
 
 allowed = ['/usr/lib', '/lib', '$ORIGIN', '${ORIGIN}']

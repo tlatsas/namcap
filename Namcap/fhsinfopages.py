@@ -18,7 +18,6 @@
 #
 
 import os
-import tarfile
 
 class package:
 	def short_name(self):
