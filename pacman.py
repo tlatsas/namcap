@@ -47,12 +47,18 @@ class PacmanPackage(object):
 
 	def clean_depends(self):
 		"""
-		Go through the special depends instance property, copy it to self.orig_depends and strip all the depend version info off ('neon>=0.25.5-4' => 'neon')
+		Go through the special depends instance property and strip all the depend version info off ('neon>=0.25.5-4' => 'neon').
+		Also clean our optdepends and remove any trailing description.
+		The original arrays are copied to orig_depends and orig_optdepends respectively.
 		"""
 		if hasattr(self, 'depends'):
 			self.orig_depends = self.depends[:]
 			for item, value in enumerate(self.depends):
 				self.depends[item] = value.split('>')[0].split('<')[0].split('=')[0]
+		if hasattr(self, 'optdepends'):
+			self.orig_optdepends = self.optdepends[:]
+			for item, value in enumerate(self.optdepends):
+				self.optdepends[item] = value.split(':')[0].split('>')[0].split('<')[0].split('=')[0]
 
 	def process(self):
 		"""
