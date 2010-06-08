@@ -40,9 +40,9 @@ def checkrpath(insecure_rpaths, dirname, names):
 				# Is this a Library rpath: line?
 				if n != None:
 					if ":" in n.group(1):
-						rpaths=n.group(1).split(':')
+						rpaths = n.group(1).split(':')
 					else:
-						rpaths=[n.group(1)]
+						rpaths = [n.group(1)]
 					for path in rpaths:
 						path_ok = path in allowed
 						for allowed_toplevel in allowed_toplevels:

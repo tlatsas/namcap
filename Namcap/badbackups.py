@@ -17,7 +17,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-import pacman,re
+import pacman, re
 
 class package:
 	def short_name(self):
@@ -30,7 +30,7 @@ class package:
 		ret = [[], [], []]
 		if hasattr(pkginfo, 'backup'):
 			for item in pkginfo.backup:
-				if re.match('^/',item) != None:
+				if re.match('^/', item) != None:
 					ret[0].append(("backups-preceding-slashes", ()))
 		return ret
 	def type(self):

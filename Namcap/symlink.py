@@ -42,7 +42,7 @@ class package:
 				if link not in filenames:
 					ret[0].append(("dangling-symlink %s points to %s", (i.name, i.linkname)))
 			if i.islnk():
-				ret[2].append(("hardlink-found %s points to %s",(i.name, i.linkname)))
+				ret[2].append(("hardlink-found %s points to %s", (i.name, i.linkname)))
 				if i.linkname not in filenames:
 					ret[0].append(("dangling-hardlink %s points to %s", (i.name, i.linkname)))
 		return ret	

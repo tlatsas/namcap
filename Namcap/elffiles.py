@@ -20,7 +20,7 @@
 import os
 from Namcap.util import is_elf, clean_filename
 
-def scanelf(invalid_elffiles,dirname,names):
+def scanelf(invalid_elffiles, dirname, names):
 	'''Method to scan for ELF files in invalid directories'''
 
 	# Valid directories for ELF files

@@ -28,7 +28,7 @@ class package:
 		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
-		arches = ['i686','i586','x86_64']
+		arches = ['i686', 'i586', 'x86_64']
 		archmatch = re.compile('%s' % '|'.join(arches))
 		# Match an arch=(i686) line
 		archline = re.compile('arch=\w*(%s)' % '|'.join(arches))

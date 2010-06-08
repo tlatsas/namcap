@@ -17,7 +17,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-import pacman,re
+import pacman, re
 
 class package:
 	def short_name(self):
@@ -30,9 +30,9 @@ class package:
 		ret = [[], [], []]
 		if hasattr(pkginfo, 'source'):
 			for source in pkginfo.source:
-				if re.match('(http://|ftp://)\w+.dl.(sourceforge|sf).net',source) != None:
+				if re.match('(http://|ftp://)\w+.dl.(sourceforge|sf).net', source) != None:
 					ret[1].append(("specific-sourceforge-mirror", ()))
-				if re.match('(http://|ftp://)dl.(sourceforge|sf).net',source) != None:
+				if re.match('(http://|ftp://)dl.(sourceforge|sf).net', source) != None:
 					ret[1].append(("using-dl-sourceforge", ()))
 		return ret
 	def type(self):

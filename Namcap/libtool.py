@@ -17,7 +17,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-import tarfile,re
+import re
 
 class package:
 	def short_name(self):
@@ -29,9 +29,10 @@ class package:
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in tar.getnames():
-			if re.search('\.la$',i) != None:
+			if re.search('\.la$', i) != None:
 				ret[1].append(("libtool-file-present %s", i))
 		return ret
 	def type(self):
 		return "tarball"
+
 # vim: set ts=4 sw=4 noet:
