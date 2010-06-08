@@ -25,7 +25,7 @@ empty-directory %s :: Directory (%s) is empty
 extra-var-begins-without-underscore %s :: Non standard variable '%s' doesn't start with an underscore
 file-in-non-standard-dir %s :: File (%s) exists in a non-standard directory.
 file-not-world-readable %s :: File (%s) does not have the world readable bit set.
-file-referred-in-startdir :: File referenced in $startdir outside of $startdir/src or $startdir/pkg
+file-referred-in-startdir :: File referenced in $startdir
 file-world-writable %s :: File (%s) has the world writable bit set.
 gnome-mime-file %s :: File (%s) is an auto-generated GNOME mime file
 hardlink-found %s points to %s :: Hard link (%s) found that points to %s
@@ -56,13 +56,13 @@ perllocal-pod-present %s :: perllocal.pod found in %s.
 pkgname-in-description :: Description should not contain the package name.
 potential-non-fhs-info-page %s :: Potential non-FHS info page (%s) found.
 potential-non-fhs-man-page %s :: Potential non-FHS man page (%s) found.
-recommend-use-pkgdir :: Recommend use of $pkgdir instead of $startdir/pkg
-recommend-use-srcdir :: Recommend use of $srcdir instead of $startdir/src
 script-link-detected %s in %s :: Script link detected (%s) in file %s
 scrollkeeper-dir-exists %s :: Scrollkeeper directory exists (%s). Remember to not run scrollkeeper till post_{install,upgrade,remove}.
 specific-host-type-used %s :: Reference to one of %s should be changed to $CARCH
 specific-sourceforge-mirror :: Attempting to use specific sourceforge mirror, use downloads.sourceforge.net instead
 symlink-found %s points to %s :: Symlink (%s) found that points to %s
 too-many-md5sums %i needed :: Too Many md5sums: %i needed
+use-pkgdir :: Use $pkgdir instead of $startdir/pkg
+use-srcdir :: Use $srcdir instead of $startdir/src
 using-dl-sourceforge :: Attempting to use dl sourceforge domain, use downloads.sourceforge.net instead
 variable-not-array %s :: Variable %s is not an array.

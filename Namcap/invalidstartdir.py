@@ -23,7 +23,7 @@ class package:
 	def short_name(self):
 		return "invalidstartdir"
 	def long_name(self):
-		return "Looks for anything that's not $startdir/pkg or $startdir/src"
+		return "Looks for references to $startdir"
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
@@ -34,9 +34,9 @@ class package:
 				if j[:4] != '/pkg' and j[:4] != '/src':
 					ret[0].append(("file-referred-in-startdir", ()))
 				elif j[:4] == '/pkg':
-					ret[2].append(("recommend-use-pkgdir", ()))
+					ret[0].append(("use-pkgdir", ()))
 				elif j[:4] == '/src':
-					ret[2].append(("recommend-use-srcdir", ()))
+					ret[0].append(("use-srcdir", ()))
 		return ret
 	def type(self):
 		return "pkgbuild"
