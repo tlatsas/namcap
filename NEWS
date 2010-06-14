@@ -1,3 +1,11 @@
+namcap (2.6)
+	- Add new 'anyelf' rule; should catch ELF files that end up in 'any'
+	  arch packages and cannot be arch-independent
+	- Allow checking of all checksum types (FS#17168)
+	- Code style and import cleanups
+	- Handle optdepends descriptions correctly (FS#18259)
+	- Make it an error to use $startdir in PKGBUILDs
+
 namcap (2.5)
     - Turn namcap into a wrapper script that handles the compression;
       this allows us to use XZ-compressed packages without Python support
