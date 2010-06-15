@@ -19,6 +19,7 @@
 
 import os
 import re
+import stat
 
 def is_elf(path):
 	"""
@@ -27,9 +28,26 @@ def is_elf(path):
 	"""
 	if not os.path.isfile(path):
 		return False
+	reset_perms = False
+	if not os.access(path, os.R_OK):
+		# don't mess with links we can't read
+		if os.path.islink(path):
+			return False
+		reset_perms = True
+		# attempt to make it readable if possible
+		statinfo = os.stat(path)
+		newmode = statinfo.st_mode | stat.S_IRUSR
+		try:
+			os.chmod(path, newmode)
+		except IOError:
+			return False
 	fd = open(path)
 	bytes = fd.read(4)
 	fd.close()
+	# reset permissions if necessary
+	if reset_perms:
+		# set file back to original permissions
+		os.chmod(path, statinfo.st_mode)
 	# magic elf header, present in binaries and libraries
 	if bytes == "\x7FELF":
 		return True
