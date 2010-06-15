@@ -9,9 +9,9 @@ export PATH=/tmp/parsepkgbuild; exec /bin/bash --noprofile --norc -r << EOF
 
 source $1
 
-# ensure $pkgname and $pkgver variables were found
-if [ -z "\$pkgname" -o -z "\$pkgver" ]; then
-	echo "   error: invalid package file"
+# ensure $pkgname, $pkgver, and $pkgrel variables were found
+if [ -z "\$pkgname" -o -z "\$pkgver" -o -z "\$pkgrel" ]; then
+	echo "error: invalid package file"
 	exit 1
 fi 
 
