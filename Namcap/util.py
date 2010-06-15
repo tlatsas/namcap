@@ -21,18 +21,14 @@ import os
 import re
 import stat
 
-def is_elf(path):
-	"""
-	Given a file path, ensure it exists and peek at the first few bytes
-	to determine if it is an ELF file.
-	"""
+def read_carefully(path, readcall):
 	if not os.path.isfile(path):
 		return False
 	reset_perms = False
 	if not os.access(path, os.R_OK):
 		# don't mess with links we can't read
 		if os.path.islink(path):
-			return False
+			return None
 		reset_perms = True
 		# attempt to make it readable if possible
 		statinfo = os.stat(path)
@@ -40,14 +36,24 @@ def is_elf(path):
 		try:
 			os.chmod(path, newmode)
 		except IOError:
-			return False
+			return None
 	fd = open(path)
-	bytes = fd.read(4)
+	val = readcall(fd)
 	fd.close()
 	# reset permissions if necessary
 	if reset_perms:
 		# set file back to original permissions
 		os.chmod(path, statinfo.st_mode)
+	return val
+
+def is_elf(path):
+	"""
+	Given a file path, ensure it exists and peek at the first few bytes
+	to determine if it is an ELF file.
+	"""
+	bytes = read_carefully(path, lambda fd: fd.read(4))
+	if not bytes:
+		return False
 	# magic elf header, present in binaries and libraries
 	if bytes == "\x7FELF":
 		return True
@@ -59,29 +65,9 @@ supported_scripts = ['python', 'perl', 'ruby', 'wish', 'expect',
 
 def script_type(path):
 	global supported_scripts
-	if not os.path.isfile(path):
+	firstline = read_carefully(path, lambda fd: fd.readline())
+	if not firstline:
 		return None
-	reset_perms = False
-	if not os.access(path, os.R_OK):
-		# don't mess with links we can't read
-		if os.path.islink(path):
-			return None
-		reset_perms = True
-		# attempt to make it readable if possible
-		statinfo = os.stat(path)
-		newmode = statinfo.st_mode | stat.S_IRUSR
-		try:
-			os.chmod(path, newmode)
-		except IOError:
-			return None
-
-	fd = open(path)
-	firstline = fd.readline()
-	fd.close()
-	# reset permissions if necessary
-	if reset_perms:
-		# set file back to original permissions
-		os.chmod(path, statinfo.st_mode)
 	script = re.compile('#!.*/(.*)')
 	firstlinere = script.match(firstline)
 	if firstlinere != None:
