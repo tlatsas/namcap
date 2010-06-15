@@ -27,7 +27,9 @@ if [ -n "\$groups" ]; then
 	echo ""
 fi
 
-[ -n "\$url" ] && echo -e "%URL%\n\$url\n"
+if [ -n "\$url" ]; then
+	echo -e "%URL%\n\$url\n"
+fi
 if [ -n "\$license" ]; then
 	echo "%LICENSE%"
 	for i in \${license[@]}; do echo \$i; done
@@ -38,15 +40,21 @@ if [ -n "\$arch" ]; then
 	for i in \${arch[@]}; do echo \$i; done
 	echo ""
 fi
-[ -n "\$builddate" ] && echo -e "%BUILDDATE%\n\$builddate\n"
-[ -n "\$packager" ] && echo -e "%PACKAGER%\n\$packager\n"
+if [ -n "\$builddate" ]; then
+	echo -e "%BUILDDATE%\n\$builddate\n"
+fi
+if [ -n "\$packager" ]; then
+	echo -e "%PACKAGER%\n\$packager\n"
+fi
 
 if [ -n "\$replaces" ]; then
 	echo "%REPLACES%"
 	for i in \${replaces[@]}; do echo \$i; done
 	echo ""
 fi
-[ -n "\$force" ] && echo -e "%FORCE%\n"
+if [ -n "\$force" ]; then
+	echo -e "%FORCE%\n"
+fi
 
 # create depends entry
 if [ -n "\$depends" ]; then
@@ -115,7 +123,8 @@ if [ -n "\$sha512sums" ]; then
 	echo ""
 fi
 
-
-[ -n "\$install" ] && echo -e "%INSTALL%\n\$install\n"
+if [ -n "\$install" ]; then
+	echo -e "%INSTALL%\n\$install\n"
+fi
 
 EOF
