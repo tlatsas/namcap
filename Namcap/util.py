@@ -54,6 +54,42 @@ def is_elf(path):
 	else:
 		return False
 
+supported_scripts = ['python', 'perl', 'ruby', 'wish', 'expect',
+	'tk', 'bash', 'sh', 'dash', 'tcsh', 'pdksh' ]
+
+def script_type(path):
+	global supported_scripts
+	if not os.path.isfile(path):
+		return None
+	reset_perms = False
+	if not os.access(path, os.R_OK):
+		# don't mess with links we can't read
+		if os.path.islink(path):
+			return None
+		reset_perms = True
+		# attempt to make it readable if possible
+		statinfo = os.stat(path)
+		newmode = statinfo.st_mode | stat.S_IRUSR
+		try:
+			os.chmod(path, newmode)
+		except IOError:
+			return None
+
+	fd = open(path)
+	firstline = fd.readline()
+	fd.close()
+	# reset permissions if necessary
+	if reset_perms:
+		# set file back to original permissions
+		os.chmod(path, statinfo.st_mode)
+	script = re.compile('#!.*/(.*)')
+	firstlinere = script.match(firstline)
+	if firstlinere != None:
+		cmdname = firstlinere.group(1).split()[0]
+		if cmdname in supported_scripts:
+			return cmdname
+	return None
+
 clean_filename = lambda s: re.search(r"/tmp/namcap\.[0-9]*/(.*)", s).group(1)
 
 # vim: set ts=4 sw=4 noet:

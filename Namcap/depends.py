@@ -18,10 +18,7 @@
 # 
 
 import re, os, os.path, pacman, subprocess
-from Namcap.util import is_elf
-
-supported_scripts = ['python', 'perl', 'ruby', 'wish', 'expect',
-	'tk', 'bash', 'sh', 'dash', 'tcsh', 'pdksh' ]
+from Namcap.util import is_elf, script_type
 
 pkgcache = {}
 
@@ -67,9 +64,7 @@ def scanlibs(data, dirname, names):
 	If they depend on a library, store that library's path in sharedlibs
 	"""
 	sharedlibs, scripts = data
-	global supported_scripts
 	shared = re.compile('Shared library: \[(.*)\]')
-	script = re.compile('#!.*/(.*)')
 	for i in names:
 		path = dirname + '/' + i
 		if is_elf(path):
@@ -90,15 +85,10 @@ def scanlibs(data, dirname, names):
 						# We didn't know about the library, so add it for fail later
 						sharedlibs.setdefault(n.group(1), {})[path] = 1
 		# Maybe it is a script file
-		elif os.path.isfile(path):
-			fd = open(path)
-			firstline = fd.readline()
-			fd.close()
-			firstlinere = script.match(firstline)
-			if firstlinere != None:
-				cmdname = firstlinere.group(1).split()[0]
-				if cmdname in supported_scripts:
-					scripts.setdefault(cmdname, {})[path] = 1
+		else:
+			cmd = script_type(path)
+			if cmd != None:
+				scripts.setdefault(cmd, {})[path] = 1
 
 def finddepends(liblist):
 	dependlist = {}
