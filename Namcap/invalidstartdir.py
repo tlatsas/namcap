@@ -29,7 +29,7 @@ class package:
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
-			startdirs = re.split('\$startdir', i)
+			startdirs = re.split('\${?startdir}?"?', i)
 			for j in startdirs[1:]:
 				if j[:4] != '/pkg' and j[:4] != '/src':
 					ret[0].append(("file-referred-in-startdir", ()))
