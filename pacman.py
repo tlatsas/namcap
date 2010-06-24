@@ -18,7 +18,14 @@
 # 
 
 import tarfile, os, os.path, re, subprocess
+
 pacmandb = '/var/lib/pacman/local/'
+
+for i in open('/etc/pacman.conf'):
+	m = re.match('\s*DBPath\s*=\s*([\S^#]+)', i)
+	if m != None:
+		pacmandb = os.path.join(m.group(1), 'local/')
+		break
 
 class PacmanPackage(object):
 	strings = ['name', 'version', 'desc', 'url', 'builddate', 'packager', 'install', 'filename', 'csize', 'isize', ]
