@@ -29,6 +29,8 @@ class package:
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in tar.getmembers():
+			if not i.isfile():
+				continue
 			if i.name.startswith('usr/info'):
 				ret[0].append(("non-fhs-info-page %s", i.name))
 			elif not i.name.startswith('usr/share/info'):

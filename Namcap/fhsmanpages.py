@@ -32,6 +32,8 @@ class package:
 		bad_dir = 'usr/man'
 		ret = [[], [], []]
 		for i in tar.getmembers():
+			if not i.isfile():
+				continue
 			if i.name.startswith(bad_dir):
 				ret[0].append(("non-fhs-man-page %s", i.name))
 			elif not i.name.startswith(gooddir):
