@@ -49,7 +49,7 @@ fi
 
 if [ -n "\$replaces" ]; then
 	echo "%REPLACES%"
-	for i in \${replaces[@]}; do echo \$i; done
+	for i in "\${replaces[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$force" ]; then
@@ -59,67 +59,67 @@ fi
 # create depends entry
 if [ -n "\$depends" ]; then
 	echo "%DEPENDS%"
-	for i in \${depends[@]}; do echo \$i; done
+	for i in "\${depends[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$makedepends" ]; then
 	echo "%MAKEDEPENDS%"
-	for i in \${makedepends[@]}; do echo \$i; done
+	for i in "\${makedepends[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$optdepends" ]; then
 	echo "%OPTDEPENDS%"
-	for i in \${optdepends[@]}; do echo \$i; done
+	for i in "\${optdepends[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$conflicts" ]; then
 	echo "%CONFLICTS%"
-	for i in \${conflicts[@]}; do echo \$i; done
+	for i in "\${conflicts[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$provides" ]; then
 	echo "%PROVIDES%"
-	for i in \${provides[@]}; do echo \$i; done
+	for i in "\${provides[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$backup" ]; then
 	echo "%BACKUP%"
-	for i in \${backup[@]}; do echo \$i; done
+	for i in "\${backup[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$options" ]; then
 	echo "%OPTIONS%"
-	for i in \${options[@]}; do echo \$i; done
+	for i in "\${options[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$source" ]; then
 	echo "%SOURCE%"
-	for i in \${source[@]}; do echo \$i; done
+	for i in "\${source[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$md5sums" ]; then
 	echo "%MD5SUMS%"
-	for i in \${md5sums[@]}; do echo \$i; done
+	for i in "\${md5sums[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$sha1sums" ]; then
 	echo "%SHA1SUMS%"
-	for i in \${sha1sums[@]}; do echo \$i; done
+	for i in "\${sha1sums[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$sha256sums" ]; then
 	echo "%SHA256SUMS%"
-	for i in \${sha256sums[@]}; do echo \$i; done
+	for i in "\${sha256sums[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$sha384sums" ]; then
 	echo "%SHA384SUMS%"
-	for i in \${sha384sums[@]}; do echo \$i; done
+	for i in "\${sha384sums[@]}"; do echo \$i; done
 	echo ""
 fi
 if [ -n "\$sha512sums" ]; then
 	echo "%SHA512SUMS%"
-	for i in \${sha512sums[@]}; do echo \$i; done
+	for i in "\${sha512sums[@]}"; do echo \$i; done
 	echo ""
 fi
 
