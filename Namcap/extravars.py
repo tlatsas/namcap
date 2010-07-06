@@ -37,7 +37,6 @@ class package:
 			m = re.match('[\s]*([^\s=]*)\s*=', i)
 			if m:
 				varname = m.group(1)
-				print varname
 				if varname not in stdvars:
 					if not varname.startswith('_'):
 						ret[1].append(("extra-var-begins-without-underscore %s", varname))
