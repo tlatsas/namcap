@@ -32,16 +32,15 @@ def get_modules():
 
 # Display usage information
 def usage():
-	print
-	print "Usage: " + sys.argv[0] + " [OPTIONS] packages"
-	print 
-	print "Options are:"
-	print "    -i                               : prints information responses from rules"
-	print "    -m                               : makes the output parseable (machine-readable)"
-	print "    -e rulelist, --exclude=rulelist  : don't apply RULELIST rules to the package"	
-	print "    -r rulelist, --rules=rulelist    : only apply RULELIST rules to the package"
-	
-	
+	print()
+	print("Usage: " + sys.argv[0] + " [OPTIONS] packages")
+	print()
+	print("Options are:")
+	print("    -i                               : prints information responses from rules")
+	print("    -m                               : makes the output parseable (machine-readable)")
+	print("    -e rulelist, --exclude=rulelist  : don't apply RULELIST rules to the package")
+	print("    -r rulelist, --rules=rulelist    : only apply RULELIST rules to the package")
+
 	sys.exit(2)
 
 # Is the package a valid package file?
@@ -93,14 +92,14 @@ def check_rules_exclude(optlist):
 
 def show_messages(name, key, messages):
 	for msg in messages:
-		print "%s %s: %s" % (name, key, m(msg[0]) % msg[1])
+		print("%s %s: %s" % (name, key, m(msg[0]) % msg[1]))
 
 def process_realpackage(package, modules):
 	extracted = 0
 	pkgtar = verify_package(package)
 
 	if not pkgtar:
-		print "Error: " + package + " is empty or is not a valid package"
+		print("Error: " + package + " is empty or is not a valid package")
 		return 1
 
 	pkginfo = pacman.load(package)
@@ -141,7 +140,7 @@ def process_pkgbuild(package, modules):
 	pkginfo = pacman.load(package)
 
 	if pkginfo == None:
-		print "Error: " + package + " is not a valid PKGBUILD"
+		print("Error: " + package + " is not a valid PKGBUILD")
 		return 1
 
 	for i in modules:
@@ -176,15 +175,15 @@ active_modules = []
 
 # Verifying if we are using the -r and -r options at same time
 if check_rules_exclude(optlist) > 1:
-	print "You cannot use '-r' (--rules) and '-e' (-exclude) options at same time"
+	print("You cannot use '-r' (--rules) and '-e' (-exclude) options at same time")
 	usage()
 
 for i, k in optlist:
 	if i in ('-r', '--rules') and active_modules == []:
 		if k == 'list':
-			print "-"*20 + " Namcap rule list " + "-"*20
+			print("-"*20 + " Namcap rule list " + "-"*20)
 			for j in modules:
-				print string.ljust(j, 20) + ": " + __import__('Namcap.' + j, globals(), locals(), [Namcap]).package().long_name()
+				print(string.ljust(j, 20) + ": " + __import__('Namcap.' + j, globals(), locals(), [Namcap]).package().long_name())
 			sys.exit(2)
 
 		module_list = k.split(',')
@@ -192,7 +191,7 @@ for i, k in optlist:
 			if j in modules:
 				active_modules.append(j)
 			else:
-				print "Error: Rule '" + j + "' does not exist"
+				print("Error: Rule '" + j + "' does not exist")
 				usage()
 
 	# Used to exclude some rules from the check
@@ -203,7 +202,7 @@ for i, k in optlist:
 			if j in modules:
 				active_modules.remove(j)
 			else:
-				print "Error: Rule '" + j + "' does not exist"
+				print("Error: Rule '" + j + "' does not exist")
 				usage()
 
 	if i in ('-i', '--info'):
@@ -231,7 +230,7 @@ if active_modules == []:
 # Go through each package, get the info, and apply the rules
 for package in packages:
 	if not os.access(package, os.R_OK):
-		print "Error: Problem reading " + package
+		print("Error: Problem reading " + package)
 		usage()
 
 	if os.path.isfile(package) and tarfile.is_tarfile(package):
@@ -239,6 +238,6 @@ for package in packages:
 	elif package[-8:] == 'PKGBUILD':
 		process_pkgbuild(package, active_modules)
 	else:
-		print "Error: Cannot process %s" % package
+		print("Error: Cannot process %s" % package)
 
 # vim: set ts=4 sw=4 noet:
