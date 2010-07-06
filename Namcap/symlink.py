@@ -27,7 +27,7 @@ class package:
 		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
-		filenames = map(lambda s: s.name, tar)
+		filenames = [s.name for s in tar]
 		for i in tar:
 			if i.issym():
 				ret[2].append(("symlink-found %s points to %s", (i.name, i.linkname)))

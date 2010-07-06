@@ -21,7 +21,7 @@ import os, subprocess, re
 from Namcap.util import is_elf, clean_filename
 
 allowed = ['/usr/lib', '/lib', '$ORIGIN', '${ORIGIN}']
-allowed_toplevels = map(lambda s: s + '/', allowed)
+allowed_toplevels = [s + '/' for s in allowed]
 warn = ['/usr/local/lib']
 libpath = re.compile('Library rpath: \[(.*)\]')
 
