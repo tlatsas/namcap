@@ -33,20 +33,21 @@ class package:
 	def short_name(self):
 		return "anyelf"
 	def long_name(self):
-		return "If package is 'any' architecture, check for ELF files"
+		return "Check for ELF files to see if a package should be 'any' architecture"
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):
 		ret = [[], [], []]
-		if pkginfo.arch and pkginfo.arch[0] != 'any':
-			return ret
 		found_elffiles = []
-
 		os.path.walk(data, scanelf, found_elffiles)
-		if len(found_elffiles) > 0:
-			for i in found_elffiles:
-				ret[0].append(("elffile-in-any-package %s", i))
 
+		if pkginfo.arch and pkginfo.arch[0] == 'any':
+			if len(found_elffiles) > 0:
+				for i in found_elffiles:
+					ret[0].append(("elffile-in-any-package %s", i))
+		else:
+			if len(found_elffiles) == 0:
+				ret[1].append(("no-elffiles-not-any-package", ()))
 		return ret
 
 	def type(self):

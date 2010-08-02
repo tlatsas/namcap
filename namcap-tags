@@ -47,6 +47,7 @@ missing-license :: Missing license
 missing-maintainer :: Missing Maintainer tag
 missing-checksums :: Missing checksums
 missing-url :: Missing url
+no-elffiles-not-any-package :: No ELF files and not an "any" package
 non-fhs-info-page %s :: Non-FHS info page (%s) found. Use /usr/share/info instead
 non-fhs-man-page %s :: Non-FHS man page (%s) found. Use /usr/share/man instead
 not-a-common-license %s :: %s is not a common license (it's not in /usr/share/licenses/common/)
