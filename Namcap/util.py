@@ -60,20 +60,19 @@ def is_elf(path):
 	else:
 		return False
 
-supported_scripts = ['python', 'perl', 'ruby', 'wish', 'expect',
-	'tk', 'bash', 'sh', 'dash', 'tcsh', 'pdksh' ]
-
 def script_type(path):
-	global supported_scripts
 	firstline = read_carefully(path, lambda fd: fd.readline())
 	if not firstline:
 		return None
 	script = re.compile('#!.*/(.*)')
-	firstlinere = script.match(firstline)
-	if firstlinere != None:
-		cmdname = firstlinere.group(1).split()[0]
-		if cmdname in supported_scripts:
-			return cmdname
+	m = script.match(firstline)
+	if m != None:
+		cmd = m.group(1).split()
+		name = cmd[0]
+		if name == 'env':
+			name = cmd[1]
+		print cmd
+		return name
 	return None
 
 clean_filename = lambda s: re.search(r"/tmp/namcap\.[0-9]*/(.*)", s).group(1)
