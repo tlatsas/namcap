@@ -23,7 +23,7 @@ from Namcap.util import is_elf, script_type
 pkgcache = {}
 
 def load(name, path=None):
-	if not pkgcache.has_key(name):
+	if name not in pkgcache:
 		pkgcache[name] = pacman.load(name)
 	return pkgcache[name]
 
@@ -35,14 +35,14 @@ def getcovered(current, dependlist, covereddepend):
 			pac = load(i)
 			if pac != None and hasattr(pac, 'depends'):
 				for j in pac.depends:
-					if j != None and not j in covereddepend.keys():
+					if j != None and not j in covereddepend:
 						covereddepend[j] = 1
 						getcovered(j, dependlist, covereddepend)
 	else:
 		pac = load(current)
 		if pac != None and hasattr(pac, 'depends'):
 			for i in pac.depends:
-				if i != None and not i in covereddepend.keys():
+				if i != None and not i in covereddepend:
 					covereddepend[i] = 1
 					getcovered(i, dependlist, covereddepend)
 
@@ -79,7 +79,8 @@ def scanlibs(data, dirname, names):
 					# Find out its architecture
 					architecture = figurebitsize(j)
 					try:
-						libpath = os.path.abspath(libcache[architecture][n.group(1)])[1:]
+						libpath = os.path.abspath(
+								libcache[architecture][n.group(1)])[1:]
 						sharedlibs.setdefault(libpath, {})[path] = 1
 					except KeyError:
 						# We didn't know about the library, so add it for fail later
@@ -113,7 +114,7 @@ def finddepends(liblist):
 	for i in os.listdir(pacmandb):
 		if os.path.isfile(pacmandb+'/'+i+'/files'):
 			file = open(pacmandb+'/'+i+'/files')
-			for j in file.readlines():
+			for j in file:
 				if not is_so.search(j):
 					continue
 
@@ -123,7 +124,7 @@ def finddepends(liblist):
 					# We compare find libgpm.so.1.19.0 startswith libgpm.so.1 and .19.0 matches the regexp
 					if j == actualpath[k] or (j.startswith(actualpath[k]) and so_end.match(j[len(actualpath[k]):])):
 						n = re.match('(.*)-([^-]*)-([^-]*)', i)
-						if not dependlist.has_key(n.group(1)):
+						if n.group(1) not in dependlist:
 							dependlist[n.group(1)] = {}
 						for x in liblist[k]:
 							dependlist[n.group(1)][x] = 1
@@ -186,7 +187,7 @@ class package:
 			ret[1].append(i)
 
 		# Remove the package name from that list, we can't depend on ourselves.
-		if dependlist.has_key(pkginfo.name):
+		if pkginfo.name in dependlist:
 			del dependlist[pkginfo.name]
 
 		# Print link-level deps
@@ -197,7 +198,7 @@ class package:
 
 		# Do the script handling stuff
 		for i, v in liblist[1].iteritems():
-			if not dependlist.has_key(i):
+			if i not in dependlist:
 				dependlist[i] = {}
 			for j in v.keys():
 				dependlist[i][j] = 1
@@ -232,7 +233,7 @@ class package:
 
 		# Set difference them to find the leaves
 		for i in dependlist.keys():
-			if not i in covereddepend.keys():
+			if not i in covereddepend:
 				smartdepend[i] = 1
 
 		# Get the provides so we can reference them later
@@ -246,17 +247,21 @@ class package:
 			# and those provides aren't included in the package's dependencies)
 			# or there are no provides for i))
 			all_dependencies = getattr(pkginfo, 'depends', []) + getattr(pkginfo, 'optdepends', []) + pkgcovered.keys()
-			if (i not in all_dependencies and i != pkginfo.name and ((smartprovides.has_key(i) and len([c for c in smartprovides[i] if c in pkgcovered.keys()]) == 0) or not smartprovides.has_key(i))):
+			if (i not in all_dependencies and i != pkginfo.name
+					and (
+						(i in smartprovides
+						and len([c for c in smartprovides[i] if c in pkgcovered]) == 0)
+						or i not in smartprovides)):
 					if type(dependlist[i]) == dict:
 						ret[0].append(("dependency-detected-not-included %s from files %s", (i, str([x[len(data)+1:] for x in dependlist[i].keys()])) ))
 					else:
 						ret[0].append(("dependency-detected-not-included %s", i))
 		if hasattr(pkginfo, 'depends'):
 			for i in pkginfo.depends:
-				if covereddepend.has_key(i) and dependlist.has_key(i):
+				if i in covereddepend and i in dependlist:
 					ret[1].append(("dependency-already-satisfied %s", i))
 				# if i is not in the depends as we see them and it's not in any of the provides from said depends
-				elif not smartdepend.has_key(i) and i not in [y for x in smartprovides.values() for y in x]:
+				elif i not in smartdepend and i not in [y for x in smartprovides.values() for y in x]:
 					ret[1].append(("dependency-not-needed %s", i))
 		ret[2].append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend.keys()) ))
 		return ret
