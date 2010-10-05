@@ -71,7 +71,6 @@ def script_type(path):
 		name = cmd[0]
 		if name == 'env':
 			name = cmd[1]
-		print cmd
 		return name
 	return None
 
