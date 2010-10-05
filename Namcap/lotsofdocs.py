@@ -40,7 +40,11 @@ class package:
 
 		if size > 0:
 			ratio = docsize / float(size)
-			if ratio > 0.50:
+			if hasattr(pkginfo, 'name') and (
+					pkginfo.name.endswith('-docs') or
+					pkginfo.name.endswith('-doc')):
+				pass
+			elif ratio > 0.50:
 				ret[1].append(("lots-of-docs %f", ratio * 100))
 
 		return ret
