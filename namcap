@@ -26,4 +26,4 @@ for arg in "${@}"; do
 	fi
 done
 
-python -m namcap ${args}
+/usr/bin/env python2 -m namcap ${args}
