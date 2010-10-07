@@ -24,8 +24,8 @@ def scanelf(invalid_elffiles, dirname, names):
 	'''Method to scan for ELF files in invalid directories'''
 
 	# Valid directories for ELF files
-	valid_dirs = ['/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/', '/lib/',
-			'/usr/lib/', '/usr/lib32/']
+	valid_dirs = ['bin/', 'sbin/', 'usr/bin/', 'usr/sbin/', 'lib/',
+			'usr/lib/', 'usr/lib32/']
 	
 	for i in names:
 		file_path = os.path.join(dirname, i)
@@ -34,7 +34,7 @@ def scanelf(invalid_elffiles, dirname, names):
 		# Checking for ELF files
 		if is_elf(file_path):
 			for f in valid_dirs:
-				if ('/' + clean_filename(file_path)).startswith(f):
+				if (clean_filename(file_path)).startswith(f):
 					valid_dir_found = True
 					break 
 
