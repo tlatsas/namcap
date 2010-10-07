@@ -20,7 +20,7 @@
 import os, subprocess, re
 from Namcap.util import is_elf, clean_filename
 
-allowed = ['/usr/lib', '/lib', '$ORIGIN', '${ORIGIN}']
+allowed = ['/usr/lib', '/usr/lib32', '/lib', '$ORIGIN', '${ORIGIN}']
 allowed_toplevels = [s + '/' for s in allowed]
 warn = ['/usr/local/lib']
 libpath = re.compile('Library rpath: \[(.*)\]')

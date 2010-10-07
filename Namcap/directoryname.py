@@ -27,7 +27,7 @@ class package:
 	def analyze(self, pkginfo, tar):
 		valid_paths = [
 				'bin/', 'etc/', 'lib/', 'sbin/', 'opt/', 'srv/',
-				'usr/bin/', 'usr/include/', 'usr/lib', 'usr/sbin/', 'usr/share/',
+				'usr/bin/', 'usr/include/', 'usr/lib', 'usr/lib32', 'usr/sbin/', 'usr/share/',
 				'var/lib/', 'var/lock/', 'var/log/', 'var/opt/', 'var/run/', 'var/spool/', 'var/state/',
 				'.PKGINFO', '.INSTALL', '.CHANGELOG',
 		]
