@@ -1,3 +1,14 @@
+namcap (2.7)
+	- parsepkgbuild: ensure return codes don't leak that aren't failures;
+	  actually check return code of script inside namcap
+	- Improved $startdir detection (braces and quotes)
+	- Improved script dependency detection
+	- Better handling of files marked unreadable inside package
+	- Be [multilib] friendly- allow use of /usr/lib32
+	- Use DBPath defined inside pacman.conf
+	- Check for packages that could be 'any' architecture
+	- Initial steps toward Python 3 compatibility
+
 namcap (2.6)
 	- Add new 'anyelf' rule; should catch ELF files that end up in 'any'
 	  arch packages and cannot be arch-independent

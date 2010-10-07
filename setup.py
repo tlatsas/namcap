@@ -6,10 +6,10 @@ DATAFILES = [('/usr/share/man/man1', ['namcap.1']),
 		('/usr/share/doc/namcap',['README','AUTHORS','TODO'])]
 
 setup(name="namcap",
-	version="2.6",
+	version="2.7",
 	description="Pacman package analyzer",
-	author="Jason Chu",
-	author_email="jason@archlinux.org",
+	author="Arch Dev Team",
+	author_email="pacman-dev@archlinux.org",
 	py_modules=["pacman", "namcap"],
 	packages=["Namcap"],
 	scripts=["namcap", 'parsepkgbuild'],
