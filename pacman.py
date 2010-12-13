@@ -29,7 +29,15 @@ for i in open('/etc/pacman.conf'):
 
 class PacmanPackage(object):
 	strings = ['name', 'version', 'desc', 'url', 'builddate', 'packager', 'install', 'filename', 'csize', 'isize', ]
-	equiv_vars = [('name', 'pkgname'), ('md5sums', 'md5sum'), ('sha1sums', 'sha1sum'), ('depends', 'depend'), ('desc', 'pkgdesc'), ('isize', 'size'), ('optdepends', 'optdepend'), ]
+	equiv_vars = [
+			('name', 'pkgname'),
+			('md5sums', 'md5sum'),
+			('sha1sums', 'sha1sum'),
+			('depends', 'depend'),
+			('desc', 'pkgdesc'),
+			('isize', 'size'),
+			('optdepends', 'optdepend'),
+	]
 
 	def __init__(self, **data):
 		self.__dict__.update(data)
@@ -149,15 +157,16 @@ def load(package, root=None):
 def loadfromdir(directory):
 	if not os.path.isdir(directory):
 		return None
-	desc = open(directory+'/desc')
+	desc = open(directory + '/desc')
 	ret = PacmanPackage()
 	loaddb(ret, desc.read())
 	desc.close()
-	depends = open(directory+'/depends')
-	loaddb(ret, depends.read())
-	depends.close()
-	if os.path.isfile(directory+'/files'):
-		files = open(directory+'/files')
+	if os.path.isfile(directory + '/depends'):
+		depends = open(directory + '/depends')
+		loaddb(ret, depends.read())
+		depends.close()
+	if os.path.isfile(directory + '/files'):
+		files = open(directory + '/files')
 		loaddb(ret, files.read())
 		files.close()
 	ret.process()
