@@ -157,18 +157,15 @@ def load(package, root=None):
 def loadfromdir(directory):
 	if not os.path.isdir(directory):
 		return None
-	desc = open(directory + '/desc')
 	ret = PacmanPackage()
-	loaddb(ret, desc.read())
-	desc.close()
-	if os.path.isfile(directory + '/depends'):
-		depends = open(directory + '/depends')
-		loaddb(ret, depends.read())
-		depends.close()
-	if os.path.isfile(directory + '/files'):
-		files = open(directory + '/files')
-		loaddb(ret, files.read())
-		files.close()
+
+	for info in ('desc', 'depends', 'files'):
+		path = os.path.join(directory, info)
+		if os.path.isfile(path):
+			dbfile = open(path)
+			loaddb(ret, dbfile.read())
+			dbfile.close()
+
 	ret.process()
 	return ret
 
