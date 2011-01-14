@@ -40,6 +40,7 @@ library-no-package-associated %s :: Referenced library '%s' is an uninstalled de
 link-level-dependence %s in %s :: Link-level dependence (%s) in file %s
 lots-of-docs %f :: Package was %.0f%% docs by size; maybe you should split out a docs package
 mime-cache-not-updated :: Mime-file found. Add "update-mime-database usr/share/mime" to the install file
+missing-backup-file %s :: File in backup array (%s) not found in package
 missing-contributor :: Missing Contributor tag
 missing-custom-license-dir usr/share/licenses/%s :: Missing custom license directory (usr/share/licenses/%s)
 missing-custom-license-file usr/share/licenses/%s/* :: Missing custom license file in package (usr/share/licenses/%s/*)
