@@ -9,6 +9,7 @@
 # human readable description.
 
 backups-preceding-slashes :: Backup entries should not have preceding slashes
+cross-dir-hardlink %s %s :: Cross-directory hardlink in package (%s, %s)
 dangling-hardlink %s points to %s :: Hard link (%s) points to non-existing %s
 dangling-symlink %s points to %s :: Symlink (%s) points to non-existing %s
 dependency-already-satisfied %s :: Dependency included but already satisfied ('%s')

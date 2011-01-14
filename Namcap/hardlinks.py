@@ -1,6 +1,6 @@
 # 
-# namcap rules - __init__
-# Copyright (C) 2003-2009 Jason Chu <jason@archlinux.org>
+# namcap rules - hardlinks
+# Copyright (C) 2011 Dan McGee <dan@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -17,49 +17,23 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-__tarball__ = """
-  anyelf
-  capsnamespkg
-  depends
-  directoryname
-  elffiles
-  emptydir
-  fhsmanpages
-  fhsinfopages
-  fileownership
-  gnomemime
-  hardlinks
-  hicoloricons
-  infodirectory
-  libtool
-  licensepkg
-  lotsofdocs
-  mimefiles
-  missingbackups
-  perllocal
-  permissions
-  scrollkeeper
-  symlink
-  urlpkg
+from os.path import dirname
 
-""".split()
-
-__pkgbuild__ = """
-  arrays
-  badbackups
-  capsnames
-  carch
-  checksums
-  invalidstartdir
-  license
-  pkgname
-  rpath
-  sfurl
-  tags
-  url
-
-""".split()
-
-__all__ = __tarball__ + __pkgbuild__
-
+class package:
+	def short_name(self):
+		return "hardlinks"
+	def long_name(self):
+		return "Look for cross-directory/partition hard links"
+	def prereq(self):
+		return "tar"
+	def analyze(self, pkginfo, tar):
+		ret = [[], [], []]
+		hardlinks = [i for i in tar.getmembers() if i.islnk() == True]
+		for hardlink in hardlinks:
+			if dirname(hardlink.name) != dirname(hardlink.linkname):
+				ret[0].append(("cross-dir-hardlink %s %s",
+					(hardlink.name, hardlink.linkname)))
+		return ret
+	def type(self):
+		return "tarball"
 # vim: set ts=4 sw=4 noet:
