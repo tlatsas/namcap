@@ -32,9 +32,9 @@ def get_modules():
 
 def usage():
 	"""Display usage information"""
-	print()
+	print("")
 	print("Usage: " + sys.argv[0] + " [OPTIONS] packages")
-	print()
+	print("")
 	print("Options are:")
 	print("    -i                               : prints information responses from rules")
 	print("    -m                               : makes the output parseable (machine-readable)")
