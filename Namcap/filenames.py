@@ -1,6 +1,7 @@
-# 
-# namcap rules - __init__
-# Copyright (C) 2003-2009 Jason Chu <jason@archlinux.org>
+# -*- coding: utf-8 -*-
+#
+# namcap rules - filenames
+# Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -17,50 +18,27 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-__tarball__ = """
-  anyelf
-  capsnamespkg
-  depends
-  directoryname
-  elffiles
-  emptydir
-  fhsmanpages
-  fhsinfopages
-  filenames
-  fileownership
-  gnomemime
-  hardlinks
-  hicoloricons
-  infodirectory
-  libtool
-  licensepkg
-  lotsofdocs
-  mimefiles
-  missingbackups
-  perllocal
-  permissions
-  scrollkeeper
-  symlink
-  urlpkg
+"""Checks for invalid filenames."""
 
-""".split()
+import re
 
-__pkgbuild__ = """
-  arrays
-  badbackups
-  capsnames
-  carch
-  checksums
-  invalidstartdir
-  license
-  pkgname
-  rpath
-  sfurl
-  tags
-  url
+ALLOWED_PUNCTUATION = "!%()+,:=?@[\]^{}~"
+VALID_FILENAMES = re.compile("^[0-9a-zA-Z./\-_" + ALLOWED_PUNCTUATION + "]*$")
 
-""".split()
-
-__all__ = __tarball__ + __pkgbuild__
-
+class package:
+	def short_name(self):
+		return "filenames"
+	def long_name(self):
+		return "Checks for invalid filenames."
+	def prereq(self):
+		return "tar"
+	def analyze(self, pkginfo, tar):
+		ret = [[], [], []]
+		for i in tar.getnames():
+			m = VALID_FILENAMES.match(i)
+			if not m:
+				ret[1].append(("invalid-filename", i))
+		return ret
+	def type(self):
+		return "tarball"
 # vim: set ts=4 sw=4 noet:

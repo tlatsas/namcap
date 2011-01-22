@@ -34,6 +34,7 @@ hicolor-icon-cache-not-updated :: Files in /usr/share/icons/hicolor but no call 
 improper-checksum %s %s :: Improper %s: '%s'
 incorrect-library-permissions %s :: Library (%s) does not have permission set to 644 or 444
 incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions
+invalid-filename :: File name %s contains non standard characters
 info-dir-file-present %s :: Info directory file (%s) should not be present
 insecure-rpath %s %s :: Insecure RPATH '%s' in file ('%s')
 libtool-file-present %s :: File (%s) is a libtool file
