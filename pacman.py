@@ -79,6 +79,9 @@ class PacmanPackage(object):
 		if hasattr(self, 'optdepends'):
 			self.orig_optdepends = self.optdepends[:]
 			strip_depend_info(self.optdepends)
+		if hasattr(self, 'provides'):
+			self.orig_provides = self.provides[:]
+			strip_depend_info(self.provides)
 
 	def process(self):
 		"""
