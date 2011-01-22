@@ -28,7 +28,7 @@ sandbox_directory = '/tmp/namcap.' + str(os.getpid())
 # Functions
 def get_modules():
 	"""Return all possible modules (rules)"""
-	return Namcap.__all__
+	return Namcap.all_rules
 
 def usage():
 	"""Display usage information"""
@@ -107,8 +107,7 @@ def process_realpackage(package, modules):
 
 	# Loop through each one, load them apply if possible
 	for i in modules:
-		cur_class = __import__('Namcap.' + i, globals(), locals(), [Namcap])
-		pkg = cur_class.package()
+		pkg = Namcap.all_rules[i]()
 		ret = [[], [], []]
 		if pkg.type() == "tarball":
 			if pkg.prereq() == "extract":
@@ -146,8 +145,7 @@ def process_pkgbuild(package, modules):
 		return 1
 
 	for i in modules:
-		cur_class = __import__('Namcap.' + i, globals(), locals(), [Namcap])
-		pkg = cur_class.package()
+		pkg = Namcap.all_rules[i]()
 		ret = [[], [], []]
 		if pkg.type() == "pkgbuild":
 			ret = pkg.analyze(pkginfo, package)
@@ -158,7 +156,6 @@ def process_pkgbuild(package, modules):
 		show_messages(name, 'W', ret[1])
 		if info_reporting:
 			show_messages(name, 'I', ret[2])
-
 
 # Main
 modules = get_modules()
@@ -185,13 +182,13 @@ for i, k in optlist:
 		if k == 'list':
 			print("-"*20 + " Namcap rule list " + "-"*20)
 			for j in modules:
-				print(string.ljust(j, 20) + ": " + __import__('Namcap.' + j, globals(), locals(), [Namcap]).package().long_name())
+				print(string.ljust(j, 20) + ": " + modules[j]().long_name())
 			sys.exit(2)
 
 		module_list = k.split(',')
 		for j in module_list:
 			if j in modules:
-				active_modules.append(j)
+				active_modules[j] = modules[j]
 			else:
 				print("Error: Rule '" + j + "' does not exist")
 				usage()
@@ -199,10 +196,10 @@ for i, k in optlist:
 	# Used to exclude some rules from the check
 	if i in ('-e', '--exclude') and active_modules == []:
 		module_list = k.split(',')
-		active_modules = modules
+		active_modules.update(modules)
 		for j in module_list:
 			if j in modules:
-				active_modules.remove(j)
+				active_modules.pop(j)
 			else:
 				print("Error: Rule '" + j + "' does not exist")
 				usage()

@@ -61,6 +61,18 @@ __pkgbuild__ = """
 
 """.split()
 
-__all__ = __tarball__ + __pkgbuild__
+tarball_rules = {}
+for __rulename__ in __tarball__:
+	tarball_rules[__rulename__] = \
+		__import__("Namcap." + __rulename__, fromlist = "Namcap").package
+
+pkgbuild_rules = {}
+for __rulename__ in __pkgbuild__:
+	pkgbuild_rules[__rulename__] = \
+		__import__("Namcap." + __rulename__, fromlist = "Namcap").package
+
+all_rules = {}
+all_rules.update(tarball_rules)
+all_rules.update(pkgbuild_rules)
 
 # vim: set ts=4 sw=4 noet:
