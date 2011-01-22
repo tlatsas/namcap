@@ -100,7 +100,7 @@ def load(package, root=None):
 			return None
 		pkginfo = pkgtar.extractfile('.PKGINFO')
 		ret = PacmanPackage()
-		for i in pkginfo.readlines():
+		for i in pkginfo:
 			m = re.match('(.*) = (.*)', i)
 			if m != None:
 				lhs = m.group(1)
