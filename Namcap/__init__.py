@@ -32,6 +32,7 @@ __tarball__ = """
   hardlinks
   hicoloricons
   infodirectory
+  kdeprograms
   libtool
   licensepkg
   lotsofdocs
