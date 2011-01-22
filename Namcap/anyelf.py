@@ -17,6 +17,10 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+"""
+Check for ELF files to see if a package should be 'any' architecture
+"""
+
 import os
 from Namcap.util import is_elf, clean_filename
 

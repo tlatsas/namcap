@@ -26,12 +26,12 @@ import shutil
 sandbox_directory = '/tmp/namcap.' + str(os.getpid())
 
 # Functions
-# Return all possible modules (rules)
 def get_modules():
+	"""Return all possible modules (rules)"""
 	return Namcap.__all__
 
-# Display usage information
 def usage():
+	"""Display usage information"""
 	print()
 	print("Usage: " + sys.argv[0] + " [OPTIONS] packages")
 	print()
@@ -43,8 +43,8 @@ def usage():
 
 	sys.exit(2)
 
-# Is the package a valid package file?
 def verify_package(filename):
+	"""Checks if a tarball is a valid package"""
 	if not os.path.isfile(filename):
 		return 0
 	if not tarfile.is_tarfile(filename):
@@ -95,6 +95,7 @@ def show_messages(name, key, messages):
 		print("%s %s: %s" % (name, key, m(msg[0]) % msg[1]))
 
 def process_realpackage(package, modules):
+	"""Runs namcap checks over a package tarball"""
 	extracted = 0
 	pkgtar = verify_package(package)
 
@@ -136,6 +137,7 @@ def process_realpackage(package, modules):
 		shutil.rmtree(sandbox_directory)
 
 def process_pkgbuild(package, modules):
+	"""Runs namcap checks over a PKGBUILD"""
 	# We might want to do some verifying in here... but really... isn't that what pacman.load is for?
 	pkginfo = pacman.load(package)
 

@@ -17,6 +17,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
+"""Checks dependencies semi-smartly."""
+
 import re, os, os.path, pacman, subprocess
 from Namcap.util import is_elf, script_type
 

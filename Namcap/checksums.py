@@ -17,6 +17,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
+"""Verifies checksums are included in a PKGBUILD"""
+
 class package:
 	def short_name(self):
 		return "checksums"
