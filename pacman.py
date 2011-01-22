@@ -158,6 +158,7 @@ def load(package, root=None):
 		return None
 
 def loadfromdir(directory):
+	"""Read package information from a directory in the database"""
 	if not os.path.isdir(directory):
 		return None
 	ret = PacmanPackage()
@@ -173,6 +174,7 @@ def loadfromdir(directory):
 	return ret
 
 def loaddb(package, data):
+	"""Read information from file data"""
 	if package is None:
 		package = PacmanPackage()
 
