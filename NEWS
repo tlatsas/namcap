@@ -1,3 +1,14 @@
+namcap (2.x)
+	- compatibility with changes in local DB format introduced by
+	  pacman 3.5
+	- New check for inexistent backup files
+	- New check for cross-directory hard links (FS#20314)
+	- New check for filenames with non-ASCII or non-printable
+	  characters (FS#20758)
+	- New check for kdebase-runtime dependency for KDE programs
+	  (FS#15110)
+	- Correct handling of versioned provides (version is now ignored)
+
 namcap (2.7)
 	- parsepkgbuild: ensure return codes don't leak that aren't failures;
 	  actually check return code of script inside namcap
