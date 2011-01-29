@@ -7,6 +7,7 @@ namcap (2.x)
 	  characters (FS#20758)
 	- New check for kdebase-runtime dependency for KDE programs
 	  (FS#15110)
+        - introduce a basic test suite
 	- Correct handling of versioned provides (version is now ignored)
 
 namcap (2.7)
