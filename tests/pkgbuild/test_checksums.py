@@ -10,7 +10,7 @@ import Namcap.checksums as module
 
 EMPTY_RESULT = [ [] , [] , [] ]
 
-class NamcapArraysTest(unittest.TestCase):
+class NamcapChecksumTest(unittest.TestCase):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
@@ -28,9 +28,11 @@ source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz)
 md5sums=('look-this-is-an-invalid-checksum')
 
 build() {
+  true
 }
 
 package() {
+  true
 }
 """
 	pkgbuild2 = """
@@ -51,9 +53,11 @@ source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz
 md5sums=('abcdefabcdef12345678901234567890')
 
 build() {
+  true
 }
 
 package() {
+  true
 }
 """
 	def run_on_pkg(self, p):
