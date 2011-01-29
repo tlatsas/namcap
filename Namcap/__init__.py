@@ -40,6 +40,7 @@ __tarball__ = """
   missingbackups
   perllocal
   permissions
+  rpath
   scrollkeeper
   symlink
   urlpkg
@@ -55,7 +56,6 @@ __pkgbuild__ = """
   invalidstartdir
   license
   pkgname
-  rpath
   sfurl
   tags
   url
