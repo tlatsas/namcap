@@ -19,7 +19,7 @@
 
 import os.path
 
-class package:
+class package(object):
 	def short_name(self):
 		return "licensepkg"
 	def long_name(self):

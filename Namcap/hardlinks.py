@@ -19,7 +19,7 @@
 
 from os.path import dirname
 
-class package:
+class package(object):
 	def short_name(self):
 		return "hardlinks"
 	def long_name(self):

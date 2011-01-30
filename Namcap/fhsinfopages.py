@@ -19,7 +19,7 @@
 
 import os
 
-class package:
+class package(object):
 	def short_name(self):
 		return "fhs-infopages"
 	def long_name(self):

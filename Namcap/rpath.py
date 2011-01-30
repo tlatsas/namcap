@@ -55,7 +55,7 @@ def checkrpath(insecure_rpaths, dirname, names):
 						if path in warn and fname not in insecure_rpaths:
 							insecure_rpaths[1].append((path, fname))
 
-class package:
+class package(object):
 	def short_name(self):
 		return "rpath"
 	def long_name(self):

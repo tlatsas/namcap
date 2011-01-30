@@ -42,7 +42,7 @@ def scanelf(invalid_elffiles, dirname, names):
 				invalid_elffiles.append(clean_filename(file_path))
 
 
-class package:
+class package(object):
 	def short_name(self):
 		return "elffiles"
 	def long_name(self):

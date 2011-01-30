@@ -162,7 +162,7 @@ def filllibcache():
 				libcache['i686'][g.group(1)] = g.group(3)
 
 
-class package:
+class package(object):
 	def short_name(self):
 		return "depends"
 	def long_name(self):

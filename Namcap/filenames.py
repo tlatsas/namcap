@@ -25,7 +25,7 @@ import re
 ALLOWED_PUNCTUATION = "!%()+,:=?@[\]^{}~"
 VALID_FILENAMES = re.compile("^[0-9a-zA-Z./\-_" + ALLOWED_PUNCTUATION + "]*$")
 
-class package:
+class package(object):
 	def short_name(self):
 		return "filenames"
 	def long_name(self):

@@ -23,7 +23,7 @@ import re
 
 RE_IS_HEXNUMBER = re.compile("[0-9a-f]+")
 
-class package:
+class package(object):
 	def short_name(self):
 		return "checksums"
 	def long_name(self):

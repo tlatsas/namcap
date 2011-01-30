@@ -33,7 +33,7 @@ def scanelf(found_elffiles, dirname, names):
 		if is_elf(file_path):
 			found_elffiles.append(clean_filename(file_path))
 
-class package:
+class package(object):
 	def short_name(self):
 		return "anyelf"
 	def long_name(self):

@@ -20,7 +20,7 @@
 import os
 import tarfile
 
-class package:
+class package(object):
 	def short_name(self):
 		return "fhs-manpages"
 	def long_name(self):

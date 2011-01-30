@@ -21,7 +21,7 @@
 
 import re
 
-class package:
+class package(object):
 	def short_name(self):
 		return "carch"
 	def long_name(self):

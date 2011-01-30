@@ -17,7 +17,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-class package:
+class package(object):
 	def short_name(self):
 		return "infodirectory"
 	def long_name(self):

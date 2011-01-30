@@ -23,7 +23,7 @@ def inDir(dir, files):
 			return 1
 	return 0
 
-class package:
+class package(object):
 	def short_name(self):
 		return "emptydir"
 	def long_name(self):

@@ -19,7 +19,7 @@
 
 import re
 
-class package:
+class package(object):
 	def short_name(self):
 		return "tags"
 	def long_name(self):
