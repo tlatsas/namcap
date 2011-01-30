@@ -37,22 +37,31 @@ package() {
 """
 
 class PkgbuildLoaderTests(unittest.TestCase):
-	def runTest(self):
-		tmpdir = tempfile.mkdtemp()
-		tmpname = os.path.join(tmpdir, "PKGBUILD")
+	def setUp(self):
+		self.tmpdir = tempfile.mkdtemp()
+		tmpname = os.path.join(self.tmpdir, "PKGBUILD")
 		with open(tmpname, 'w') as f:
 			f.write(pkgbuild)
-		pkginfo = pacman.load(tmpname)
+		self.pkginfo = pacman.load(tmpname)
 
-		self.assertEqual(pkginfo.name, "mypackage")
-		self.assertEqual(pkginfo.version, "1.0-1")
-		self.assertEqual(pkginfo.desc, "A package")
-		self.assertEqual(pkginfo.url, "http://www.example.com/")
+	def tearDown(self):
+		shutil.rmtree(self.tmpdir)
 
-		self.assertEqual(pkginfo.depends, ["glibc", "foobar"])
-		self.assertEqual(pkginfo.optdepends, ["libabc"])
-		self.assertEqual(pkginfo.provides, ["yourpackage"])
+	def test_pkgname(self):
+		self.assertEqual(self.pkginfo.name, "mypackage")
+	def test_version(self):
+		self.assertEqual(self.pkginfo.version, "1.0-1")
+	def test_pkgdesc(self):
+		self.assertEqual(self.pkginfo.desc, "A package")
+	def test_url(self):
+		self.assertEqual(self.pkginfo.url, "http://www.example.com/")
 
-		shutil.rmtree(tmpdir)
+	def test_depends(self):
+		self.assertEqual(self.pkginfo.depends, ["glibc", "foobar"])
+	def test_optdeps(self):
+		self.assertEqual(self.pkginfo.optdepends, ["libabc"])
+	def test_provides(self):
+		self.assertEqual(self.pkginfo.provides, ["yourpackage"])
+
 
 # vim: set ts=4 sw=4 noet:

@@ -40,28 +40,31 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
+	def setUp(self):
+		self.rule = module.package()
+		self.tmpdir = tempfile.mkdtemp()
+		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
+
+	def tearDown(self):
+		shutil.rmtree(self.tmpdir)
+
 	def run_on_pkg(self, p):
 		with open(self.tmpname, 'w') as f:
 			f.write(p)
 		pkginfo = pacman.load(self.tmpname)
 		return self.rule.analyze(pkginfo, self.tmpname)
 
-	def runTest(self):
-		self.rule = module.package()
-		self.tmpdir = tempfile.mkdtemp()
-		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
-
+	def test_valid(self):
 		# Valid PKGBUILDS
 		for p in valid_pkgbuilds.all_pkgbuilds:
 			ret = self.run_on_pkg(p)
 			self.assertEqual(ret, EMPTY_RESULT)
 
+	def test_example1(self):
 		# Example 1
 		ret = self.run_on_pkg(self.pkgbuild1)
 		self.assertEqual(ret[0], [])
 		self.assertEqual(ret[1], ("specific-host-type-used %s", "i686"))
 		self.assertEqual(ret[2], [])
-
-		shutil.rmtree(self.tmpdir)
 
 # vim: set ts=4 sw=4 noet:
