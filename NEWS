@@ -1,4 +1,4 @@
-namcap (2.x)
+namcap (2.8)
 	- compatibility with changes in local DB format introduced by
 	  pacman 3.5
 	- New check for inexistent backup files
