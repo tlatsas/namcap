@@ -19,6 +19,10 @@
 
 """Verifies checksums are included in a PKGBUILD"""
 
+import re
+
+RE_IS_HEXNUMBER = re.compile("[0-9a-f]+")
+
 class package:
 	def short_name(self):
 		return "checksums"
@@ -42,11 +46,13 @@ class package:
 			sumname += 'sums'
 			if hasattr(pkginfo, sumname):
 				if len(pkginfo.source) > len(getattr(pkginfo, sumname)):
-					ret[0].append(("not-enough-checksums %s %i needed", (sumname, len(pkginfo.source))))
+					ret[0].append(("not-enough-checksums %s %i needed",
+						          (sumname, len(pkginfo.source))))
 				elif len(pkginfo.source) < len(getattr(pkginfo, sumname)):
-					ret[0].append(("too-many-checksums %s %i needed", (sumname, len(pkginfo.source))))
+					ret[0].append(("too-many-checksums %s %i needed",
+						          (sumname, len(pkginfo.source))))
 				for sum in getattr(pkginfo, sumname):
-					if len(sum) != sumlen:
+					if len(sum) != sumlen or not RE_IS_HEXNUMBER.match(sum):
 						ret[0].append(("improper-checksum %s %s", (sumname, sum)))
 
 		return ret
