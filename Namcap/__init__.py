@@ -50,12 +50,12 @@ __tarball__ = """
 __pkgbuild__ = """
   arrays
   badbackups
-  capsnames
   carch
   checksums
   invalidstartdir
   license
   pkgname
+  pkgnameindesc
   sfurl
   tags
   url

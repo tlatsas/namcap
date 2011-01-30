@@ -1,6 +1,6 @@
 # 
-# namcap rules - capsnames
-# Copyright (C) 2003-2009 Jason Chu <jason@archlinux.org>
+# namcap rules - pkgname
+# Copyright (C) 2009 Hugo Doria <hugo@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -17,22 +17,20 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-"""Verifies package name does not include upper case letters"""
-
-import re
-
 class package:
 	def short_name(self):
-		return "capsnames"
+		return "pkgnameindesc"
 	def long_name(self):
-		return "Verifies package name does not include upper case letters"
+		return "Verifies if the package name is included on package description"
 	def prereq(self):
 		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
-		if re.search('[A-Z]', pkginfo.name) != None:
-			ret[0].append(("package-name-in-uppercase", ()))
+		if hasattr(pkginfo, 'name') and hasattr(pkginfo, 'desc'):
+			if pkginfo.name.lower() in pkginfo.desc.lower().split():
+				ret[1].append(("pkgname-in-description", ()))
 		return ret
 	def type(self):
 		return "pkgbuild"
+
 # vim: set ts=4 sw=4 noet:
