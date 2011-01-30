@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from setuptools import setup
+from setuptools import setup, find_packages
 
 DATAFILES = [('/usr/share/man/man1', ['namcap.1']),
 		('/usr/share/namcap', ['namcap-tags']),
@@ -14,9 +14,10 @@ setup(name="namcap",
 	url="http://www.archlinux.org/",
 
 	py_modules=["pacman", "namcap"],
-	packages=["Namcap"],
+	packages = find_packages(),
 	scripts=["namcap", 'parsepkgbuild'],
-	test_suite = "tests",
+	test_suite = "Namcap.tests",
+	use_2to3 = True,
 	data_files=DATAFILES)
 
 # vim: set ts=4 sw=4 noet:
