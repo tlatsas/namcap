@@ -6,19 +6,19 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.pkgname as module
+import Namcap.pkgnameindesc as module
 
 EMPTY_RESULT = [ [] , [] , [] ]
 
-class NamcapInvalidPkgNameTest(unittest.TestCase):
+class NamcapPkgnameInDescTest(unittest.TestCase):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
 
-pkgname=MyPackage
+pkgname=mypackage
 pkgver=1.0
 pkgrel=1
-pkgdesc="A package"
+pkgdesc="The mypackage program does foobar"
 arch=('i686' 'x86_64')
 url="http://www.example.com/"
 license=('GPL')
@@ -57,10 +57,11 @@ package() {
 
 		# Example 1
 		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [("package-name-in-uppercase", ())])
-		self.assertEqual(ret[1], [])
+		self.assertEqual(ret[0], [])
+		self.assertEqual(set(ret[1]), set( [("pkgname-in-description", ())] ))
 		self.assertEqual(ret[2], [])
 
 		shutil.rmtree(self.tmpdir)
 
 # vim: set ts=4 sw=4 noet:
+

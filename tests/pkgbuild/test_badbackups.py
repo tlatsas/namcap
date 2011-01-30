@@ -6,16 +6,16 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.pkgname as module
+import Namcap.badbackups as module
 
 EMPTY_RESULT = [ [] , [] , [] ]
 
-class NamcapInvalidPkgNameTest(unittest.TestCase):
+class NamcapBadBackupsTest(unittest.TestCase):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
 
-pkgname=MyPackage
+pkgname=mypackage
 pkgver=1.0
 pkgrel=1
 pkgdesc="A package"
@@ -23,6 +23,7 @@ arch=('i686' 'x86_64')
 url="http://www.example.com/"
 license=('GPL')
 depends=('glibc')
+backup=('/etc/rc.conf')
 options=('!libtool')
 source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz)
 md5sums=('abcdefabcdef12345678901234567890')
@@ -57,7 +58,7 @@ package() {
 
 		# Example 1
 		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [("package-name-in-uppercase", ())])
+		self.assertEqual(ret[0], [("backups-preceding-slashes", ())])
 		self.assertEqual(ret[1], [])
 		self.assertEqual(ret[2], [])
 

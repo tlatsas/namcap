@@ -6,20 +6,20 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.pkgname as module
+import Namcap.carch as module
 
 EMPTY_RESULT = [ [] , [] , [] ]
 
-class NamcapInvalidPkgNameTest(unittest.TestCase):
+class NamcapSpecialArchTest(unittest.TestCase):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
 
-pkgname=MyPackage
+pkgname=mypackage
 pkgver=1.0
 pkgrel=1
 pkgdesc="A package"
-arch=('i686' 'x86_64')
+arch=('i686')
 url="http://www.example.com/"
 license=('GPL')
 depends=('glibc')
@@ -29,6 +29,7 @@ md5sums=('abcdefabcdef12345678901234567890')
 
 build() {
   cd "${srcdir}"/${pkgname}-${pkgver}
+  [[ $CARCH == x86_64 ]] && CFLAGS+="-m32"
   ./configure --prefix=/usr
   make
 }
@@ -57,8 +58,8 @@ package() {
 
 		# Example 1
 		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [("package-name-in-uppercase", ())])
-		self.assertEqual(ret[1], [])
+		self.assertEqual(ret[0], [])
+		self.assertEqual(ret[1], ("specific-host-type-used %s", "i686"))
 		self.assertEqual(ret[2], [])
 
 		shutil.rmtree(self.tmpdir)
