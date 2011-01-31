@@ -17,8 +17,9 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 import os
+from Namcap.ruleclass import *
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "symlink"
 	def long_name(self):
@@ -46,6 +47,5 @@ class package(object):
 				if i.linkname not in filenames:
 					ret[0].append(("dangling-hardlink %s points to %s", (i.name, i.linkname)))
 		return ret	
-	def type(self):
-		return "tarball"
+
 # vim: set ts=4 sw=4 noet:

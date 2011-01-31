@@ -18,8 +18,9 @@
 #
 
 import os
+from Namcap.ruleclass import *
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "fhs-infopages"
 	def long_name(self):

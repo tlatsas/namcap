@@ -17,7 +17,9 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-class package(object):
+from Namcap.ruleclass import *
+
+class package(TarballRule):
 	def short_name(self):
 		return "fileownership"
 	def long_name(self):

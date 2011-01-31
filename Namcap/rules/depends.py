@@ -21,6 +21,7 @@
 
 import re, os, os.path, pacman, subprocess
 from Namcap.util import is_elf, script_type
+from Namcap.ruleclass import *
 
 pkgcache = {}
 
@@ -161,7 +162,7 @@ def filllibcache():
 				libcache['i686'][g.group(1)] = g.group(3)
 
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "depends"
 	def long_name(self):
@@ -267,7 +268,5 @@ class package(object):
 					ret[1].append(("dependency-not-needed %s", i))
 		ret[2].append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend.keys()) ))
 		return ret
-	def type(self):
-		return "tarball"
 
 # vim: set ts=4 sw=4 noet:

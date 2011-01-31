@@ -18,14 +18,13 @@
 # 
 
 import re
+from Namcap.ruleclass import *
 
-class package(object):
+class package(PkgbuildRule):
 	def short_name(self):
 		return "invalidstartdir"
 	def long_name(self):
 		return "Looks for references to $startdir"
-	def prereq(self):
-		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
@@ -38,6 +37,4 @@ class package(object):
 				elif j[:4] == '/src':
 					ret[0].append(("use-srcdir", ()))
 		return ret
-	def type(self):
-		return "pkgbuild"
 # vim: set ts=4 sw=4 noet:

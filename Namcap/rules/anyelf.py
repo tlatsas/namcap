@@ -23,8 +23,9 @@ Check for ELF files to see if a package should be 'any' architecture
 
 import os
 from Namcap.util import is_elf, clean_filename
+from Namcap.ruleclass import *
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "anyelf"
 	def long_name(self):
@@ -50,8 +51,5 @@ class package(object):
 			if len(found_elffiles) == 0:
 				ret[1].append(("no-elffiles-not-any-package", ()))
 		return ret
-
-	def type(self):
-		return "tarball"
 
 # vim: set ts=4 sw=4 noet:

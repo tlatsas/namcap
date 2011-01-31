@@ -17,7 +17,9 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-class package(object):
+from Namcap.ruleclass import *
+
+class package(TarballRule):
 	def short_name(self):
 		return "permissions"
 	def long_name(self):
@@ -36,6 +38,5 @@ class package(object):
 			if str(i.name).endswith('.a') and i.mode != 0644 and i.mode != 0444:
 				ret[1].append(("incorrect-library-permissions %s", i.name))
 		return ret
-	def type(self):
-		return "tarball"
+
 # vim: set ts=4 sw=4 noet:

@@ -19,6 +19,7 @@
 
 import os, subprocess, re
 from Namcap.util import is_elf, clean_filename
+from Namcap.ruleclass import *
 
 allowed = ['/usr/lib', '/usr/lib32', '/lib', '$ORIGIN', '${ORIGIN}']
 allowed_toplevels = [s + '/' for s in allowed]
@@ -56,7 +57,7 @@ def checkrpath(filename, ret):
 				if path in warn and fname not in insecure_rpaths:
 					ret[1].append(("insecure-rpath %s %s", (path, fname)))
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "rpath"
 	def long_name(self):
@@ -73,6 +74,4 @@ class package(object):
 
 		return ret
 
-	def type(self):
-		return "tarball"
 # vim: set ts=4 sw=4 noet:

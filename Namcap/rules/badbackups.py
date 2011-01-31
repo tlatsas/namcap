@@ -20,14 +20,13 @@
 """Checks for bad backup entries"""
 
 import re
+from Namcap.ruleclass import *
 
-class package(object):
+class package(PkgbuildRule):
 	def short_name(self):
 		return "badbackups"
 	def long_name(self):
 		return "Checks for bad backup entries"
-	def prereq(self):
-		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if hasattr(pkginfo, 'backup'):
@@ -35,6 +34,5 @@ class package(object):
 				if re.match('^/', item) != None:
 					ret[0].append(("backups-preceding-slashes", ()))
 		return ret
-	def type(self):
-		return "pkgbuild"
+
 # vim: set ts=4 sw=4 noet:

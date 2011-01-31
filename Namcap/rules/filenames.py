@@ -21,11 +21,12 @@
 """Checks for invalid filenames."""
 
 import re
+from Namcap.ruleclass import *
 
 ALLOWED_PUNCTUATION = "!%()+,:=?@[\]^{}~"
 VALID_FILENAMES = re.compile("^[0-9a-zA-Z./\-_" + ALLOWED_PUNCTUATION + "]*$")
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "filenames"
 	def long_name(self):

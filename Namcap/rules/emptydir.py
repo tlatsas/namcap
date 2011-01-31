@@ -17,13 +17,15 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
+from Namcap.ruleclass import *
+
 def inDir(dir, files):
 	for i in files:
 		if i[:len(dir)] == dir:
 			return 1
 	return 0
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "emptydir"
 	def long_name(self):
@@ -41,6 +43,4 @@ class package(object):
 			if not inDir(i, files):
 				ret[1].append(("empty-directory %s", i))
 		return ret
-	def type(self):
-		return "tarball"
 # vim: set ts=4 sw=4 noet:

@@ -18,8 +18,9 @@
 # 
 
 import re
+from Namcap.ruleclass import *
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "scrollkeeper"
 	def long_name(self):
@@ -34,6 +35,5 @@ class package(object):
 			if n != None:
 				ret[0].append(("scrollkeeper-dir-exists %s", i))
 		return ret
-	def type(self):
-		return "tarball"
+
 # vim: set ts=4 sw=4 noet:

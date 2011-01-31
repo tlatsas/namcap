@@ -19,8 +19,9 @@
 
 import os
 import tarfile
+from Namcap.ruleclass import *
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "fhs-manpages"
 	def long_name(self):

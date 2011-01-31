@@ -18,14 +18,13 @@
 # 
 
 import re
+from Namcap.ruleclass import *
 
-class package(object):
+class package(Pkgbuildrule):
 	def short_name(self):
 		return "extravars"
 	def long_name(self):
 		return "Verifies that extra variables start with an underscore"
-	def prereq(self):
-		return ""
 	def analyze(self, pkginfo, tar):
 		stdvars = ['arch', 'license', 'depends', 'makedepends',
 				 'provides', 'conflicts' , 'replaces', 'backup',
@@ -41,6 +40,4 @@ class package(object):
 					if not varname.startswith('_'):
 						ret[1].append(("extra-var-begins-without-underscore %s", varname))
 		return ret
-	def type(self):
-		return "pkgbuild"
 # vim: set ts=4 sw=4 noet:

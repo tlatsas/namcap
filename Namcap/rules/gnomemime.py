@@ -17,7 +17,9 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
 # 
 
-class package(object):
+from Namcap.ruleclass import *
+
+class package(TarballRule):
     def short_name(self):
         return "gnomemime"
     def long_name(self):
@@ -40,6 +42,4 @@ class package(object):
                 ret[0].append(("gnome-mime-file %s", i))
                 
         return ret
-    def type(self):
-        return "tarball"
 # vim: set ts=4 sw=4 noet:

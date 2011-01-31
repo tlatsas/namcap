@@ -20,14 +20,13 @@
 """Verifies that array variables are actually arrays"""
 
 import re
+from Namcap.ruleclass import *
 
-class package(object):
+class package(PkgbuildRule):
 	def short_name(self):
 		return "array"
 	def long_name(self):
 		return "Verifies that array variables are actually arrays"
-	def prereq(self):
-		return ""
 	def analyze(self, pkginfo, tar):
 		arrayvars = ['arch', 'license', 'depends', 'makedepends',
 			 'optdepends', 'provides', 'conflicts' , 'replaces',
@@ -42,6 +41,5 @@ class package(object):
 						ret[1].append(("variable-not-array %s", j))
 
 		return ret
-	def type(self):
-		return "pkgbuild"
+
 # vim: set ts=4 sw=4 noet:

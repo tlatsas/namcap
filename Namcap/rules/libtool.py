@@ -18,11 +18,13 @@
 # 
 
 import re
+from Namcap.ruleclass import *
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "libtool"
 	def long_name(self):
+
 		return "Checks for libtool (*.la) files."
 	def prereq(self):
 		return "tar"
@@ -32,7 +34,5 @@ class package(object):
 			if re.search('\.la$', i) != None:
 				ret[1].append(("libtool-file-present %s", i))
 		return ret
-	def type(self):
-		return "tarball"
 
 # vim: set ts=4 sw=4 noet:

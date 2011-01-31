@@ -22,16 +22,15 @@
 """Checks for missing variables in PKGBUILD"""
 
 import re
+from Namcap.ruleclass import *
 
 RE_IS_HEXNUMBER = re.compile("[0-9a-f]+")
 
-class ChecksumsRule(object):
+class ChecksumsRule(PkgbuildRule):
 	def short_name(self):
 		return "checksums"
 	def long_name(self):
 		return "Verifies checksums are included in a PKGBUILD"
-	def prereq(self):
-		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		checksums=[('md5', 32), ('sha1', 40), ('sha256', 64), ('sha384', 96), ('sha512', 128)]
@@ -58,16 +57,12 @@ class ChecksumsRule(object):
 						ret[0].append(("improper-checksum %s %s", (sumname, sum)))
 
 		return ret
-	def type(self):
-		return "pkgbuild"
 
-class TagsRule(object):
+class TagsRule(PkgbuildRule):
 	def short_name(self):
 		return "tags"
 	def long_name(self):
 		return "Looks for Maintainer and Contributor comments"
-	def prereq(self):
-		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		contributortag = 0
@@ -86,7 +81,5 @@ class TagsRule(object):
 			ret[1].append(("missing-maintainer", ()))
 
 		return ret
-	def type(self):
-		return "pkgbuild"
 
 # vim: set ts=4 sw=4 noet:

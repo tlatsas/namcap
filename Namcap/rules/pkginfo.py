@@ -27,44 +27,32 @@ class CapsPkgnameRule(PkgInfoRule):
 		return "capsnamespkg"
 	def long_name(self):
 		return "Verifies package name in package does not include upper case letters"
-	def prereq(self):
-		return "pkg"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if re.search('[A-Z]', pkginfo.name) != None:
 			ret[0].append(("package-name-in-uppercase", ()))
 		return ret
-	def type(self):
-		return "tarball"
 
 class UrlRule(PkgInfoRule):
 	def short_name(self):
 		return "urlpkg"
 	def long_name(self):
 		return "Verifies url is included in a package file"
-	def prereq(self):
-		return "pkg"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if not hasattr(pkginfo, 'url'):
 			ret[0].append(("missing-url", ()))
 		return ret
-	def type(self):
-		return "tarball"
 
-class LicenseRule(object):
+class LicenseRule(PkgInfoRule):
 	def short_name(self):
 		return "license"
 	def long_name(self):
 		return "Verifies license is included in a PKGBUILD"
-	def prereq(self):
-		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if not hasattr(pkginfo, 'license') or len(pkginfo.license) == 0:
 			ret[0].append(("missing-license", ()))
 		return ret
-	def type(self):
-		return "pkgbuild"
 
 # vim: set ts=4 sw=4 noet:

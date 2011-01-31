@@ -17,7 +17,9 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-class package(object):
+from Namcap.ruleclass import *
+
+class package(TarballRule):
 	def short_name(self):
 		return "hicoloricons"
 	def long_name(self):
@@ -41,6 +43,4 @@ class package(object):
 				if ("gtk-update-icon-cache" not in install_script) and ("xdg-icon-resource" not in install_script):
 					ret[0].append(("hicolor-icon-cache-not-updated", ()))
 		return ret
-	def type(self):
-		return "tarball"
 # vim: set ts=4 sw=4 noet:

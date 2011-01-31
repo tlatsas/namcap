@@ -18,8 +18,9 @@
 # 
 
 import os.path
+from Namcap.ruleclass import *
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "licensepkg"
 	def long_name(self):
@@ -48,6 +49,5 @@ class package(object):
 					if lowerlicense not in commonlicenses:
 						ret[0].append(("not-a-common-license %s", license))
 		return ret
-	def type(self):
-		return "tarball"
+
 # vim: set ts=4 sw=4 noet:

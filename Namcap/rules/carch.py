@@ -20,14 +20,13 @@
 """Verifies that no specific host type is used"""
 
 import re
+from Namcap.ruleclass import *
 
-class package(object):
+class package(PkgbuildRule):
 	def short_name(self):
 		return "carch"
 	def long_name(self):
 		return "Verifies that no specific host type is used"
-	def prereq(self):
-		return ""
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		arches = ['i686', 'i586', 'x86_64']
@@ -41,6 +40,4 @@ class package(object):
 				if not archline.match(i) and not archif.match(i):
 					ret[1].append(("specific-host-type-used %s", ",".join(arches)))
 		return ret
-	def type(self):
-		return "pkgbuild"
 # vim: set ts=4 sw=4 noet:

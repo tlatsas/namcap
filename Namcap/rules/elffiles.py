@@ -19,12 +19,13 @@
 
 import os
 from Namcap.util import is_elf, clean_filename
+from Namcap.ruleclass import *
 
 # Valid directories for ELF files
 valid_dirs = ['bin/', 'sbin/', 'usr/bin/', 'usr/sbin/', 'lib/',
 		'usr/lib/', 'usr/lib32/']
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "elffiles"
 	def long_name(self):
@@ -52,8 +53,5 @@ class package(object):
 						clean_file_path))
 
 		return ret
-
-	def type(self):
-		return "tarball"
 
 # vim: set ts=4 sw=4 noet:

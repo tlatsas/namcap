@@ -18,8 +18,9 @@
 # 
 
 from os.path import dirname
+from Namcap.ruleclass import *
 
-class package(object):
+class package(TarballRule):
 	def short_name(self):
 		return "hardlinks"
 	def long_name(self):
