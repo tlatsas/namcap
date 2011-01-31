@@ -89,34 +89,4 @@ class TagsRule(object):
 	def type(self):
 		return "pkgbuild"
 
-class UrlRule(object):
-	def short_name(self):
-		return "url"
-	def long_name(self):
-		return "Verifies url is included in a PKGBUILD"
-	def prereq(self):
-		return ""
-	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
-		if not hasattr(pkginfo, 'url'):
-			ret[0].append(("missing-url", ()))
-		return ret
-	def type(self):
-		return "pkgbuild"
-
-class LicenseRule(object):
-	def short_name(self):
-		return "license"
-	def long_name(self):
-		return "Verifies license is included in a PKGBUILD"
-	def prereq(self):
-		return ""
-	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
-		if not hasattr(pkginfo, 'license') or len(pkginfo.license) == 0:
-			ret[0].append(("missing-license", ()))
-		return ret
-	def type(self):
-		return "pkgbuild"
-
 # vim: set ts=4 sw=4 noet:
