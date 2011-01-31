@@ -60,38 +60,37 @@ def figurebitsize(line):
 	else:
 		return 'i686'
 
-def scanlibs(data, dirname, names):
+def scanlibs(filename, liblist):
 	"""
-	Walk over all the files in the package and run "readelf -d" on them.
-	If they depend on a library, store that library's path in sharedlibs
+	Run "readelf -d" on a file
+	If it depends on a library, store that library's path.
 	"""
-	sharedlibs, scripts = data
+	sharedlibs, scripts = liblist
 	shared = re.compile('Shared library: \[(.*)\]')
-	for i in names:
-		path = dirname + '/' + i
-		if is_elf(path):
-			var = subprocess.Popen('readelf -d ' + path,
-					shell=True,
-					stdout=subprocess.PIPE,
-					stderr=subprocess.PIPE).communicate()
-			for j in var[0].split('\n'):
-				n = shared.search(j)
-				# Is this a Shared library: line?
-				if n != None:
-					# Find out its architecture
-					architecture = figurebitsize(j)
-					try:
-						libpath = os.path.abspath(
-								libcache[architecture][n.group(1)])[1:]
-						sharedlibs.setdefault(libpath, {})[path] = 1
-					except KeyError:
-						# We didn't know about the library, so add it for fail later
-						sharedlibs.setdefault(n.group(1), {})[path] = 1
-		# Maybe it is a script file
-		else:
-			cmd = script_type(path)
-			if cmd != None:
-				scripts.setdefault(cmd, {})[path] = 1
+
+	if is_elf(filename):
+		var = subprocess.Popen('readelf -d ' + filename,
+				shell=True,
+				stdout=subprocess.PIPE,
+				stderr=subprocess.PIPE).communicate()
+		for j in var[0].splitlines():
+			n = shared.search(j)
+			# Is this a Shared library: line?
+			if n != None:
+				# Find out its architecture
+				architecture = figurebitsize(j)
+				try:
+					libpath = os.path.abspath(
+							libcache[architecture][n.group(1)])[1:]
+					sharedlibs.setdefault(libpath, {})[filename] = 1
+				except KeyError:
+					# We didn't know about the library, so add it for fail later
+					sharedlibs.setdefault(n.group(1), {})[filename] = 1
+	# Maybe it is a script file
+	else:
+		cmd = script_type(filename)
+		if cmd != None:
+			scripts.setdefault(cmd, {})[filename] = 1
 
 def finddepends(liblist):
 	dependlist = {}
@@ -153,7 +152,7 @@ def filllibcache():
 			stdout=subprocess.PIPE,
 			stderr=subprocess.PIPE).communicate()
 	libline = re.compile('\s*(.*) \((.*)\) => (.*)')
-	for j in var[0].split('\n'):
+	for j in var[0].splitlines():
 		g = libline.match(j)
 		if g != None:
 			if g.group(2).startswith('libc6,x86-64'):
@@ -179,7 +178,10 @@ class package(object):
 		ret = [[], [], []]
 		filllibcache()
 		os.environ['LC_ALL'] = 'C'
-		os.path.walk(data, scanlibs, liblist)
+
+		for dirpath, subdirs, files in os.walk(data):
+			for i in files:
+				scanlibs(os.path.join(dirpath, i), liblist)
 
 		# Ldd all the files and find all the link and script dependencies
 		dependlist, tmpret = finddepends(liblist[0])

@@ -25,35 +25,36 @@ allowed_toplevels = [s + '/' for s in allowed]
 warn = ['/usr/local/lib']
 libpath = re.compile('Library rpath: \[(.*)\]')
 
-def checkrpath(insecure_rpaths, dirname, names):
+def checkrpath(filename, ret):
 	"Checks if secure RPATH."
 
-	for i in names:
-		mypath = dirname + '/' + i
-		if is_elf(mypath):
-			var = subprocess.Popen('readelf -d ' + mypath,
-					shell=True,
-					stdout=subprocess.PIPE,
-					stderr=subprocess.PIPE).communicate()
-			for j in var[0].split('\n'):
-				n = libpath.search(j)
-				# Is this a Library rpath: line?
-				if n != None:
-					if ":" in n.group(1):
-						rpaths = n.group(1).split(':')
-					else:
-						rpaths = [n.group(1)]
-					for path in rpaths:
-						path_ok = path in allowed
-						for allowed_toplevel in allowed_toplevels:
-							if path.startswith(allowed_toplevel):
-								path_ok = True
-						fname = clean_filename(mypath)
-						if not path_ok:
-							insecure_rpaths[0].append((path, fname))
-							break
-						if path in warn and fname not in insecure_rpaths:
-							insecure_rpaths[1].append((path, fname))
+	if not is_elf(filename):
+		return
+
+	var = subprocess.Popen('readelf -d ' + filename,
+			shell=True,
+			stdout=subprocess.PIPE,
+			stderr=subprocess.PIPE).communicate()
+
+	for j in var[0].splitlines():
+		n = libpath.search(j)
+		# Is this a Library rpath: line?
+		if n != None:
+			if ":" in n.group(1):
+				rpaths = n.group(1).split(':')
+			else:
+				rpaths = [n.group(1)]
+			for path in rpaths:
+				path_ok = path in allowed
+				for allowed_toplevel in allowed_toplevels:
+					if path.startswith(allowed_toplevel):
+						path_ok = True
+				fname = clean_filename(filename)
+				if not path_ok:
+					ret[0].append(("insecure-rpath %s %s", (path, fname)))
+					break
+				if path in warn and fname not in insecure_rpaths:
+					ret[1].append(("insecure-rpath %s %s", (path, fname)))
 
 class package(object):
 	def short_name(self):
@@ -65,14 +66,13 @@ class package(object):
 	def analyze(self, pkginfo, data):
 		ret = [[], [], []]
 		insecure_rpaths = [[], []]
-		os.path.walk(data, checkrpath, insecure_rpaths)
 
-		if len(insecure_rpaths) > 0:
-			for j in (0, 1):
-				for f in insecure_rpaths[j]:
-					# f is already a tuple of (badrpath, badbinary)
-					ret[j].append(("insecure-rpath %s %s", f))
+		for dirpath, subdirs, files in os.walk(data):
+			for i in files:
+				checkrpath(os.path.join(dirpath, i), ret)
+
 		return ret
+
 	def type(self):
 		return "tarball"
 # vim: set ts=4 sw=4 noet:
