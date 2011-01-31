@@ -1,6 +1,8 @@
-# 
-# namcap rules - checksums
+# -*- coding: utf-8 -*-
+#
+# namcap rules - missingvars
 # Copyright (C) 2003-2009 Jason Chu <jason@archlinux.org>
+# Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -17,13 +19,13 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-"""Verifies checksums are included in a PKGBUILD"""
+"""Checks for missing variables in PKGBUILD"""
 
 import re
 
 RE_IS_HEXNUMBER = re.compile("[0-9a-f]+")
 
-class package(object):
+class ChecksumsRule(object):
 	def short_name(self):
 		return "checksums"
 	def long_name(self):
@@ -58,4 +60,63 @@ class package(object):
 		return ret
 	def type(self):
 		return "pkgbuild"
+
+class TagsRule(object):
+	def short_name(self):
+		return "tags"
+	def long_name(self):
+		return "Looks for Maintainer and Contributor comments"
+	def prereq(self):
+		return ""
+	def analyze(self, pkginfo, tar):
+		ret = [[], [], []]
+		contributortag = 0
+		maintainertag = 0
+		idtag = 0
+		for i in pkginfo.pkgbuild:
+			if re.match("#\s*Contributor\s*:", i) != None:
+				contributortag = 1
+			if re.match("#\s*Maintainer\s*:", i) != None:
+				maintainertag = 1
+
+		if contributortag != 1:
+			ret[2].append(("missing-contributor", ()))
+
+		if maintainertag != 1:
+			ret[1].append(("missing-maintainer", ()))
+
+		return ret
+	def type(self):
+		return "pkgbuild"
+
+class UrlRule(object):
+	def short_name(self):
+		return "url"
+	def long_name(self):
+		return "Verifies url is included in a PKGBUILD"
+	def prereq(self):
+		return ""
+	def analyze(self, pkginfo, tar):
+		ret = [[], [], []]
+		if not hasattr(pkginfo, 'url'):
+			ret[0].append(("missing-url", ()))
+		return ret
+	def type(self):
+		return "pkgbuild"
+
+class LicenseRule(object):
+	def short_name(self):
+		return "license"
+	def long_name(self):
+		return "Verifies license is included in a PKGBUILD"
+	def prereq(self):
+		return ""
+	def analyze(self, pkginfo, tar):
+		ret = [[], [], []]
+		if not hasattr(pkginfo, 'license') or len(pkginfo.license) == 0:
+			ret[0].append(("missing-license", ()))
+		return ret
+	def type(self):
+		return "pkgbuild"
+
 # vim: set ts=4 sw=4 noet:

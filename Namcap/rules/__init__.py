@@ -54,14 +54,11 @@ from . import (
   arrays,
   badbackups,
   carch,
-  checksums,
   invalidstartdir,
-  license,
+  missingvars,
   pkgname,
   pkgnameindesc,
   sfurl,
-  tags,
-  url,
 )
 
 all_rules = {}
