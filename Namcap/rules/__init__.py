@@ -22,7 +22,6 @@ from types import ModuleType
 # Tarball rules
 from . import (
   anyelf,
-  capsnamespkg,
   depends,
   directoryname,
   elffiles,
@@ -46,7 +45,6 @@ from . import (
   rpath,
   scrollkeeper,
   symlink,
-  urlpkg,
 )
 
 # Package rules
@@ -57,6 +55,7 @@ from . import (
   invalidstartdir,
   missingvars,
   pkgname,
+  pkginfo,
   pkgnameindesc,
   sfurl,
 )
@@ -68,7 +67,7 @@ for name,value in dict(locals()).iteritems():
 	if name == "Namcap.ruleclass":
 		continue
 	for n, v in value.__dict__.iteritems():
-		if type(v) == type:
+		if type(v) == type and hasattr(v, "short_name"):
 			all_rules[v().short_name()] = v
 
 # vim: set ts=4 sw=4 noet:
