@@ -28,7 +28,7 @@ sandbox_directory = '/tmp/namcap.' + str(os.getpid())
 # Functions
 def get_modules():
 	"""Return all possible modules (rules)"""
-	return Namcap.all_rules
+	return Namcap.rules.all_rules
 
 def usage():
 	"""Display usage information"""
@@ -107,7 +107,7 @@ def process_realpackage(package, modules):
 
 	# Loop through each one, load them apply if possible
 	for i in modules:
-		pkg = Namcap.all_rules[i]()
+		pkg = get_modules()[i]()
 		ret = [[], [], []]
 		if pkg.type() == "tarball":
 			if pkg.prereq() == "extract":
@@ -145,7 +145,7 @@ def process_pkgbuild(package, modules):
 		return 1
 
 	for i in modules:
-		pkg = Namcap.all_rules[i]()
+		pkg = get_modules()[i]()
 		ret = [[], [], []]
 		if pkg.type() == "pkgbuild":
 			ret = pkg.analyze(pkginfo, package)

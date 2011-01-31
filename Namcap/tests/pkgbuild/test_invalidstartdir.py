@@ -6,7 +6,7 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.invalidstartdir as module
+import Namcap.rules.invalidstartdir as module
 
 EMPTY_RESULT = [ [] , [] , [] ]
 

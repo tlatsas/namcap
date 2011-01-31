@@ -6,7 +6,7 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.url
+import Namcap.rules
 
 EMPTY_RESULT = [ [] , [] , [] ]
 
@@ -45,7 +45,7 @@ package() {
 		return self.rule.analyze(pkginfo, self.tmpname)
 
 	def runTest(self):
-		self.rule = Namcap.url.package()
+		self.rule = Namcap.rules.url.package()
 		self.tmpdir = tempfile.mkdtemp()
 		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
 

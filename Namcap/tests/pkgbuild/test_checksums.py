@@ -6,7 +6,7 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.checksums as module
+import Namcap.rules.checksums as module
 
 EMPTY_RESULT = [ [] , [] , [] ]
 

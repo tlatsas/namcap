@@ -6,7 +6,7 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.sfurl as module
+import Namcap.rules.sfurl as module
 
 EMPTY_RESULT = [ [] , [] , [] ]
 

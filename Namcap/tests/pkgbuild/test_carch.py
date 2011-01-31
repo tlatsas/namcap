@@ -6,7 +6,7 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.carch as module
+import Namcap.rules.carch as module
 
 EMPTY_RESULT = [ [] , [] , [] ]
 

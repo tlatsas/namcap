@@ -6,7 +6,7 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.arrays
+import Namcap.rules
 
 EMPTY_RESULT = [ [] , [] , [] ]
 
@@ -40,7 +40,7 @@ package() {
 }
 """
 	def setUp(self):
-		self.rule = Namcap.arrays.package()
+		self.rule = Namcap.rules.arrays.package()
 		self.tmpdir = tempfile.mkdtemp()
 		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
 

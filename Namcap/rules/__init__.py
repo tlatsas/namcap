@@ -17,7 +17,61 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-import util
-import rules
+from types import ModuleType
+
+# Tarball rules
+from . import (
+  anyelf,
+  capsnamespkg,
+  depends,
+  directoryname,
+  elffiles,
+  emptydir,
+  fhsmanpages,
+  fhsinfopages,
+  filenames,
+  fileownership,
+  gnomemime,
+  hardlinks,
+  hicoloricons,
+  infodirectory,
+  kdeprograms,
+  libtool,
+  licensepkg,
+  lotsofdocs,
+  mimefiles,
+  missingbackups,
+  perllocal,
+  permissions,
+  rpath,
+  scrollkeeper,
+  symlink,
+  urlpkg,
+)
+
+# Package rules
+from . import (
+  arrays,
+  badbackups,
+  carch,
+  checksums,
+  invalidstartdir,
+  license,
+  pkgname,
+  pkgnameindesc,
+  sfurl,
+  tags,
+  url,
+)
+
+all_rules = {}
+for name,value in dict(locals()).iteritems():
+	if not isinstance(value, ModuleType):
+		continue
+	if name == "Namcap.ruleclass":
+		continue
+	for n, v in value.__dict__.iteritems():
+		if type(v) == type:
+			all_rules[v().short_name()] = v
 
 # vim: set ts=4 sw=4 noet:

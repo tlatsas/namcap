@@ -6,7 +6,7 @@ import shutil
 import pacman
 import valid_pkgbuilds
 
-import Namcap.pkgnameindesc as module
+import Namcap.rules.pkgnameindesc as module
 
 EMPTY_RESULT = [ [] , [] , [] ]
 
