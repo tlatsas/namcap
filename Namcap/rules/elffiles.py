@@ -49,8 +49,7 @@ class package(TarballRule):
 						in_valid_dir = True
 						break
 				if not in_valid_dir:
-					ret[0].append(("elffile-not-in-allowed-dirs	%s",
-						clean_file_path))
+					ret[0].append(("elffile-not-in-allowed-dirs %s", clean_file_path))
 
 		return ret
 
