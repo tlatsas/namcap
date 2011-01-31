@@ -24,15 +24,6 @@ Check for ELF files to see if a package should be 'any' architecture
 import os
 from Namcap.util import is_elf, clean_filename
 
-def scanelf(found_elffiles, dirname, names):
-	'''Look at files and determine if they are ELF files'''
-
-	for i in names:
-		file_path = os.path.join(dirname, i)
-		# Checking for ELF files
-		if is_elf(file_path):
-			found_elffiles.append(clean_filename(file_path))
-
 class package(object):
 	def short_name(self):
 		return "anyelf"
@@ -43,7 +34,13 @@ class package(object):
 	def analyze(self, pkginfo, data):
 		ret = [[], [], []]
 		found_elffiles = []
-		os.path.walk(data, scanelf, found_elffiles)
+
+		for dirpath, subdirs, files in os.walk(data):
+			for i in files:
+				file_path = os.path.join(dirpath, i)
+				# Checking for ELF files
+				if is_elf(file_path):
+					found_elffiles.append(clean_filename(file_path))
 
 		if pkginfo.arch and pkginfo.arch[0] == 'any':
 			if len(found_elffiles) > 0:

@@ -20,27 +20,9 @@
 import os
 from Namcap.util import is_elf, clean_filename
 
-def scanelf(invalid_elffiles, dirname, names):
-	'''Method to scan for ELF files in invalid directories'''
-
-	# Valid directories for ELF files
-	valid_dirs = ['bin/', 'sbin/', 'usr/bin/', 'usr/sbin/', 'lib/',
-			'usr/lib/', 'usr/lib32/']
-	
-	for i in names:
-		file_path = os.path.join(dirname, i)
-		valid_dir_found = False
-		
-		# Checking for ELF files
-		if is_elf(file_path):
-			for f in valid_dirs:
-				if (clean_filename(file_path)).startswith(f):
-					valid_dir_found = True
-					break 
-
-			if not valid_dir_found:
-				invalid_elffiles.append(clean_filename(file_path))
-
+# Valid directories for ELF files
+valid_dirs = ['bin/', 'sbin/', 'usr/bin/', 'usr/sbin/', 'lib/',
+		'usr/lib/', 'usr/lib32/']
 
 class package(object):
 	def short_name(self):
@@ -51,15 +33,26 @@ class package(object):
 		return "extract"
 	def analyze(self, pkginfo, data):
 		ret = [[], [], []]
-		invalid_elffiles = []
-		
-		os.path.walk(data, scanelf, invalid_elffiles)		
-		if len(invalid_elffiles) > 0:			
-			for i in invalid_elffiles:
-				ret[0].append(("elffile-not-in-allowed-dirs %s", i))
-					
+
+		for dirpath, subdirs, files in os.walk(data):
+			for i in files:
+				file_path = os.path.join(dirpath, i)
+				if not is_elf(file_path):
+					# Not an ELF file, nothing to check
+					continue
+				clean_file_path = clean_filename(file_path)
+				in_valid_dir = False
+				for valid in valid_dirs:
+					if clean_file_path.startswith(valid):
+						# Found a valid path prefix
+						in_valid_dir = True
+						break
+				if not in_valid_dir:
+					ret[0].append(("elffile-not-in-allowed-dirs	%s",
+						clean_file_path))
+
 		return ret
-	
+
 	def type(self):
 		return "tarball"
 
