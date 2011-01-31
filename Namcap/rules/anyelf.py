@@ -26,10 +26,8 @@ from Namcap.util import is_elf, clean_filename
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "anyelf"
-	def long_name(self):
-		return "Check for ELF files to see if a package should be 'any' architecture"
+	name = "anyelf"
+	description = "Check for ELF files to see if a package should be 'any' architecture"
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):

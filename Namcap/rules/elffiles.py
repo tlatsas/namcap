@@ -26,10 +26,8 @@ valid_dirs = ['bin/', 'sbin/', 'usr/bin/', 'usr/sbin/', 'lib/',
 		'usr/lib/', 'usr/lib32/']
 
 class package(TarballRule):
-	def short_name(self):
-		return "elffiles"
-	def long_name(self):
-		return "Check about ELF files outside some standard paths."
+	name = "elffiles"
+	description = "Check about ELF files outside some standard paths."
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):

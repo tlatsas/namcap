@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "hicoloricons"
-	def long_name(self):
-		return "Checks whether the hicolor icon cache is updated."
+	name = "hicoloricons"
+	description = "Checks whether the hicolor icon cache is updated."
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):

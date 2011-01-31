@@ -21,10 +21,8 @@ import re
 from Namcap.ruleclass import *
 
 class package(PkgbuildRule):
-	def short_name(self):
-		return "sfurl"
-	def long_name(self):
-		return "Checks for proper sourceforge URLs"
+	name = "sfurl"
+	description = "Checks for proper sourceforge URLs"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if hasattr(pkginfo, 'source'):

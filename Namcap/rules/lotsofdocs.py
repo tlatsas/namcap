@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "lots-of-docs"
-	def long_name(self):
-		return "See if a package is carrying more documentation than it should"
+	name = "lots-of-docs"
+	description = "See if a package is carrying more documentation than it should"
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):

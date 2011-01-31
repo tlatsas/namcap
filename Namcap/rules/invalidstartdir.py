@@ -21,10 +21,8 @@ import re
 from Namcap.ruleclass import *
 
 class package(PkgbuildRule):
-	def short_name(self):
-		return "invalidstartdir"
-	def long_name(self):
-		return "Looks for references to $startdir"
+	name = "invalidstartdir"
+	description = "Looks for references to $startdir"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:

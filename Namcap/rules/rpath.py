@@ -58,10 +58,8 @@ def checkrpath(filename, ret):
 					ret[1].append(("insecure-rpath %s %s", (path, fname)))
 
 class package(TarballRule):
-	def short_name(self):
-		return "rpath"
-	def long_name(self):
-		return "Verifies correct and secure RPATH for files."
+	name = "rpath"
+	description = "Verifies correct and secure RPATH for files."
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):

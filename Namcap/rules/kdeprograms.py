@@ -21,10 +21,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "kdeprograms"
-	def long_name(self):
-		return "Checks that KDE programs have kdebase-runtime as a dependency"
+	name = "kdeprograms"
+	description = "Checks that KDE programs have kdebase-runtime as a dependency"
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):

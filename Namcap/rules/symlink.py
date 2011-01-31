@@ -20,10 +20,8 @@ import os
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "symlink"
-	def long_name(self):
-		return "Checks that symlinks point to the right place"
+	name = "symlink"
+	description = "Checks that symlinks point to the right place"
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):

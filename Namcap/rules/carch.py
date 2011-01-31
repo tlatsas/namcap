@@ -23,10 +23,8 @@ import re
 from Namcap.ruleclass import *
 
 class package(PkgbuildRule):
-	def short_name(self):
-		return "carch"
-	def long_name(self):
-		return "Verifies that no specific host type is used"
+	name = "carch"
+	description = "Verifies that no specific host type is used"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		arches = ['i686', 'i586', 'x86_64']

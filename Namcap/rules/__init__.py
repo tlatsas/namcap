@@ -68,6 +68,6 @@ for name,value in dict(locals()).iteritems():
 		continue
 	for n, v in value.__dict__.iteritems():
 		if type(v) == type and hasattr(v, "short_name"):
-			all_rules[v().short_name()] = v
+			all_rules[v.name] = v
 
 # vim: set ts=4 sw=4 noet:

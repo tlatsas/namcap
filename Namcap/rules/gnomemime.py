@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-    def short_name(self):
-        return "gnomemime"
-    def long_name(self):
-        return "Checks for generated GNOME mime files"
+    name = "gnomemime"
+    description = "Checks for generated GNOME mime files"
     def prereq(self):
         return "tar"
     def analyze(self, pkginfo, tar):

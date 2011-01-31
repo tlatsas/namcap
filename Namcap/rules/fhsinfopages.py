@@ -21,10 +21,8 @@ import os
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "fhs-infopages"
-	def long_name(self):
-		return "Verifies correct installation of info pages"
+	name = "fhs-infopages"
+	description = "Verifies correct installation of info pages"
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
@@ -40,7 +38,5 @@ class package(TarballRule):
 						ret[1].append(("potential-non-fhs-info-page %s", i.name))
 
 		return ret
-	def type(self):
-		return "tarball"
 
 # vim: set ts=4 sw=4 noet:

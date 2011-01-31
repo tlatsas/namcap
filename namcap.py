@@ -185,7 +185,7 @@ for i, k in optlist:
 		if k == 'list':
 			print("-"*20 + " Namcap rule list " + "-"*20)
 			for j in modules:
-				print(string.ljust(j, 20) + ": " + modules[j]().long_name())
+				print(string.ljust(j, 20) + ": " + modules[j].description)
 			sys.exit(2)
 
 		module_list = k.split(',')

@@ -21,11 +21,8 @@ import re
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "libtool"
-	def long_name(self):
-
-		return "Checks for libtool (*.la) files."
+	name = "libtool"
+	description = "Checks for libtool (*.la) files."
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):

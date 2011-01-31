@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "missingbackups"
-	def long_name(self):
-		return "Backup files listed in package should exist"
+	name = "missingbackups"
+	description = "Backup files listed in package should exist"
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
@@ -36,6 +34,4 @@ class package(TarballRule):
 		for backup in missing_backups:
 			ret[0].append(("missing-backup-file %s", backup))
 		return ret
-	def type(self):
-		return "tarball"
 # vim: set ts=4 sw=4 noet:

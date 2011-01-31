@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "permissions"
-	def long_name(self):
-		return "Checks file permissions."
+	name = "permissions"
+	description = "Checks file permissions."
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):

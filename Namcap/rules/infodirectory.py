@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "infodirectory"
-	def long_name(self):
-		return "Checks for info directory file."
+	name = "infodirectory"
+	description = "Checks for info directory file."
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
@@ -32,6 +30,4 @@ class package(TarballRule):
 			if i == "usr/share/info/dir":
 				ret[0].append(("info-dir-file-present %s", i))
 		return ret
-	def type(self):
-		return "tarball"
 # vim: set ts=4 sw=4 noet:

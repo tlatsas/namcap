@@ -21,10 +21,8 @@ import os.path
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "licensepkg"
-	def long_name(self):
-		return "Verifies license is included in a package file"
+	name = "licensepkg"
+	description = "Verifies license is included in a package file"
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):

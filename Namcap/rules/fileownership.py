@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "fileownership"
-	def long_name(self):
-		return "Checks file ownership."
+	name = "fileownership"
+	description = "Checks file ownership."
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
@@ -42,6 +40,4 @@ class package(TarballRule):
 					gname = i.gname
 				ret[0].append(("incorrect-permissions %s (%s/%s)", (i.name, uname, gname)))
 		return ret
-	def type(self):
-		return "tarball"
 # vim: set ts=4 sw=4 noet:

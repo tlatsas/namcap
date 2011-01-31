@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(PkgInfoRule):
-	def short_name(self):
-		return "pkgnameindesc"
-	def long_name(self):
-		return "Verifies if the package name is included on package description"
+	name = "pkgnameindesc"
+	description = "Verifies if the package name is included on package description"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if hasattr(pkginfo, 'name') and hasattr(pkginfo, 'desc'):

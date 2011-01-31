@@ -21,10 +21,8 @@ import re
 from Namcap.ruleclass import *
 
 class package(Pkgbuildrule):
-	def short_name(self):
-		return "extravars"
-	def long_name(self):
-		return "Verifies that extra variables start with an underscore"
+	name = "extravars"
+	description = "Verifies that extra variables start with an underscore"
 	def analyze(self, pkginfo, tar):
 		stdvars = ['arch', 'license', 'depends', 'makedepends',
 				 'provides', 'conflicts' , 'replaces', 'backup',

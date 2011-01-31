@@ -27,10 +27,8 @@ ALLOWED_PUNCTUATION = "!%()+,:=?@[\]^{}~"
 VALID_FILENAMES = re.compile("^[0-9a-zA-Z./\-_" + ALLOWED_PUNCTUATION + "]*$")
 
 class package(TarballRule):
-	def short_name(self):
-		return "filenames"
-	def long_name(self):
-		return "Checks for invalid filenames."
+	name = "filenames"
+	description = "Checks for invalid filenames."
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
@@ -40,6 +38,4 @@ class package(TarballRule):
 			if not m:
 				ret[1].append(("invalid-filename", i))
 		return ret
-	def type(self):
-		return "tarball"
 # vim: set ts=4 sw=4 noet:

@@ -23,10 +23,8 @@ import re
 from Namcap.ruleclass import PkgInfoRule
 
 class CapsPkgnameRule(PkgInfoRule):
-	def short_name(self):
-		return "capsnamespkg"
-	def long_name(self):
-		return "Verifies package name in package does not include upper case letters"
+	name = "capsnamespkg"
+	description = "Verifies package name in package does not include upper case letters"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if re.search('[A-Z]', pkginfo.name) != None:
@@ -34,10 +32,8 @@ class CapsPkgnameRule(PkgInfoRule):
 		return ret
 
 class UrlRule(PkgInfoRule):
-	def short_name(self):
-		return "urlpkg"
-	def long_name(self):
-		return "Verifies url is included in a package file"
+	name = "urlpkg"
+	description = "Verifies url is included in a package file"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if not hasattr(pkginfo, 'url'):
@@ -45,10 +41,8 @@ class UrlRule(PkgInfoRule):
 		return ret
 
 class LicenseRule(PkgInfoRule):
-	def short_name(self):
-		return "license"
-	def long_name(self):
-		return "Verifies license is included in a PKGBUILD"
+	name = "license"
+	description = "Verifies license is included in a PKGBUILD"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if not hasattr(pkginfo, 'license') or len(pkginfo.license) == 0:

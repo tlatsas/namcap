@@ -23,10 +23,8 @@ import re
 from Namcap.ruleclass import *
 
 class package(PkgbuildRule):
-	def short_name(self):
-		return "badbackups"
-	def long_name(self):
-		return "Checks for bad backup entries"
+	name = "badbackups"
+	description = "Checks for bad backup entries"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if hasattr(pkginfo, 'backup'):

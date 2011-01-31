@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "directoryname"
-	def long_name(self):
-		return "Checks for standard directories."
+	name = "directoryname"
+	description = "Checks for standard directories."
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):

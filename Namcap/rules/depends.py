@@ -163,10 +163,8 @@ def filllibcache():
 
 
 class package(TarballRule):
-	def short_name(self):
-		return "depends"
-	def long_name(self):
-		return "Checks dependencies semi-smartly."
+	name = "depends"
+	description = "Checks dependencies semi-smartly."
 	def prereq(self):
 		return "extract"
 	def analyze(self, pkginfo, data):

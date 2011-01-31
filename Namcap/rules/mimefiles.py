@@ -20,10 +20,8 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-    def short_name(self):
-        return "mimefiles"
-    def long_name(self):
-        return "Check for files in /usr/share/mime"
+    name = "mimefiles"
+    description = "Check for files in /usr/share/mime"
     def prereq(self):
         return "tar"
     def analyze(self, pkginfo, tar):        
@@ -40,5 +38,4 @@ class package(TarballRule):
                     ret[0].append(("mime-cache-not-updated", ()))
 
         return ret
-    def type(self):
-        return "tarball"
+# vim: set ts=4 sw=4 noet:

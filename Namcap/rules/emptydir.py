@@ -26,10 +26,8 @@ def inDir(dir, files):
 	return 0
 
 class package(TarballRule):
-	def short_name(self):
-		return "emptydir"
-	def long_name(self):
-		return "Warns about empty directories in a package"
+	name = "emptydir"
+	description = "Warns about empty directories in a package"
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):

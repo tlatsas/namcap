@@ -27,10 +27,8 @@ from Namcap.ruleclass import *
 RE_IS_HEXNUMBER = re.compile("[0-9a-f]+")
 
 class ChecksumsRule(PkgbuildRule):
-	def short_name(self):
-		return "checksums"
-	def long_name(self):
-		return "Verifies checksums are included in a PKGBUILD"
+	name = "checksums"
+	description = "Verifies checksums are included in a PKGBUILD"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		checksums=[('md5', 32), ('sha1', 40), ('sha256', 64), ('sha384', 96), ('sha512', 128)]
@@ -59,10 +57,8 @@ class ChecksumsRule(PkgbuildRule):
 		return ret
 
 class TagsRule(PkgbuildRule):
-	def short_name(self):
-		return "tags"
-	def long_name(self):
-		return "Looks for Maintainer and Contributor comments"
+	name = "tags"
+	description = "Looks for Maintainer and Contributor comments"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		contributortag = 0

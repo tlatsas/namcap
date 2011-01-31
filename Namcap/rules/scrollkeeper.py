@@ -21,10 +21,8 @@ import re
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-	def short_name(self):
-		return "scrollkeeper"
-	def long_name(self):
-		return "Verifies that there aren't any scrollkeeper directories."
+	name = "scrollkeeper"
+	description = "Verifies that there aren't any scrollkeeper directories."
 	def prereq(self):
 		return "tar"
 	def analyze(self, pkginfo, tar):
