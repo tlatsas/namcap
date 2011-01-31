@@ -109,7 +109,10 @@ def process_realpackage(package, modules):
 	for i in modules:
 		pkg = get_modules()[i]()
 		ret = [[], [], []]
-		if pkg.type() == "tarball":
+
+		if isinstance(pkg, Namcap.ruleclass.PkgInfoRule):
+			ret = pkg.analyze(pkginfo, None)
+		if isinstance(pkg, Namcap.ruleclass.TarballRule):
 			if pkg.prereq() == "extract":
 				# If it's not extracted, then extract it and then analyze the package
 				if not extracted:
@@ -118,18 +121,16 @@ def process_realpackage(package, modules):
 						pkgtar.extract(j, sandbox_directory)
 					extracted = 1
 				ret = pkg.analyze(pkginfo, sandbox_directory)
-			elif pkg.prereq() == "pkg":
-				ret = pkg.analyze(pkginfo, None)
 			elif pkg.prereq() == "tar":
 				ret = pkg.analyze(pkginfo, pkgtar)
 			else:
 				ret = [['Error running rule (' + i + ')'], [], []]
 
-			# Output the three types of messages
-			show_messages(pkginfo.name, 'E', ret[0])
-			show_messages(pkginfo.name, 'W', ret[1])
-			if info_reporting:
-				show_messages(pkginfo.name, 'I', ret[2])
+		# Output the three types of messages
+		show_messages(pkginfo.name, 'E', ret[0])
+		show_messages(pkginfo.name, 'W', ret[1])
+		if info_reporting:
+			show_messages(pkginfo.name, 'I', ret[2])
 
 	# Clean up if we extracted anything
 	if extracted:
@@ -147,7 +148,9 @@ def process_pkgbuild(package, modules):
 	for i in modules:
 		pkg = get_modules()[i]()
 		ret = [[], [], []]
-		if pkg.type() == "pkgbuild":
+		if isinstance(pkg, Namcap.ruleclass.PkgInfoRule):
+			ret = pkg.analyze(pkginfo, None)
+		if isinstance(pkg, Namcap.ruleclass.PkgbuildRule):
 			ret = pkg.analyze(pkginfo, package)
 
 		# Output the PKGBUILD messages
