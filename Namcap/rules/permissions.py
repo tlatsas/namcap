@@ -33,7 +33,7 @@ class package(TarballRule):
 				ret[1].append(("file-world-writable %s", i.name))
 			if not i.mode & 1 and i.isdir():
 				ret[1].append(("directory-not-world-executable %s", i.name))
-			if str(i.name).endswith('.a') and i.mode != 0644 and i.mode != 0444:
+			if str(i.name).endswith('.a') and i.mode != 0o644 and i.mode != 0o444:
 				ret[1].append(("incorrect-library-permissions %s", i.name))
 		return ret
 
