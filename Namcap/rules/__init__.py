@@ -18,6 +18,7 @@
 # 
 
 from types import ModuleType
+import Namcap.ruleclass
 
 # Tarball rules
 from . import (
@@ -67,7 +68,9 @@ for name,value in dict(locals()).iteritems():
 	if name == "Namcap.ruleclass":
 		continue
 	for n, v in value.__dict__.iteritems():
-		if type(v) == type and hasattr(v, "short_name"):
+		if (type(v) == type
+			and issubclass(v, Namcap.ruleclass.AbstractRule)
+			and hasattr(v, "name")):
 			all_rules[v.name] = v
 
 # vim: set ts=4 sw=4 noet:
