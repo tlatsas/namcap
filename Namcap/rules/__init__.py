@@ -24,11 +24,9 @@ import Namcap.ruleclass
 from . import (
   anyelf,
   depends,
-  directoryname,
   elffiles,
   emptydir,
-  fhsmanpages,
-  fhsinfopages,
+  fhs,
   filenames,
   fileownership,
   gnomemime,
