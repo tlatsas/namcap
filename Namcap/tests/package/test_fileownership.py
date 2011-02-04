@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-import Namcap.fileownership
+import Namcap.rules.fileownership
 
 class fileownershipTest(MakepkgTest):
 	pkgbuild = """
@@ -50,7 +50,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.fileownership.package
+				Namcap.rules.fileownership.package
 				)
 		self.assertEqual(ret[0], [("incorrect-permissions %s (%s/%s)",
 			("usr/bin/program", "root", "storage"))])

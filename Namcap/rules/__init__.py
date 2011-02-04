@@ -45,7 +45,7 @@ from . import (
   permissions,
   rpath,
   scrollkeeper,
-  symlink,
+  symlink
 )
 
 # Package rules
@@ -55,10 +55,9 @@ from . import (
   carch,
   invalidstartdir,
   missingvars,
-  pkgname,
   pkginfo,
   pkgnameindesc,
-  sfurl,
+  sfurl
 )
 
 all_rules = {}

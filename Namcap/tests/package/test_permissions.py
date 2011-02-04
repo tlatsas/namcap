@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-import Namcap.permissions
+import Namcap.rules.permissions
 
 class permissionsTest(MakepkgTest):
 	pkgbuild = """
@@ -50,7 +50,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.permissions.package
+				Namcap.rules.permissions.package
 				)
 		self.assertEqual(ret[0], [])
 		self.assertEqual(ret[1], [("file-world-writable %s",

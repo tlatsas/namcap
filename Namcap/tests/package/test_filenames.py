@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-import Namcap.filenames
+import Namcap.rules.filenames
 
 class FilenamesTest(MakepkgTest):
 	pkgbuild = """
@@ -49,7 +49,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.filenames.package
+				Namcap.rules.filenames.package
 				)
 		self.assertEqual(ret[0], [])
 		self.assertEqual(ret[1], [("invalid-filename", "usr/bin/Arch·Linux")])

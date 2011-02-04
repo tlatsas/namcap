@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-import Namcap.emptydir
+import Namcap.rules.emptydir
 
 class EmptyDirTest(MakepkgTest):
 	pkgbuild = """
@@ -49,7 +49,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.emptydir.package
+				Namcap.rules.emptydir.package
 				)
 		self.assertEqual(ret[0], [])
 		self.assertEqual(ret[1], [("empty-directory %s",
