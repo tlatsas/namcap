@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-from Namcap.rules import directoryname, fhsinfopages, fhsmanpages
+from Namcap.rules import fhs
 
 class FHSTest(MakepkgTest):
 	pkgbuild = """
@@ -49,7 +49,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				directoryname.package
+				fhs.FHSRule
 				)
 		self.assertEqual(ret[0], [])
 		self.assertEqual(set(ret[1]), set([
@@ -84,7 +84,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				fhsmanpages.package
+				fhs.FHSManpagesRule
 				)
 		self.assertEqual(ret[0],
 				[("non-fhs-man-page %s", "usr/man/something.1.gz")])
@@ -116,7 +116,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				fhsinfopages.package
+				fhs.FHSInfoPagesRule
 				)
 		self.assertEqual(ret[0],
 				[("non-fhs-info-page %s", "usr/info/something.gz")])
