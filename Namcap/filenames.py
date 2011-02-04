@@ -20,10 +20,10 @@
 
 """Checks for invalid filenames."""
 
-import re
+import string
 
-ALLOWED_PUNCTUATION = "!%()+,:=?@[\]^{}~"
-VALID_FILENAMES = re.compile("^[0-9a-zA-Z./\-_" + ALLOWED_PUNCTUATION + "]*$")
+VALID_CHARS = string.ascii_letters + string.digits \
+		+ string.punctuation + ' '
 
 class package:
 	def short_name(self):
@@ -35,9 +35,10 @@ class package:
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in tar.getnames():
-			m = VALID_FILENAMES.match(i)
-			if not m:
-				ret[1].append(("invalid-filename", i))
+			for c in i:
+				if c not in VALID_CHARS:
+					ret[1].append(("invalid-filename", i))
+					break
 		return ret
 	def type(self):
 		return "tarball"

@@ -38,6 +38,7 @@ build() {
   true
 }
 package() {
+  mkdir -p "${pkgdir}/usr/bin/Arch Linux"
   mkdir -p ${pkgdir}/usr/bin/Arch·Linux
 }
 """
