@@ -1,3 +1,7 @@
+namcap (2.x)
+	- don't be restrictive in filenames rule
+	- the test suite can now be used for tarball rules
+
 namcap (2.8)
 	- compatibility with changes in local DB format introduced by
 	  pacman 3.5
