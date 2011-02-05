@@ -17,13 +17,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
+import os
 from Namcap.ruleclass import *
-
-def inDir(dir, files):
-	for i in files:
-		if i[:len(dir)] == dir:
-			return 1
-	return 0
 
 class package(TarballRule):
 	name = "emptydir"
@@ -33,12 +28,14 @@ class package(TarballRule):
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 
-		# Strip trailing directory slashes (since python 2.5.1)
-		dirs = [x.rstrip('/') + '/' for x in tar.getnames() if x.endswith('/')]
-
-		files = [x for x in tar.getnames() if not x.endswith('/')]
-		for i in dirs:
-			if not inDir(i, files):
-				ret[1].append(("empty-directory %s", i))
+		dirs = []
+		entries = []
+		for entry in tar:
+			if entry.isdir():
+				dirs.append(entry.name.rstrip("/"))
+			entries.append(entry.name.rstrip("/"))
+		nonemptydirs = [os.path.dirname(x) for x in entries]
+		ret[1] = [("empty-directory %s", d)
+				for d in (set(dirs) - set(nonemptydirs))]
 		return ret
 # vim: set ts=4 sw=4 noet:
