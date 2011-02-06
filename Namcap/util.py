@@ -37,7 +37,7 @@ def read_carefully(path, readcall):
 			os.chmod(path, newmode)
 		except IOError:
 			return None
-	fd = open(path)
+	fd = open(path, 'rb')
 	val = readcall(fd)
 	fd.close()
 	# reset permissions if necessary
@@ -55,7 +55,7 @@ def is_elf(path):
 	if not bytes:
 		return False
 	# magic elf header, present in binaries and libraries
-	if bytes == "\x7FELF":
+	if bytes == b"\x7FELF":
 		return True
 	else:
 		return False
@@ -64,14 +64,14 @@ def script_type(path):
 	firstline = read_carefully(path, lambda fd: fd.readline())
 	if not firstline:
 		return None
-	script = re.compile('#!.*/(.*)')
+	script = re.compile(b'#!.*/(.*)')
 	m = script.match(firstline)
 	if m != None:
 		cmd = m.group(1).split()
 		name = cmd[0]
 		if name == 'env':
 			name = cmd[1]
-		return name
+		return name.decode('ascii')
 	return None
 
 clean_filename = lambda s: re.search(r"/tmp/namcap\.[0-9]*/(.*)", s).group(1)
