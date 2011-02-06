@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python3
 # 
 # namcap - A Pacman package analyzer
 # Copyright (C) 2003-2009 Jason Chu <jason@archlinux.org>

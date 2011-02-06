@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # This file is part of the namcap test suite.
 # It checks whether tags defined in the modules
 # have been entered in the 'tags' file.
@@ -37,9 +37,10 @@ for m in modules:
 			tags_by_file[tag] = m
 
 if tags_in_modules - tags != set([]):
-	print "Some tags are defined in the modules"
-	print "but not in the 'namcap-tags' file"
-	print "\n".join(map(lambda s: " %s (in %s)" % (s, tags_by_file[s]), list(tags_in_modules - tags)))
+	print("Some tags are defined in the modules")
+	print("but not in the 'namcap-tags' file")
+	for t in (tags_in_modules - tags):
+		print(" %s (in %s)" % (t, tags_by_file[t]))
 	sys.exit(1)
 
 # vim: set ts=4 sw=4 noet:

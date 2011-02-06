@@ -17,7 +17,6 @@ setup(name="namcap",
 	packages = find_packages(),
 	scripts=["namcap", 'parsepkgbuild'],
 	test_suite = "Namcap.tests",
-	use_2to3 = True,
 	data_files=DATAFILES)
 
 # vim: set ts=4 sw=4 noet:
