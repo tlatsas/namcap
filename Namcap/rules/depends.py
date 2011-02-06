@@ -115,7 +115,7 @@ def finddepends(liblist):
 	pacmandb = '/var/lib/pacman/local'
 	for i in os.listdir(pacmandb):
 		if os.path.isfile(pacmandb+'/'+i+'/files'):
-			file = open(pacmandb+'/'+i+'/files')
+			file = open(pacmandb+'/'+i+'/files', errors='ignore')
 			for j in file:
 				if not is_so.search(j):
 					continue

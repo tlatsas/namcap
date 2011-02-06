@@ -104,6 +104,7 @@ def load(package, root=None):
 		pkginfo = pkgtar.extractfile('.PKGINFO')
 		ret = PacmanPackage()
 		for i in pkginfo:
+			i = i.decode("utf-8", "ignore")
 			m = re.match('(.*) = (.*)', i)
 			if m != None:
 				lhs = m.group(1)
@@ -116,7 +117,7 @@ def load(package, root=None):
 		return ret
 
 	# Ooooo, it's a PKGBUILD
-	elif package.endswith('PKGBUILD'):
+	elif package[-8:] == 'PKGBUILD':
 		# Load all the data like we normally would
 		workingdir = os.path.dirname(package)
 		if workingdir == '':
@@ -127,10 +128,10 @@ def load(package, root=None):
 		# this means parsepkgbuild returned an error, so we are not valid
 		if process.returncode > 0:
 			return None
-		ret = loaddb(None, data[0])
+		ret = loaddb(None, data[0].decode('utf-8', 'ignore'))
 
 		# Add a nice little .pkgbuild surprise
-		pkgbuild = open(package)
+		pkgbuild = open(package, errors="ignore")
 		ret.pkgbuild = pkgbuild.readlines()
 		pkgbuild.close()
 
@@ -166,7 +167,7 @@ def loadfromdir(directory):
 	for info in ('desc', 'depends', 'files'):
 		path = os.path.join(directory, info)
 		if os.path.isfile(path):
-			dbfile = open(path)
+			dbfile = open(path, encoding="utf-8", errors="ignore")
 			loaddb(ret, dbfile.read())
 			dbfile.close()
 
