@@ -33,11 +33,11 @@ def checkrpath(filename, ret):
 		return
 
 	var = subprocess.Popen('readelf -d ' + filename,
-			shell=True,
+			shell=True, env={'LANG': 'C'},
 			stdout=subprocess.PIPE,
 			stderr=subprocess.PIPE).communicate()
 
-	for j in var[0].splitlines():
+	for j in var[0].decode('ascii').splitlines():
 		n = libpath.search(j)
 		# Is this a Library rpath: line?
 		if n != None:

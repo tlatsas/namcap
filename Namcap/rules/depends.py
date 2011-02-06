@@ -153,7 +153,7 @@ def filllibcache():
 			stdout=subprocess.PIPE,
 			stderr=subprocess.PIPE).communicate()
 	libline = re.compile('\s*(.*) \((.*)\) => (.*)')
-	for j in var[0].splitlines():
+	for j in var[0].decode('ascii').splitlines():
 		g = libline.match(j)
 		if g != None:
 			if g.group(2).startswith('libc6,x86-64'):
