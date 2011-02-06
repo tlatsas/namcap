@@ -1,6 +1,8 @@
 namcap (2.x)
 	- don't be restrictive in filenames rule
-	- fix non-working emptydirs rule
+	- fix: emptydirs rule was not working properly
+	- fix: extravars rule was not run
+	- fix: extravars rule did not know options variable
 	- the test suite can now be used for tarball rules
 
 namcap (2.8)

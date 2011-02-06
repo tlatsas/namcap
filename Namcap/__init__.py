@@ -52,6 +52,7 @@ __pkgbuild__ = """
   badbackups
   carch
   checksums
+  extravars
   invalidstartdir
   license
   pkgname
