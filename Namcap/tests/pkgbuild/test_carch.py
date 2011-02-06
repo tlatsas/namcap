@@ -4,7 +4,7 @@ import tempfile
 import shutil
 
 import pacman
-import valid_pkgbuilds
+from . import valid_pkgbuilds
 
 import Namcap.rules.carch as module
 
