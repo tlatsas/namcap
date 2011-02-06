@@ -77,16 +77,19 @@ class MakepkgTest(unittest.TestCase):
 
 		# process PKGINFO
 		pkg = pacman.PacmanPackage()
-		with tarfile.open(filename) as tar:
-			pkginfo = tar.extractfile('.PKGINFO')
-			for i in pkginfo:
-				m = i.strip().split(" = ")
-				if len(m) == 2:
-					pkg.__dict__.setdefault(m[0], []).append(m[1])
+		tar = tarfile.open(filename)
+		pkginfo = tar.extractfile('.PKGINFO')
+		for i in pkginfo:
+			i = i.decode("utf-8", "ignore")
+			m = i.strip().split(" = ")
+			if len(m) == 2:
+				pkg.__dict__.setdefault(m[0], []).append(m[1])
 		pkg.process()
+		tar.close()
 
-		with tarfile.open(filename) as tar:
-			ret = rule().analyze(pkg, tar)
+		tar = tarfile.open(filename)
+		ret = rule().analyze(pkg, tar)
+		tar.close()
 		return ret
 
 # vim: set ts=4 sw=4 noet:
