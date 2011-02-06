@@ -80,7 +80,7 @@ class MakepkgTest(unittest.TestCase):
 		with tarfile.open(filename) as tar:
 			pkginfo = tar.extractfile('.PKGINFO')
 			for i in pkginfo:
-				m = i.split(" = ")
+				m = i.strip().split(" = ")
 				if len(m) == 2:
 					pkg.__dict__.setdefault(m[0], []).append(m[1])
 		pkg.process()

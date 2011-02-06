@@ -29,22 +29,21 @@ class package(TarballRule):
 	name = "anyelf"
 	description = "Check for ELF files to see if a package should be 'any' architecture"
 	def prereq(self):
-		return "extract"
-	def analyze(self, pkginfo, data):
+		return "tar"
+	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		found_elffiles = []
 
-		for dirpath, subdirs, files in os.walk(data):
-			for i in files:
-				file_path = os.path.join(dirpath, i)
-				# Checking for ELF files
-				if is_elf(file_path):
-					found_elffiles.append(clean_filename(file_path))
+		for entry in tar.getmembers():
+			if not entry.isfile():
+				continue
+			f = tar.extractfile(entry)
+			if f.read(4) == b"\x7fELF":
+				found_elffiles.append(entry.name)
 
 		if pkginfo.arch and pkginfo.arch[0] == 'any':
-			if len(found_elffiles) > 0:
-				for i in found_elffiles:
-					ret[0].append(("elffile-in-any-package %s", i))
+			ret[0] = [("elffile-in-any-package %s", i)
+					for i in found_elffiles]
 		else:
 			if len(found_elffiles) == 0:
 				ret[1].append(("no-elffiles-not-any-package", ()))
