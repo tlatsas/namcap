@@ -100,7 +100,7 @@ def finddepends(liblist):
 	somatches = {}
 	actualpath = {}
 
-	knownlibs = liblist.keys()
+	knownlibs = list(liblist.keys())
 
 	for j in knownlibs:
 		actualpath[j] = os.path.realpath('/'+j)[1:]
@@ -194,13 +194,13 @@ class package(TarballRule):
 			del dependlist[pkginfo.name]
 
 		# Print link-level deps
-		for i, v in dependlist.iteritems():
+		for i, v in dependlist.items():
 			if type(v) == dict:
 				files = [x[len(data)+1:] for x in v.keys()]
 				ret[2].append(("link-level-dependence %s in %s", (i, str(files))))
 
 		# Do the script handling stuff
-		for i, v in liblist[1].iteritems():
+		for i, v in liblist[1].items():
 			if i not in dependlist:
 				dependlist[i] = {}
 			for j in v.keys():
@@ -249,7 +249,7 @@ class package(TarballRule):
 			# and (if (there are provides for i) then
 			#      (those provides aren't included in the package's dependencies))
 			# )
-			all_dependencies = getattr(pkginfo, 'depends', []) + getattr(pkginfo, 'optdepends', []) + pkgcovered.keys()
+			all_dependencies = getattr(pkginfo, 'depends', []) + getattr(pkginfo, 'optdepends', []) + list(pkgcovered.keys())
 			if (i not in all_dependencies and i != pkginfo.name
 					and ((i not in smartprovides)
 						or len([c for c in smartprovides[i] if c in pkgcovered]) == 0)):
