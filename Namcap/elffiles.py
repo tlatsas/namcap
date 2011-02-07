@@ -20,27 +20,9 @@
 import os
 from Namcap.util import is_elf, clean_filename
 
-def scanelf(invalid_elffiles, dirname, names):
-	'''Method to scan for ELF files in invalid directories'''
-
-	# Valid directories for ELF files
-	valid_dirs = ['bin/', 'sbin/', 'usr/bin/', 'usr/sbin/', 'lib/',
-			'usr/lib/', 'usr/lib32/']
-	
-	for i in names:
-		file_path = os.path.join(dirname, i)
-		valid_dir_found = False
-		
-		# Checking for ELF files
-		if is_elf(file_path):
-			for f in valid_dirs:
-				if (clean_filename(file_path)).startswith(f):
-					valid_dir_found = True
-					break 
-
-			if not valid_dir_found:
-				invalid_elffiles.append(clean_filename(file_path))
-
+# Valid directories for ELF files
+valid_dirs = ['bin/', 'sbin/', 'usr/bin/', 'usr/sbin/', 'lib/',
+		'usr/lib/', 'usr/lib32/']
 
 class package:
 	def short_name(self):
@@ -48,18 +30,32 @@ class package:
 	def long_name(self):
 		return "Check about ELF files outside some standard paths."
 	def prereq(self):
-		return "extract"
-	def analyze(self, pkginfo, data):
+		return "tar"
+	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		invalid_elffiles = []
-		
-		os.path.walk(data, scanelf, invalid_elffiles)		
-		if len(invalid_elffiles) > 0:			
-			for i in invalid_elffiles:
-				ret[0].append(("elffile-not-in-allowed-dirs %s", i))
-					
+
+		for entry in tar:
+			# is it a regular file ?
+			if not entry.isfile():
+				continue
+			# is it outside standard binary dirs ?
+			is_outside_std_dirs = True
+			for d in valid_dirs:
+				if entry.name.startswith(d):
+					is_outside_std_dirs = False
+					break
+			if not is_outside_std_dirs:
+				continue
+			# is it an ELF file ?
+			f = tar.extractfile(entry)
+			if f.read(4) == b"\x7fELF":
+				invalid_elffiles.append(entry.name)
+
+		ret[0] = [("elffile-not-in-allowed-dirs %s", i)
+				for i in invalid_elffiles]
 		return ret
-	
+
 	def type(self):
 		return "tarball"
 
