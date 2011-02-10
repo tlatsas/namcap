@@ -20,7 +20,7 @@
 import re
 from Namcap.ruleclass import *
 
-class package(Pkgbuildrule):
+class package(PkgbuildRule):
 	name = "extravars"
 	description = "Verifies that extra variables start with an underscore"
 	def analyze(self, pkginfo, tar):
@@ -28,7 +28,8 @@ class package(Pkgbuildrule):
 				 'provides', 'conflicts' , 'replaces', 'backup',
 				 'source', 'noextract', 'md5sums', 'sha1sums',
 				 'sha256sums', 'sha384sums', 'sha512sums', 'pkgname',
-				 'pkgver', 'pkgrel', 'pkgdesc', 'url', 'install']
+				 'pkgver', 'pkgrel', 'pkgdesc', 'url', 'install',
+				 'options']
 		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
 			m = re.match('[\s]*([^\s=]*)\s*=', i)

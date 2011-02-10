@@ -46,11 +46,12 @@ from . import (
   symlink
 )
 
-# Package rules
+# PKGBUILD and metadata rules
 from . import (
   arrays,
   badbackups,
   carch,
+  extravars,
   invalidstartdir,
   missingvars,
   pkginfo,

@@ -29,26 +29,30 @@ class package(TarballRule):
 	name = "elffiles"
 	description = "Check about ELF files outside some standard paths."
 	def prereq(self):
-		return "extract"
-	def analyze(self, pkginfo, data):
+		return "tar"
+	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
+		invalid_elffiles = []
 
-		for dirpath, subdirs, files in os.walk(data):
-			for i in files:
-				file_path = os.path.join(dirpath, i)
-				if not is_elf(file_path):
-					# Not an ELF file, nothing to check
-					continue
-				clean_file_path = clean_filename(file_path)
-				in_valid_dir = False
-				for valid in valid_dirs:
-					if clean_file_path.startswith(valid):
-						# Found a valid path prefix
-						in_valid_dir = True
-						break
-				if not in_valid_dir:
-					ret[0].append(("elffile-not-in-allowed-dirs %s", clean_file_path))
+		for entry in tar:
+			# is it a regular file ?
+			if not entry.isfile():
+				continue
+			# is it outside standard binary dirs ?
+			is_outside_std_dirs = True
+			for d in valid_dirs:
+				if entry.name.startswith(d):
+					is_outside_std_dirs = False
+					break
+			if not is_outside_std_dirs:
+				continue
+			# is it an ELF file ?
+			f = tar.extractfile(entry)
+			if f.read(4) == b"\x7fELF":
+				invalid_elffiles.append(entry.name)
 
+		ret[0] = [("elffile-not-in-allowed-dirs %s", i)
+				for i in invalid_elffiles]
 		return ret
 
 # vim: set ts=4 sw=4 noet:

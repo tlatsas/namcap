@@ -27,7 +27,7 @@ class package(TarballRule):
 		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
-		scroll = re.compile("var.*/scrollkeeper/$")
+		scroll = re.compile("var.*/scrollkeeper/?$")
 		for i in tar.getnames():
 			n = scroll.search(i)
 			if n != None:

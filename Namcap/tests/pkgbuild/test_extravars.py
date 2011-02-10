@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# namcap tests - badbackups
+# namcap tests - arrays
 # Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
@@ -27,11 +27,11 @@ import shutil
 import pacman
 from . import valid_pkgbuilds
 
-import Namcap.rules.badbackups as module
+import Namcap.rules.extravars
 
 EMPTY_RESULT = [ [] , [] , [] ]
 
-class NamcapBadBackupsTest(unittest.TestCase):
+class ExtravarsTest(unittest.TestCase):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
@@ -42,12 +42,13 @@ pkgrel=1
 pkgdesc="A package"
 arch=('i686' 'x86_64')
 url="http://www.example.com/"
-license=('GPL')
-depends=('glibc')
-backup=('/etc/rc.conf')
+license='GPL'
+depends='glibc'
 options=('!libtool')
 source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz)
 md5sums=('abcdefabcdef12345678901234567890')
+
+mycustomvar="something"
 
 build() {
   cd "${srcdir}"/${pkgname}-${pkgver}
@@ -62,7 +63,7 @@ package() {
 }
 """
 	def setUp(self):
-		self.rule = module.package()
+		self.rule = Namcap.rules.extravars.package()
 		self.tmpdir = tempfile.mkdtemp()
 		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
 
@@ -84,8 +85,11 @@ package() {
 	def test_example1(self):
 		# Example 1
 		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [("backups-preceding-slashes", ())])
-		self.assertEqual(ret[1], [])
+		self.assertEqual(ret[0], [])
+		self.assertEqual(ret[1], [
+			("extra-var-begins-without-underscore %s", "mycustomvar")
+		])
 		self.assertEqual(ret[2], [])
+
 
 # vim: set ts=4 sw=4 noet:
