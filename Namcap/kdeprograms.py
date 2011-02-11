@@ -28,7 +28,8 @@ class package:
 	def analyze(self, pkginfo, tar):
 		ret = [ [], [], [] ]
 		if hasattr(pkginfo, "depends") and 'kdelibs' in pkginfo.depends:
-			binaries = [f for f in tar.getnames() if f.startswith("/usr/bin")]
+			binaries = [ f.name for f in tar
+					if f.name.startswith("usr/bin") and f.isfile() ]
 			if len(binaries) > 0:
 				ret[1].append(("kdebase-runtime-missing-dep %s", binaries))
 		return ret
