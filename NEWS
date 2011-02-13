@@ -4,7 +4,7 @@ namcap (2.8.1)
 	- fix: kdeprograms rule was not working properly
 	- fix: extravars rule was not run
 	- fix: extravars rule did not know options variable
-	- the test suite can now be used for tarball rules
+	- the test suite covers all rules except "depends" and "rpath"
 
 namcap (2.8)
 	- compatibility with changes in local DB format introduced by

@@ -6,7 +6,7 @@ DATAFILES = [('/usr/share/man/man1', ['namcap.1']),
 		('/usr/share/doc/namcap',['README','AUTHORS','TODO'])]
 
 setup(name="namcap",
-	version="2.8",
+	version="2.8.1",
 
 	description="Pacman package analyzer",
 	author="Arch Dev Team",
