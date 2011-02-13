@@ -31,11 +31,12 @@ class package:
 				 'provides', 'conflicts' , 'replaces', 'backup',
 				 'source', 'noextract', 'md5sums', 'sha1sums',
 				 'sha256sums', 'sha384sums', 'sha512sums', 'pkgname',
-				 'pkgver', 'pkgrel', 'pkgdesc', 'url', 'install',
-				 'options']
+				 'pkgbase', 'pkgver', 'pkgrel', 'pkgdesc', 'groups',
+				 'url', 'install', 'changelog',
+				 'options', 'optdepends']
 		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
-			m = re.match('[\s]*([^\s=]*)\s*=', i)
+			m = re.match('[\s]*([a-z][^\s=]*[^+])=', i)
 			if m:
 				varname = m.group(1)
 				if varname not in stdvars:

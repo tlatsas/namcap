@@ -35,7 +35,7 @@ class package:
 			 'sha1sums', 'sha256sums', 'sha384sums', 'sha512sums']
 		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
-			m = re.match('\s*(.*)\s*=\s*(.*)\n', i)
+			m = re.match('\s*(.*)\s*=\s*(.*)$', i)
 			for j in arrayvars:
 				if m and m.group(1) == j:
 					if not m.group(2).startswith('('):
