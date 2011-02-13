@@ -1,3 +1,6 @@
+namcap (2.8.2)
+	- fix: extravars rule parses PKGBUILDs incorrectly
+
 namcap (2.8.1)
 	- don't be restrictive in filenames rule
 	- fix: emptydirs rule was not working properly
