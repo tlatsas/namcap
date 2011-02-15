@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-import Namcap.missingbackups
+import Namcap.rules.missingbackups
 
 class MissingbackupsTest(MakepkgTest):
 	pkgbuild = """
@@ -51,7 +51,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.missingbackups.package
+				Namcap.rules.missingbackups.package
 				)
 		self.assertEqual(ret[0], [
 			("missing-backup-file %s", "etc/imaginary_file.conf")

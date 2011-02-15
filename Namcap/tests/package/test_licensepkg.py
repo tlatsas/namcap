@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-import Namcap.licensepkg
+import Namcap.rules.licensepkg
 
 class LicenseFileTest(MakepkgTest):
 	pkgbuild = """
@@ -50,7 +50,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.licensepkg.package
+				Namcap.rules.licensepkg.package
 				)
 		expect = ("missing-custom-license-dir usr/share/licenses/%s",
 				"__namcap_test_licensepkg")

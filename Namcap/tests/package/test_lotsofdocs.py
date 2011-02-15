@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-import Namcap.lotsofdocs
+import Namcap.rules.lotsofdocs
 
 class LotsOfDocsTest(MakepkgTest):
 	pkgbuild = """
@@ -50,7 +50,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.lotsofdocs.package
+				Namcap.rules.lotsofdocs.package
 				)
 		self.assertEqual(ret[0], [])
 		tag, value = ret[1][0]

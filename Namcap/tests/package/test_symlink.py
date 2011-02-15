@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-import Namcap.symlink
+import Namcap.rules.symlink
 
 class SymlinkTest(MakepkgTest):
 	pkgbuild = """
@@ -51,7 +51,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.symlink.package
+				Namcap.rules.symlink.package
 				)
 		self.assertEqual(ret[0], [
 			("dangling-symlink %s points to %s",

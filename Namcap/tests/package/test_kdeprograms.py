@@ -21,7 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
-import Namcap.kdeprograms
+import Namcap.rules.kdeprograms
 
 class kdeprogramsTest(MakepkgTest):
 	pkgbuild = """
@@ -51,7 +51,7 @@ package() {
 		self.run_makepkg()
 		ret = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.kdeprograms.package
+				Namcap.rules.kdeprograms.package
 				)
 		self.assertEqual(ret[0], [])
 		self.assertEqual(ret[1], [
