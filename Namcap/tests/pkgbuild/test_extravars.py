@@ -43,7 +43,9 @@ pkgdesc="A package"
 arch=('i686' 'x86_64')
 url="http://www.example.com/"
 license='GPL'
-depends='glibc'
+depends=('glibc')
+depends+=('glib2')
+optdepends=('gtk2')
 options=('!libtool')
 source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz)
 md5sums=('abcdefabcdef12345678901234567890')
@@ -52,13 +54,14 @@ mycustomvar="something"
 
 build() {
   cd "${srcdir}"/${pkgname}-${pkgver}
-  ./configure --prefix=/usr
+  ./configure --prefix=/usr \\
+	--libdir=something
   make
+  hello=world make something
 }
 
 package() {
   cd "${srcdir}"/${pkgname}-${pkgver}
-  ./configure --prefix=/usr
   make DESTDIR="${pkgdir}" install
 }
 """
@@ -86,9 +89,10 @@ package() {
 		# Example 1
 		ret = self.run_on_pkg(self.pkgbuild1)
 		self.assertEqual(ret[0], [])
-		self.assertEqual(ret[1], [
-			("extra-var-begins-without-underscore %s", "mycustomvar")
-		])
+		self.assertEqual(set(ret[1]), set([
+			("extra-var-begins-without-underscore %s", "mycustomvar"),
+			("extra-var-begins-without-underscore %s", "hello")
+		]))
 		self.assertEqual(ret[2], [])
 
 

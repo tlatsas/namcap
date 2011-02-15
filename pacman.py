@@ -132,7 +132,7 @@ def load(package, root=None):
 
 		# Add a nice little .pkgbuild surprise
 		pkgbuild = open(package, errors="ignore")
-		ret.pkgbuild = pkgbuild.readlines()
+		ret.pkgbuild = pkgbuild.read().replace("\\\n", " ").splitlines()
 		pkgbuild.close()
 
 		ret.process()

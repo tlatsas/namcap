@@ -1,9 +1,13 @@
-namcap (2.x)
+namcap (2.8.2)
+	- fix: extravars rule parses PKGBUILDs incorrectly
+
+namcap (2.8.1)
 	- don't be restrictive in filenames rule
 	- fix: emptydirs rule was not working properly
+	- fix: kdeprograms rule was not working properly
 	- fix: extravars rule was not run
 	- fix: extravars rule did not know options variable
-	- the test suite can now be used for tarball rules
+	- the test suite covers all rules except "depends" and "rpath"
 
 namcap (2.8)
 	- compatibility with changes in local DB format introduced by
@@ -14,9 +18,9 @@ namcap (2.8)
 	  characters (FS#20758)
 	- New check for kdebase-runtime dependency for KDE programs
 	  (FS#15110)
-        - introduce a basic test suite
+	- introduce a basic test suite
 	- Correct handling of versioned provides (version is now ignored)
-        - Correct checksum checking to detect non-hexadecimal digits
+	- Correct checksum checking to detect non-hexadecimal digits
 
 namcap (2.7)
 	- parsepkgbuild: ensure return codes don't leak that aren't failures;
