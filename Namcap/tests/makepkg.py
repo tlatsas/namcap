@@ -29,15 +29,15 @@ import tarfile
 import pacman
 
 makepkg_conf = """
-DLAGENTS=('ftp::/usr/bin/wget -c --passive-ftp -t 3 --waitretry=3 -O %o %u'
-		  'http::/usr/bin/wget -c -t 3 --waitretry=3 -O %o %u'
-		  'https::/usr/bin/wget -c -t 3 --waitretry=3 --no-check-certificate -O %o %u'
-		  'rsync::/usr/bin/rsync -z %u %o'
-		  'scp::/usr/bin/scp -C %u %o')
-CARCH="i686"
-CHOST="i686-pc-linux-gnu"
-CFLAGS="-march=i686 -mtune=generic -O2 -pipe"
-CXXFLAGS="-march=i686 -mtune=generic -O2 -pipe"
+DLAGENTS=('ftp::/usr/bin/wget -c --passive-ftp -t 3 --waitretry=3 -O %%o %%u'
+		  'http::/usr/bin/wget -c -t 3 --waitretry=3 -O %%o %%u'
+		  'https::/usr/bin/wget -c -t 3 --waitretry=3 --no-check-certificate -O %%o %%u'
+		  'rsync::/usr/bin/rsync -z %%u %%o'
+		  'scp::/usr/bin/scp -C %%u %%o')
+CARCH="%(arch)s"
+CHOST="%(arch)s-pc-linux-gnu"
+CFLAGS="-march=%(arch)s -mtune=generic -O2 -pipe"
+CXXFLAGS="-march=%(arch)s -mtune=generic -O2 -pipe"
 LDFLAGS="-Wl,--hash-style=gnu -Wl,--as-needed"
 BUILDENV=(fakeroot !distcc color !ccache)
 OPTIONS=(strip docs libtool emptydirs zipman purge)
@@ -56,8 +56,9 @@ SRCEXT='.src.tar.gz'
 class MakepkgTest(unittest.TestCase):
 	def setUp(self):
 		self.tmpdir = tempfile.mkdtemp()
+		self.arch = subprocess.getoutput("arch")
 		with open(os.path.join(self.tmpdir, "makepkg.conf"), "w") as f:
-			f.write(makepkg_conf)
+			f.write(makepkg_conf % {"arch": self.arch})
 
 	def tearDown(self):
 		shutil.rmtree(self.tmpdir)

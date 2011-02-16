@@ -44,7 +44,7 @@ package() {
 }
 """
 	def test_perllocal_files(self):
-		pkgfile = "__namcap_test_perllocal-1.0-1-i686.pkg.tar"
+		pkgfile = "__namcap_test_perllocal-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()

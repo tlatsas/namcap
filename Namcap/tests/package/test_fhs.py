@@ -43,7 +43,7 @@ package() {
 }
 """
 	def test_nonfhs(self):
-		pkgfile = "__namcap_test_nonfhs-1.0-1-i686.pkg.tar"
+		pkgfile = "__namcap_test_nonfhs-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
@@ -78,7 +78,7 @@ package() {
 }
 """
 	def test_nonfhsman(self):
-		pkgfile = "__namcap_test_nonfhs-1.0-1-i686.pkg.tar"
+		pkgfile = "__namcap_test_nonfhs-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_man)
 		self.run_makepkg()
@@ -110,7 +110,7 @@ package() {
 }
 """
 	def test_nonfhsinfo(self):
-		pkgfile = "__namcap_test_nonfhs-1.0-1-i686.pkg.tar"
+		pkgfile = "__namcap_test_nonfhs-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_info)
 		self.run_makepkg()

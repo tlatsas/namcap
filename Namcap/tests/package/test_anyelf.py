@@ -62,7 +62,7 @@ package() {
 }
 """
 	def test_not_any_no_elf(self):
-		pkgfile = "__namcap_test_anyelf-1.0-1-i686.pkg.tar"
+		pkgfile = "__namcap_test_anyelf-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_any)
 		self.run_makepkg()

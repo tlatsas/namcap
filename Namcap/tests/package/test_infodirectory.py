@@ -44,7 +44,7 @@ package() {
 }
 """
 	def test_info_slash_dir_exists(self):
-		pkgfile = "__namcap_test_infodirectory-1.0-1-i686.pkg.tar"
+		pkgfile = "__namcap_test_infodirectory-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
