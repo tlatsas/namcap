@@ -1,3 +1,9 @@
+namcap (3.0)
+	- rework the implementation of rules
+	- switch to Python 3
+	- fix: test suite ran with i686 architecture set
+	- test: add unit test for the rpath rule
+
 namcap (2.8.2)
 	- fix: extravars rule parses PKGBUILDs incorrectly
 
