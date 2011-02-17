@@ -28,8 +28,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "anyelf"
 	description = "Check for ELF files to see if a package should be 'any' architecture"
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		found_elffiles = []

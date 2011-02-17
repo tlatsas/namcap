@@ -23,8 +23,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "scrollkeeper"
 	description = "Verifies that there aren't any scrollkeeper directories."
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		scroll = re.compile("var.*/scrollkeeper/?$")

@@ -23,8 +23,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "kdeprograms"
 	description = "Checks that KDE programs have kdebase-runtime as a dependency"
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [ [], [], [] ]
 		if hasattr(pkginfo, "depends") and 'kdelibs' in pkginfo.depends:

@@ -23,8 +23,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "libtool"
 	description = "Checks for libtool (*.la) files."
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in tar.getnames():

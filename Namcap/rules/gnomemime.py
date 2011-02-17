@@ -22,8 +22,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
     name = "gnomemime"
     description = "Checks for generated GNOME mime files"
-    def prereq(self):
-        return "tar"
     def analyze(self, pkginfo, tar):
         mime_files = [
                 'usr/share/applications/mimeinfo.cache',

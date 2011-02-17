@@ -29,8 +29,6 @@ VALID_CHARS = string.ascii_letters + string.digits \
 class package(TarballRule):
 	name = "filenames"
 	description = "Checks for invalid filenames."
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in tar.getnames():

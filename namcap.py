@@ -112,19 +112,20 @@ def process_realpackage(package, modules):
 
 		if isinstance(pkg, Namcap.ruleclass.PkgInfoRule):
 			ret = pkg.analyze(pkginfo, None)
-		if isinstance(pkg, Namcap.ruleclass.TarballRule):
-			if pkg.prereq() == "extract":
-				# If it's not extracted, then extract it and then analyze the package
-				if not extracted:
-					os.mkdir(sandbox_directory)
-					for j in pkgtar.getmembers():
-						pkgtar.extract(j, sandbox_directory)
-					extracted = 1
-				ret = pkg.analyze(pkginfo, sandbox_directory)
-			elif pkg.prereq() == "tar":
-				ret = pkg.analyze(pkginfo, pkgtar)
-			else:
-				ret = [['Error running rule (' + i + ')'], [], []]
+		elif isinstance(pkg, Namcap.ruleclass.PkgdirRule):
+			# If it's not extracted, then extract it and then analyze the package
+			if not extracted:
+				os.mkdir(sandbox_directory)
+				for j in pkgtar.getmembers():
+					pkgtar.extract(j, sandbox_directory)
+				extracted = 1
+			ret = pkg.analyze(pkginfo, sandbox_directory)
+		elif isinstance(pkg, Namcap.ruleclass.PkgbuildRule):
+			pass
+		elif isinstance(pkg, Namcap.ruleclass.TarballRule):
+			ret = pkg.analyze(pkginfo, pkgtar)
+		else:
+			ret = [[('error-running-rule %s', i)], [], []]
 
 		# Output the three types of messages
 		show_messages(pkginfo.name, 'E', ret[0])

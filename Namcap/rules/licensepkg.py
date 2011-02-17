@@ -23,8 +23,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "licensepkg"
 	description = "Verifies license is included in a package file"
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if not hasattr(pkginfo, 'license') or len(pkginfo.license) == 0:

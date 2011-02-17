@@ -22,8 +22,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "fileownership"
 	description = "Checks file ownership."
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in tar.getmembers():

@@ -22,8 +22,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "hicoloricons"
 	description = "Checks whether the hicolor icon cache is updated."
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if "usr/share/icons/hicolor" in tar.getnames():

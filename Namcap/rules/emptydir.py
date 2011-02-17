@@ -23,8 +23,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "emptydir"
 	description = "Warns about empty directories in a package"
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 

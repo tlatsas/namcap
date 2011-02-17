@@ -22,8 +22,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "missingbackups"
 	description = "Backup files listed in package should exist"
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		if not hasattr(pkginfo, 'backup') or len(pkginfo.backup) == 0:

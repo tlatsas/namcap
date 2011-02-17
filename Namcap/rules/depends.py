@@ -162,11 +162,9 @@ def filllibcache():
 				libcache['i686'][g.group(1)] = g.group(3)
 
 
-class package(TarballRule):
+class package(PkgdirRule):
 	name = "depends"
 	description = "Checks dependencies semi-smartly."
-	def prereq(self):
-		return "extract"
 	def analyze(self, pkginfo, data):
 		liblist = [{}, {}]
 		dependlist = {}

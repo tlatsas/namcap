@@ -22,8 +22,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "perllocal"
 	description = "Verifies the absence of perllocal.pod."
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		j = 'perllocal.pod'

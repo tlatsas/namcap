@@ -22,8 +22,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
     name = "mimefiles"
     description = "Check for files in /usr/share/mime"
-    def prereq(self):
-        return "tar"
     def analyze(self, pkginfo, tar):        
         ret = [[], [], []]
         if 'usr/share/mime' in tar.getnames():            

@@ -28,8 +28,6 @@ valid_dirs = ['bin/', 'sbin/', 'usr/bin/', 'usr/sbin/', 'lib/',
 class package(TarballRule):
 	name = "elffiles"
 	description = "Check about ELF files outside some standard paths."
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		invalid_elffiles = []

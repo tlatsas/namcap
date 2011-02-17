@@ -41,4 +41,9 @@ class TarballRule(AbstractRule):
 	"The parent class of rules that process tarballs"
 	pass
 
+class PkgdirRule(AbstractRule):
+	"""The parent class of rules that process pkgdirs
+	(extracted tarballs)"""
+	pass
+
 # vim: set ts=4 sw=4 noet:

@@ -24,8 +24,6 @@ from Namcap.ruleclass import *
 class FHSRule(TarballRule):
 	name = "directoryname"
 	description = "Checks for standard directories."
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		valid_paths = [
 				'bin/', 'etc/', 'lib/', 'sbin/', 'opt/', 'srv/',
@@ -53,8 +51,6 @@ class FHSRule(TarballRule):
 class FHSManpagesRule(TarballRule):
 	name = "fhs-manpages"
 	description = "Verifies correct installation of man pages"
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		gooddir = 'usr/share/man'
 		bad_dir = 'usr/man'
@@ -75,8 +71,6 @@ class FHSManpagesRule(TarballRule):
 class FHSInfoPagesRule(TarballRule):
 	name = "fhs-infopages"
 	description = "Verifies correct installation of info pages"
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		for i in tar.getmembers():

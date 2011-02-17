@@ -23,8 +23,6 @@ from Namcap.ruleclass import *
 class package(TarballRule):
 	name = "hardlinks"
 	description = "Look for cross-directory/partition hard links"
-	def prereq(self):
-		return "tar"
 	def analyze(self, pkginfo, tar):
 		ret = [[], [], []]
 		hardlinks = [i for i in tar.getmembers() if i.islnk() == True]
