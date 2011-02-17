@@ -74,7 +74,7 @@ def scanlibs(filename, liblist):
 				shell=True,
 				stdout=subprocess.PIPE,
 				stderr=subprocess.PIPE).communicate()
-		for j in var[0].splitlines():
+		for j in var[0].decode('ascii').splitlines():
 			n = shared.search(j)
 			# Is this a Shared library: line?
 			if n != None:

@@ -35,7 +35,7 @@ class package(TarballRule):
 				ret[0].append(("hicolor-icon-cache-not-updated", ()))
 			else:
 				f = tar.extractfile(".INSTALL")
-				install_script = "\n".join(f.readlines())
+				install_script = f.read().decode("utf-8", "ignore")
 				if ("gtk-update-icon-cache" not in install_script) and ("xdg-icon-resource" not in install_script):
 					ret[0].append(("hicolor-icon-cache-not-updated", ()))
 		return ret

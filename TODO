@@ -1,4 +1,4 @@
-For the 2.5 version and near future:
+For the 3.0 version and near future:
 
 * Add support for splitted packages. FS#15027
 * Improve depends.py. Fix FS#9396 FS#14124

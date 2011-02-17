@@ -32,7 +32,7 @@ class package(TarballRule):
                 ret[0].append(("mime-cache-not-updated", ()))
             else:
                 f = tar.extractfile(".INSTALL")                    
-                if "update-mime-database" not in "\n".join(f.readlines()):
+                if b"update-mime-database" not in f.read():
                     ret[0].append(("mime-cache-not-updated", ()))
 
         return ret
