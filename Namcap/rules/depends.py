@@ -19,7 +19,9 @@
 
 """Checks dependencies semi-smartly."""
 
-import re, os, os.path, pacman, subprocess
+import re, os, os.path, pacman
+import subprocess
+import tempfile
 from Namcap.util import is_elf, script_type
 from Namcap.ruleclass import *
 
@@ -61,37 +63,51 @@ def figurebitsize(line):
 	else:
 		return 'i686'
 
-def scanlibs(filename, liblist):
+def scanlibs(fileobj, filename, sharedlibs, scripts):
 	"""
-	Run "readelf -d" on a file
+	Run "readelf -d" on a file-like object (e.g. a TarFile)
 	If it depends on a library, store that library's path.
 	"""
-	sharedlibs, scripts = liblist
 	shared = re.compile('Shared library: \[(.*)\]')
 
-	if is_elf(filename):
-		var = subprocess.Popen('readelf -d ' + filename,
-				shell=True,
-				stdout=subprocess.PIPE,
-				stderr=subprocess.PIPE).communicate()
-		for j in var[0].decode('ascii').splitlines():
-			n = shared.search(j)
-			# Is this a Shared library: line?
-			if n != None:
-				# Find out its architecture
-				architecture = figurebitsize(j)
-				try:
-					libpath = os.path.abspath(
-							libcache[architecture][n.group(1)])[1:]
-					sharedlibs.setdefault(libpath, {})[filename] = 1
-				except KeyError:
-					# We didn't know about the library, so add it for fail later
-					sharedlibs.setdefault(n.group(1), {})[filename] = 1
-	# Maybe it is a script file
-	else:
-		cmd = script_type(filename)
-		if cmd != None:
-			scripts.setdefault(cmd, {})[filename] = 1
+	# test magic bytes
+	magic = fileobj.read(4)
+	if magic[:2] != b"#!" and magic[:4] != b"\x7fELF":
+		return {}, {}
+	# read the rest of file
+	tmp = tempfile.NamedTemporaryFile(delete=False)
+	tmp.write(magic + fileobj.read())
+	tmp.close()
+
+	try:
+		if magic[:4] == b"\x7fELF":
+			p = subprocess.Popen(["readelf", "-d", tmp.name],
+					env = {"LANG": "C"},
+					stdout=subprocess.PIPE,
+					stderr=subprocess.PIPE)
+			var = p.communicate()
+			assert(p.returncode == 0)
+			for j in var[0].decode('ascii').splitlines():
+				n = shared.search(j)
+				# Is this a Shared library: line?
+				if n != None:
+					# Find out its architecture
+					architecture = figurebitsize(j)
+					try:
+						libpath = os.path.abspath(
+								libcache[architecture][n.group(1)])[1:]
+						sharedlibs.setdefault(libpath, {})[filename] = 1
+					except KeyError:
+						# We didn't know about the library, so add it for fail later
+						sharedlibs.setdefault(n.group(1), {})[filename] = 1
+		# Maybe it is a script file
+		else:
+			cmd = script_type(tmp.name)
+			if cmd != None:
+				assert(isinstance(cmd, str))
+				scripts.setdefault(cmd, {})[filename] = 1
+	finally:
+		os.unlink(tmp.name)
 
 def finddepends(liblist):
 	dependlist = {}
@@ -162,11 +178,12 @@ def filllibcache():
 				libcache['i686'][g.group(1)] = g.group(3)
 
 
-class package(PkgdirRule):
+class package(TarballRule):
 	name = "depends"
 	description = "Checks dependencies semi-smartly."
-	def analyze(self, pkginfo, data):
-		liblist = [{}, {}]
+	def analyze(self, pkginfo, tar):
+		liblist = {}
+		scriptlist = {}
 		dependlist = {}
 		smartdepend = {}
 		smartprovides = {}
@@ -176,12 +193,15 @@ class package(PkgdirRule):
 		filllibcache()
 		os.environ['LC_ALL'] = 'C'
 
-		for dirpath, subdirs, files in os.walk(data):
-			for i in files:
-				scanlibs(os.path.join(dirpath, i), liblist)
+		for entry in tar:
+			if not entry.isfile():
+				continue
+			f = tar.extractfile(entry)
+			scanlibs(f, entry.name, liblist, scriptlist)
+			f.close()
 
 		# Ldd all the files and find all the link and script dependencies
-		dependlist, tmpret = finddepends(liblist[0])
+		dependlist, tmpret = finddepends(liblist)
 
 		# Handle "no package associated" errors
 		for i in tmpret:
@@ -194,16 +214,16 @@ class package(PkgdirRule):
 		# Print link-level deps
 		for i, v in dependlist.items():
 			if type(v) == dict:
-				files = [x[len(data)+1:] for x in v.keys()]
+				files = list(v.keys())
 				ret[2].append(("link-level-dependence %s in %s", (i, str(files))))
 
 		# Do the script handling stuff
-		for i, v in liblist[1].items():
+		for i, v in scriptlist.items():
 			if i not in dependlist:
 				dependlist[i] = {}
 			for j in v.keys():
 				dependlist[i][j] = 1
-			files = [x[len(data)+1:] for x in v.keys()]
+			files = list(v.keys())
 			ret[2].append(("script-link-detected %s in %s", (i, str(files))))
 
 		# Check for packages in testing
@@ -252,7 +272,8 @@ class package(PkgdirRule):
 					and ((i not in smartprovides)
 						or len([c for c in smartprovides[i] if c in pkgcovered]) == 0)):
 					if type(dependlist[i]) == dict:
-						ret[0].append(("dependency-detected-not-included %s from files %s", (i, str([x[len(data)+1:] for x in dependlist[i].keys()])) ))
+						ret[0].append(("dependency-detected-not-included %s from files %s",
+							(i, str(list(dependlist[i]))) ))
 					else:
 						ret[0].append(("dependency-detected-not-included %s", i))
 		if hasattr(pkginfo, 'depends'):
