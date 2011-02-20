@@ -31,13 +31,12 @@ class package(PkgbuildRule):
 				 'pkgbase', 'pkgver', 'pkgrel', 'pkgdesc', 'groups',
 				 'url', 'install', 'changelog',
 				 'options', 'optdepends']
-		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
 			m = re.match('[\s]*([a-z][^\s=]*[^+])=', i)
 			if m:
 				varname = m.group(1)
 				if varname not in stdvars:
 					if not varname.startswith('_'):
-						ret[1].append(("extra-var-begins-without-underscore %s", varname))
-		return ret
+						self.warnings.append(("extra-var-begins-without-underscore %s", varname))
+
 # vim: set ts=4 sw=4 noet:

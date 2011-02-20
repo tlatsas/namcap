@@ -66,7 +66,7 @@ class MakepkgTest(unittest.TestCase):
 	def run_makepkg(self):
 		pwd = os.getcwd()
 		os.chdir(self.tmpdir)
-		ret = subprocess.call(["makepkg", "-f"],
+		ret = subprocess.call(["makepkg", "-f", "-d"],
 				env = { "MAKEPKG_CONF": "./makepkg.conf" },
 				stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 		os.chdir(pwd)
@@ -89,9 +89,10 @@ class MakepkgTest(unittest.TestCase):
 		tar.close()
 
 		tar = tarfile.open(filename)
-		ret = rule().analyze(pkg, tar)
+		r = rule()
+		r.analyze(pkg, tar)
 		tar.close()
-		return ret
+		return r
 
 # vim: set ts=4 sw=4 noet:
 

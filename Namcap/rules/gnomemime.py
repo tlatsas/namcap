@@ -32,10 +32,8 @@ class package(TarballRule):
                 'usr/share/mime/subclasses'
                 ]
 
-        ret = [[], [], []]
         for i in tar.getnames():
             if i in mime_files:
-                ret[0].append(("gnome-mime-file %s", i))
+                self.errors.append(("gnome-mime-file %s", i))
                 
-        return ret
 # vim: set ts=4 sw=4 noet:

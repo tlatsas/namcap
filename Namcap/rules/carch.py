@@ -26,7 +26,6 @@ class package(PkgbuildRule):
 	name = "carch"
 	description = "Verifies that no specific host type is used"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		arches = ['i686', 'i586', 'x86_64']
 		archmatch = re.compile('%s' % '|'.join(arches))
 		# Match an arch=(i686) line
@@ -36,6 +35,6 @@ class package(PkgbuildRule):
 		for i in pkginfo.pkgbuild:
 			if archmatch.match(i):
 				if not archline.match(i) and not archif.match(i):
-					ret[1].append(("specific-host-type-used %s", ",".join(arches)))
-		return ret
+					self.warnings.append(("specific-host-type-used %s", ",".join(arches)))
+
 # vim: set ts=4 sw=4 noet:

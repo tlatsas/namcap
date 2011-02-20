@@ -47,13 +47,13 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.filenames.package
 				)
-		self.assertEqual(ret[0], [])
-		self.assertEqual(ret[1], [("invalid-filename", "usr/bin/Arch·Linux")])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.errors, [])
+		self.assertEqual(r.warnings, [("invalid-filename", "usr/bin/Arch·Linux")])
+		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:
 

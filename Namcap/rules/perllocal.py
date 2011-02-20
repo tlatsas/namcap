@@ -23,10 +23,9 @@ class package(TarballRule):
 	name = "perllocal"
 	description = "Verifies the absence of perllocal.pod."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		j = 'perllocal.pod'
 		for i in tar.getnames():
 			if i[-len(j):] == j:
-				ret[0].append(("perllocal-pod-present %s", i))
-		return ret
+				self.errors.append(("perllocal-pod-present %s", i))
+
 # vim: set ts=4 sw=4 noet:

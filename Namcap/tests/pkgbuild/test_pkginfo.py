@@ -1,16 +1,28 @@
-import os
-import unittest
-import tempfile
-import shutil
+# -*- coding: utf-8 -*-
+#
+# namcap tests - carch
+# Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
+# 
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+#   USA
+# 
 
-import pacman
-from . import valid_pkgbuilds
-
+from Namcap.tests.pkgbuild_test import PkgbuildTest
 from Namcap.rules.pkginfo import *
 
-EMPTY_RESULT = [ [] , [] , [] ]
-
-class NamcapInvalidPkgNameTest(unittest.TestCase):
+class NamcapInvalidPkgNameTest(PkgbuildTest):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
@@ -39,31 +51,19 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
-	def run_on_pkg(self, p):
-		with open(self.tmpname, 'w') as f:
-			f.write(p)
-		pkginfo = pacman.load(self.tmpname)
-		return self.rule.analyze(pkginfo, self.tmpname)
 
-	def runTest(self):
-		self.rule = CapsPkgnameRule()
-		self.tmpdir = tempfile.mkdtemp()
-		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
+	def preSetUp(self):
+		self.rule = CapsPkgnameRule
+		self.test_valid = PkgbuildTest.valid_tests
 
-		# Valid PKGBUILDS
-		for p in valid_pkgbuilds.all_pkgbuilds:
-			ret = self.run_on_pkg(p)
-			self.assertEqual(ret, EMPTY_RESULT)
-
+	def test_example1(self):
 		# Example 1
-		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [("package-name-in-uppercase", ())])
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
+		r = self.run_on_pkg(self.pkgbuild1)
+		self.assertEqual(r.errors, [("package-name-in-uppercase", ())])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
-		shutil.rmtree(self.tmpdir)
-
-class NamcapLicenseTest(unittest.TestCase):
+class NamcapLicenseTest(PkgbuildTest):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
@@ -91,31 +91,18 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
-	def run_on_pkg(self, p):
-		with open(self.tmpname, 'w') as f:
-			f.write(p)
-		pkginfo = pacman.load(self.tmpname)
-		return self.rule.analyze(pkginfo, self.tmpname)
+	def preSetUp(self):
+		self.rule = LicenseRule
+		self.test_valid = PkgbuildTest.valid_tests
 
-	def runTest(self):
-		self.rule = LicenseRule()
-		self.tmpdir = tempfile.mkdtemp()
-		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
-
-		# Valid PKGBUILDS
-		for p in valid_pkgbuilds.all_pkgbuilds:
-			ret = self.run_on_pkg(p)
-			self.assertEqual(ret, EMPTY_RESULT)
-
+	def test_example1(self):
 		# Example 1
-		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [("missing-license", ())] )
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
+		r = self.run_on_pkg(self.pkgbuild1)
+		self.assertEqual(r.errors, [("missing-license", ())] )
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
-		shutil.rmtree(self.tmpdir)
-
-class NamcapUrlTest(unittest.TestCase):
+class NamcapUrlTest(PkgbuildTest):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
@@ -143,28 +130,15 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
-	def run_on_pkg(self, p):
-		with open(self.tmpname, 'w') as f:
-			f.write(p)
-		pkginfo = pacman.load(self.tmpname)
-		return self.rule.analyze(pkginfo, self.tmpname)
+	def preSetUp(self):
+		self.rule = UrlRule
+		self.test_valid = PkgbuildTest.valid_tests
 
-	def runTest(self):
-		self.rule = UrlRule()
-		self.tmpdir = tempfile.mkdtemp()
-		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
-
-		# Valid PKGBUILDS
-		for p in valid_pkgbuilds.all_pkgbuilds:
-			ret = self.run_on_pkg(p)
-			self.assertEqual(ret, EMPTY_RESULT)
-
+	def test_example1(self):
 		# Example 1
-		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [("missing-url", ())] )
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
-
-		shutil.rmtree(self.tmpdir)
+		r = self.run_on_pkg(self.pkgbuild1)
+		self.assertEqual(r.errors, [("missing-url", ())] )
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:

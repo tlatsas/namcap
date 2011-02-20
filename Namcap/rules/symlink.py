@@ -23,11 +23,10 @@ class package(TarballRule):
 	name = "symlink"
 	description = "Checks that symlinks point to the right place"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		filenames = [s.name for s in tar]
 		for i in tar:
 			if i.issym():
-				ret[2].append(("symlink-found %s points to %s", (i.name, i.linkname)))
+				self.infos.append(("symlink-found %s points to %s", (i.name, i.linkname)))
 				linktarget = i.linkname
 				linklead = os.path.dirname(i.name)
 				while linktarget[:3] == "../":
@@ -37,11 +36,10 @@ class package(TarballRule):
 				if link[0] == "/": link = link[1:]
 				if i.linkname[0] == "/": link = i.linkname[1:]
 				if link not in filenames:
-					ret[0].append(("dangling-symlink %s points to %s", (i.name, i.linkname)))
+					self.errors.append(("dangling-symlink %s points to %s", (i.name, i.linkname)))
 			if i.islnk():
-				ret[2].append(("hardlink-found %s points to %s", (i.name, i.linkname)))
+				self.infos.append(("hardlink-found %s points to %s", (i.name, i.linkname)))
 				if i.linkname not in filenames:
-					ret[0].append(("dangling-hardlink %s points to %s", (i.name, i.linkname)))
-		return ret	
+					self.errors.append(("dangling-hardlink %s points to %s", (i.name, i.linkname)))
 
 # vim: set ts=4 sw=4 noet:

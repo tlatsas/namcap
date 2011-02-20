@@ -47,16 +47,16 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.mimefiles.package
 				)
-		self.assertEqual(ret[0], [
+		self.assertEqual(r.errors, [
 			("dependency-detected-not-included %s", ("shared-mime-info",)),
 			("mime-cache-not-updated", ())
 		])
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:
 

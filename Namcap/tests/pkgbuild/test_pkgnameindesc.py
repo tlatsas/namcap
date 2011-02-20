@@ -1,16 +1,28 @@
-import os
-import unittest
-import tempfile
-import shutil
+# -*- coding: utf-8 -*-
+#
+# namcap tests - carch
+# Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
+# 
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+#   USA
+# 
 
-import pacman
-from . import valid_pkgbuilds
-
+from Namcap.tests.pkgbuild_test import PkgbuildTest
 import Namcap.rules.pkgnameindesc as module
 
-EMPTY_RESULT = [ [] , [] , [] ]
-
-class NamcapPkgnameInDescTest(unittest.TestCase):
+class NamcapPkgnameInDescTest(PkgbuildTest):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
@@ -39,29 +51,16 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
-	def run_on_pkg(self, p):
-		with open(self.tmpname, 'w') as f:
-			f.write(p)
-		pkginfo = pacman.load(self.tmpname)
-		return self.rule.analyze(pkginfo, self.tmpname)
 
-	def runTest(self):
-		self.rule = module.package()
-		self.tmpdir = tempfile.mkdtemp()
-		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
+	def preSetUp(self):
+		self.rule = module.package
 
-		# Valid PKGBUILDS
-		for p in valid_pkgbuilds.all_pkgbuilds:
-			ret = self.run_on_pkg(p)
-			self.assertEqual(ret, EMPTY_RESULT)
-
+	def test_example1(self):
 		# Example 1
-		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [])
-		self.assertEqual(set(ret[1]), set( [("pkgname-in-description", ())] ))
-		self.assertEqual(ret[2], [])
-
-		shutil.rmtree(self.tmpdir)
+		r = self.run_on_pkg(self.pkgbuild1)
+		self.assertEqual(r.errors, [])
+		self.assertEqual(set(r.warnings), set( [("pkgname-in-description", ())] ))
+		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:
 

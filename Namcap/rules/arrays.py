@@ -30,14 +30,11 @@ class package(PkgbuildRule):
 			 'optdepends', 'provides', 'conflicts' , 'replaces',
 			 'backup', 'source', 'noextract', 'md5sums',
 			 'sha1sums', 'sha256sums', 'sha384sums', 'sha512sums']
-		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
 			m = re.match('\s*(.*)\s*=\s*(.*)$', i)
 			for j in arrayvars:
 				if m and m.group(1) == j:
 					if not m.group(2).startswith('('):
-						ret[1].append(("variable-not-array %s", j))
-
-		return ret
+						self.warnings.append(("variable-not-array %s", j))
 
 # vim: set ts=4 sw=4 noet:

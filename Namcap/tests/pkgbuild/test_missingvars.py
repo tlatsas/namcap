@@ -1,16 +1,28 @@
-import os
-import unittest
-import tempfile
-import shutil
+# -*- coding: utf-8 -*-
+#
+# namcap tests - missingvars
+# Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
+# 
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+#   USA
+# 
 
-import pacman
-from . import valid_pkgbuilds
-
+from Namcap.tests.pkgbuild_test import PkgbuildTest
 from Namcap.rules.missingvars import *
 
-EMPTY_RESULT = [ [] , [] , [] ]
-
-class NamcapChecksumTest(unittest.TestCase):
+class NamcapChecksumTest(PkgbuildTest):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
@@ -60,42 +72,31 @@ package() {
   true
 }
 """
-	def run_on_pkg(self, p):
-		with open(self.tmpname, 'w') as f:
-			f.write(p)
-		pkginfo = pacman.load(self.tmpname)
-		return self.rule.analyze(pkginfo, self.tmpname)
 
-	def runTest(self):
-		self.rule = ChecksumsRule()
-		self.tmpdir = tempfile.mkdtemp()
-		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
+	def preSetUp(self):
+		self.rule = ChecksumsRule
+		self.test_valid = PkgbuildTest.valid_tests
 
-		# Valid PKGBUILDS
-		for p in valid_pkgbuilds.all_pkgbuilds:
-			ret = self.run_on_pkg(p)
-			self.assertEqual(ret, EMPTY_RESULT)
-
+	def test_example1(self):
 		# Example 1
-		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [
+		r = self.run_on_pkg(self.pkgbuild1)
+		self.assertEqual(r.errors, [
 			("improper-checksum %s %s", ("md5sums",
 			 "look-this-is-an-invalid-checksum"))
 		])
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
+	def test_example2(self):
 		# Example 2
-		ret = self.run_on_pkg(self.pkgbuild2)
-		self.assertEqual(ret[0], [
+		r = self.run_on_pkg(self.pkgbuild2)
+		self.assertEqual(r.errors, [
 			("not-enough-checksums %s %i needed", ("md5sums", 2))
 		])
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
-		shutil.rmtree(self.tmpdir)
-
-class NamcapMaintainerTagTest(unittest.TestCase):
+class NamcapMaintainerTagTest(PkgbuildTest):
 	pkgbuild1 = """
 pkgname=mypackage
 pkgver=1.0
@@ -121,28 +122,16 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
-	def run_on_pkg(self, p):
-		with open(self.tmpname, 'w') as f:
-			f.write(p)
-		pkginfo = pacman.load(self.tmpname)
-		return self.rule.analyze(pkginfo, self.tmpname)
 
-	def runTest(self):
-		self.rule = TagsRule()
-		self.tmpdir = tempfile.mkdtemp()
-		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
+	def preSetUp(self):
+		self.rule = TagsRule
+		self.test_valid = PkgbuildTest.valid_tests
 
-		# Valid PKGBUILDS
-		for p in valid_pkgbuilds.all_pkgbuilds:
-			ret = self.run_on_pkg(p)
-			self.assertEqual(ret, EMPTY_RESULT)
-
+	def test_example1(self):
 		# Example 1
-		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [])
-		self.assertEqual(ret[1], [("missing-maintainer", ())])
-		self.assertEqual(ret[2], [("missing-contributor", ())] )
-
-		shutil.rmtree(self.tmpdir)
+		r = self.run_on_pkg(self.pkgbuild1)
+		self.assertEqual(r.errors, [])
+		self.assertEqual(r.warnings, [("missing-maintainer", ())])
+		self.assertEqual(r.infos, [("missing-contributor", ())] )
 
 # vim: set ts=4 sw=4 noet:

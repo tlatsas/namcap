@@ -23,20 +23,19 @@ class package(TarballRule):
 	name = "hicoloricons"
 	description = "Checks whether the hicolor icon cache is updated."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		if "usr/share/icons/hicolor" in tar.getnames():
 			if hasattr(pkginfo, "depends"):
 				if "hicolor-icon-theme" not in pkginfo.depends:
-					ret[0].append(("dependency-detected-not-included %s", ("hicolor-icon-theme",)))
+					self.errors.append(("dependency-detected-not-included %s", ("hicolor-icon-theme",)))
 			else:
-				ret[0].append(("dependency-detected-not-included %s", ("hicolor-icon-theme",)))
+				self.errors.append(("dependency-detected-not-included %s", ("hicolor-icon-theme",)))
 
 			if ".INSTALL" not in tar.getnames():
-				ret[0].append(("hicolor-icon-cache-not-updated", ()))
+				self.errors.append(("hicolor-icon-cache-not-updated", ()))
 			else:
 				f = tar.extractfile(".INSTALL")
 				install_script = f.read().decode("utf-8", "ignore")
 				if ("gtk-update-icon-cache" not in install_script) and ("xdg-icon-resource" not in install_script):
-					ret[0].append(("hicolor-icon-cache-not-updated", ()))
-		return ret
+					self.errors.append(("hicolor-icon-cache-not-updated", ()))
+
 # vim: set ts=4 sw=4 noet:

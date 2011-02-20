@@ -24,15 +24,14 @@ class package(PkgbuildRule):
 	name = "invalidstartdir"
 	description = "Looks for references to $startdir"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		for i in pkginfo.pkgbuild:
 			startdirs = re.split('\${?startdir}?"?', i)
 			for j in startdirs[1:]:
 				if j[:4] != '/pkg' and j[:4] != '/src':
-					ret[0].append(("file-referred-in-startdir", ()))
+					self.errors.append(("file-referred-in-startdir", ()))
 				elif j[:4] == '/pkg':
-					ret[0].append(("use-pkgdir", ()))
+					self.errors.append(("use-pkgdir", ()))
 				elif j[:4] == '/src':
-					ret[0].append(("use-srcdir", ()))
-		return ret
+					self.errors.append(("use-srcdir", ()))
+
 # vim: set ts=4 sw=4 noet:

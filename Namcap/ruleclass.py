@@ -27,7 +27,10 @@ and how they are meant to be used.
 # pacman 3 does not need classes to derive from object
 class AbstractRule(object):
 	"The parent class of all rules"
-	pass
+	def __init__(self):
+		self.errors = []
+		self.warnings = []
+		self.infos = []
 
 class PkgInfoRule(AbstractRule):
 	"The parent class of rules that process package metadata"

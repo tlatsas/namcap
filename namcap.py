@@ -107,31 +107,31 @@ def process_realpackage(package, modules):
 
 	# Loop through each one, load them apply if possible
 	for i in modules:
-		pkg = get_modules()[i]()
-		ret = [[], [], []]
+		rule = get_modules()[i]()
 
-		if isinstance(pkg, Namcap.ruleclass.PkgInfoRule):
-			ret = pkg.analyze(pkginfo, None)
-		elif isinstance(pkg, Namcap.ruleclass.PkgdirRule):
+		if isinstance(rule, Namcap.ruleclass.PkgInfoRule):
+			rule.analyze(pkginfo, None)
+		elif isinstance(rule, Namcap.ruleclass.PkgdirRule):
 			# If it's not extracted, then extract it and then analyze the package
 			if not extracted:
 				os.mkdir(sandbox_directory)
 				for j in pkgtar.getmembers():
 					pkgtar.extract(j, sandbox_directory)
 				extracted = 1
-			ret = pkg.analyze(pkginfo, sandbox_directory)
-		elif isinstance(pkg, Namcap.ruleclass.PkgbuildRule):
+			rule = pkg.analyze(pkginfo, sandbox_directory)
+		elif isinstance(rule, Namcap.ruleclass.PkgbuildRule):
 			pass
-		elif isinstance(pkg, Namcap.ruleclass.TarballRule):
-			ret = pkg.analyze(pkginfo, pkgtar)
+		elif isinstance(rule, Namcap.ruleclass.TarballRule):
+			rule.analyze(pkginfo, pkgtar)
 		else:
-			ret = [[('error-running-rule %s', i)], [], []]
+			show_messages(pkginfo.name, 'E',
+			              [('error-running-rule %s', i)])
 
 		# Output the three types of messages
-		show_messages(pkginfo.name, 'E', ret[0])
-		show_messages(pkginfo.name, 'W', ret[1])
+		show_messages(pkginfo.name, 'E', rule.errors)
+		show_messages(pkginfo.name, 'W', rule.warnings)
 		if info_reporting:
-			show_messages(pkginfo.name, 'I', ret[2])
+			show_messages(pkginfo.name, 'I', rule.infos)
 
 	# Clean up if we extracted anything
 	if extracted:
@@ -147,19 +147,18 @@ def process_pkgbuild(package, modules):
 		return 1
 
 	for i in modules:
-		pkg = get_modules()[i]()
-		ret = [[], [], []]
-		if isinstance(pkg, Namcap.ruleclass.PkgInfoRule):
-			ret = pkg.analyze(pkginfo, None)
-		if isinstance(pkg, Namcap.ruleclass.PkgbuildRule):
-			ret = pkg.analyze(pkginfo, package)
+		rule = get_modules()[i]()
+		if isinstance(rule, Namcap.ruleclass.PkgInfoRule):
+			ret = rule.analyze(pkginfo, None)
+		if isinstance(rule, Namcap.ruleclass.PkgbuildRule):
+			ret = rule.analyze(pkginfo, package)
 
-		# Output the PKGBUILD messages
+		# Output the ruleBUILD messages
 		name = "PKGBUILD (" + pkginfo.name + ")"
-		show_messages(name, 'E', ret[0])
-		show_messages(name, 'W', ret[1])
+		show_messages(name, 'E', rule.errors)
+		show_messages(name, 'W', rule.warnings)
 		if info_reporting:
-			show_messages(name, 'I', ret[2])
+			show_messages(name, 'I', rule.infos)
 
 # Main
 modules = get_modules()

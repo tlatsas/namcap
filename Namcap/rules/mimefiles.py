@@ -23,17 +23,15 @@ class package(TarballRule):
     name = "mimefiles"
     description = "Check for files in /usr/share/mime"
     def analyze(self, pkginfo, tar):        
-        ret = [[], [], []]
         if 'usr/share/mime' in tar.getnames():            
             if hasattr(pkginfo, "depends"):
                 if "shared-mime-info" not in pkginfo.depends:
-                    ret[0].append(("dependency-detected-not-included %s", ("shared-mime-info",)))
+                    self.errors.append(("dependency-detected-not-included %s", ("shared-mime-info",)))
             if ".INSTALL" not in tar.getnames():
-                ret[0].append(("mime-cache-not-updated", ()))
+                self.errors.append(("mime-cache-not-updated", ()))
             else:
                 f = tar.extractfile(".INSTALL")                    
                 if b"update-mime-database" not in f.read():
-                    ret[0].append(("mime-cache-not-updated", ()))
+                    self.errors.append(("mime-cache-not-updated", ()))
 
-        return ret
 # vim: set ts=4 sw=4 noet:

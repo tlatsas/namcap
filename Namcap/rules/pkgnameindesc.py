@@ -23,10 +23,8 @@ class package(PkgInfoRule):
 	name = "pkgnameindesc"
 	description = "Verifies if the package name is included on package description"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		if hasattr(pkginfo, 'name') and hasattr(pkginfo, 'desc'):
 			if pkginfo.name.lower() in pkginfo.desc.lower().split():
-				ret[1].append(("pkgname-in-description", ()))
-		return ret
+				self.warnings.append(("pkgname-in-description", ()))
 
 # vim: set ts=4 sw=4 noet:

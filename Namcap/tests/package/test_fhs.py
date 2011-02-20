@@ -47,17 +47,17 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				fhs.FHSRule
 				)
-		self.assertEqual(ret[0], [])
-		self.assertEqual(set(ret[1]), set([
+		self.assertEqual(r.errors, [])
+		self.assertEqual(set(r.warnings), set([
 			("file-in-non-standard-dir %s", "weird"),
 			("file-in-non-standard-dir %s", "weird/directory"),
 			("file-in-non-standard-dir %s", "weird/directory/file")
 			]))
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.infos, [])
 
 	pkgbuild_man = """
 pkgname=__namcap_test_nonfhs
@@ -82,14 +82,14 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_man)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				fhs.FHSManpagesRule
 				)
-		self.assertEqual(ret[0],
+		self.assertEqual(r.errors,
 				[("non-fhs-man-page %s", "usr/man/something.1.gz")])
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
 	pkgbuild_info = """
 pkgname=__namcap_test_nonfhs
@@ -114,14 +114,14 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_info)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				fhs.FHSInfoPagesRule
 				)
-		self.assertEqual(ret[0],
+		self.assertEqual(r.errors,
 				[("non-fhs-info-page %s", "usr/info/something.gz")])
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
 
 

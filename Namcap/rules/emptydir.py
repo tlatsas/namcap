@@ -24,8 +24,6 @@ class package(TarballRule):
 	name = "emptydir"
 	description = "Warns about empty directories in a package"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
-
 		dirs = []
 		entries = []
 		for entry in tar:
@@ -33,7 +31,7 @@ class package(TarballRule):
 				dirs.append(entry.name.rstrip("/"))
 			entries.append(entry.name.rstrip("/"))
 		nonemptydirs = [os.path.dirname(x) for x in entries]
-		ret[1] = [("empty-directory %s", d)
+		self.warnings = [("empty-directory %s", d)
 				for d in (set(dirs) - set(nonemptydirs))]
-		return ret
+
 # vim: set ts=4 sw=4 noet:

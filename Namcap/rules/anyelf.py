@@ -29,7 +29,6 @@ class package(TarballRule):
 	name = "anyelf"
 	description = "Check for ELF files to see if a package should be 'any' architecture"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		found_elffiles = []
 
 		for entry in tar.getmembers():
@@ -40,11 +39,10 @@ class package(TarballRule):
 				found_elffiles.append(entry.name)
 
 		if pkginfo.arch and pkginfo.arch[0] == 'any':
-			ret[0] = [("elffile-in-any-package %s", i)
+			self.errors = [("elffile-in-any-package %s", i)
 					for i in found_elffiles]
 		else:
 			if len(found_elffiles) == 0:
-				ret[1].append(("no-elffiles-not-any-package", ()))
-		return ret
+				self.warnings.append(("no-elffiles-not-any-package", ()))
 
 # vim: set ts=4 sw=4 noet:

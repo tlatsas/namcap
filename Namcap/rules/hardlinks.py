@@ -24,11 +24,10 @@ class package(TarballRule):
 	name = "hardlinks"
 	description = "Look for cross-directory/partition hard links"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		hardlinks = [i for i in tar.getmembers() if i.islnk() == True]
 		for hardlink in hardlinks:
 			if dirname(hardlink.name) != dirname(hardlink.linkname):
-				ret[0].append(("cross-dir-hardlink %s %s",
+				self.errors.append(("cross-dir-hardlink %s %s",
 					(hardlink.name, hardlink.linkname)))
-		return ret
+
 # vim: set ts=4 sw=4 noet:

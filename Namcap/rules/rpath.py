@@ -53,8 +53,6 @@ class package(TarballRule):
 	name = "rpath"
 	description = "Verifies correct and secure RPATH for files."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
-
 		for entry in tar:
 			if not entry.isfile():
 				continue
@@ -78,15 +76,13 @@ class package(TarballRule):
 						path_ok = True
 
 				if not path_ok:
-					ret[0].append(("insecure-rpath %s %s",
+					self.errors.append(("insecure-rpath %s %s",
 						(path, entry.name)))
 					break
 				if path in warn and entry.name not in insecure_rpaths:
-					ret[1].append(("insecure-rpath %s %s",
+					self.warnings.append(("insecure-rpath %s %s",
 						(path, entry.name)))
 
 			os.unlink(f.name)
-
-		return ret
 
 # vim: set ts=4 sw=4 noet:

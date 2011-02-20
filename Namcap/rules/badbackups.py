@@ -26,11 +26,9 @@ class package(PkgbuildRule):
 	name = "badbackups"
 	description = "Checks for bad backup entries"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		if hasattr(pkginfo, 'backup'):
 			for item in pkginfo.backup:
 				if re.match('^/', item) != None:
-					ret[0].append(("backups-preceding-slashes", ()))
-		return ret
+					self.errors.append(("backups-preceding-slashes", ()))
 
 # vim: set ts=4 sw=4 noet:

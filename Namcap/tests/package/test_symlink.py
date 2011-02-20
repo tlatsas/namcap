@@ -49,16 +49,16 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.symlink.package
 				)
-		self.assertEqual(ret[0], [
+		self.assertEqual(r.errors, [
 			("dangling-symlink %s points to %s",
 				("usr/share/somelink", "nofile"))
 		])
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [
 			("symlink-found %s points to %s",
 				("usr/share/somelink", "nofile"))
 		])

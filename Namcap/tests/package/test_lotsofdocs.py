@@ -48,15 +48,15 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.lotsofdocs.package
 				)
-		self.assertEqual(ret[0], [])
-		tag, value = ret[1][0]
+		self.assertEqual(r.errors, [])
+		tag, value = r.warnings[0]
 		self.assertEqual(tag, "lots-of-docs %f")
 		self.assertGreater(value, 99.9)
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:
 

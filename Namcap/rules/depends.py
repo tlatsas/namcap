@@ -189,7 +189,6 @@ class package(TarballRule):
 		smartprovides = {}
 		covereddepend = {}
 		pkgcovered = {}
-		ret = [[], [], []]
 		filllibcache()
 		os.environ['LC_ALL'] = 'C'
 
@@ -205,7 +204,7 @@ class package(TarballRule):
 
 		# Handle "no package associated" errors
 		for i in tmpret:
-			ret[1].append(i)
+			self.warnings.append(i)
 
 		# Remove the package name from that list, we can't depend on ourselves.
 		if pkginfo.name in dependlist:
@@ -215,7 +214,7 @@ class package(TarballRule):
 		for i, v in dependlist.items():
 			if type(v) == dict:
 				files = list(v.keys())
-				ret[2].append(("link-level-dependence %s in %s", (i, str(files))))
+				self.infos.append(("link-level-dependence %s in %s", (i, str(files))))
 
 		# Do the script handling stuff
 		for i, v in scriptlist.items():
@@ -224,7 +223,7 @@ class package(TarballRule):
 			for j in v.keys():
 				dependlist[i][j] = 1
 			files = list(v.keys())
-			ret[2].append(("script-link-detected %s in %s", (i, str(files))))
+			self.infos.append(("script-link-detected %s in %s", (i, str(files))))
 
 		# Check for packages in testing
 		if os.path.isdir('/var/lib/pacman/sync/testing'):
@@ -232,7 +231,7 @@ class package(TarballRule):
 				p = pacman.load(i, '/var/lib/pacman/sync/testing/')
 				q = load(i)
 				if p != None and q != None and p.version == q.version:
-					ret[1].append(("dependency-is-testing-release %s", i))
+					self.warnings.append(("dependency-is-testing-release %s", i))
 
 		# Find all the covered dependencies from the PKGBUILD
 		pkgdepend = {}
@@ -250,7 +249,7 @@ class package(TarballRule):
 		# Do tree walking to find all the non-leaves (branches?)
 		getcovered(None, dependlist, covereddepend)
 		for i in covereddepend.keys():
-			ret[2].append(("dependency-covered-by-link-dependence %s", i))
+			self.infos.append(("dependency-covered-by-link-dependence %s", i))
 
 		# Set difference them to find the leaves
 		for i in dependlist.keys():
@@ -272,18 +271,17 @@ class package(TarballRule):
 					and ((i not in smartprovides)
 						or len([c for c in smartprovides[i] if c in pkgcovered]) == 0)):
 					if type(dependlist[i]) == dict:
-						ret[0].append(("dependency-detected-not-included %s from files %s",
+						self.errors.append(("dependency-detected-not-included %s from files %s",
 							(i, str(list(dependlist[i]))) ))
 					else:
-						ret[0].append(("dependency-detected-not-included %s", i))
+						self.errors.append(("dependency-detected-not-included %s", i))
 		if hasattr(pkginfo, 'depends'):
 			for i in pkginfo.depends:
 				if i in covereddepend and i in dependlist:
-					ret[1].append(("dependency-already-satisfied %s", i))
+					self.warnings.append(("dependency-already-satisfied %s", i))
 				# if i is not in the depends as we see them and it's not in any of the provides from said depends
 				elif i not in smartdepend and i not in [y for x in smartprovides.values() for y in x]:
-					ret[1].append(("dependency-not-needed %s", i))
-		ret[2].append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend.keys()) ))
-		return ret
+					self.warnings.append(("dependency-not-needed %s", i))
+		self.infos.append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend.keys()) ))
 
 # vim: set ts=4 sw=4 noet:

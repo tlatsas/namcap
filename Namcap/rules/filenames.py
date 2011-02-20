@@ -30,11 +30,10 @@ class package(TarballRule):
 	name = "filenames"
 	description = "Checks for invalid filenames."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		for i in tar.getnames():
 			for c in i:
 				if c not in VALID_CHARS:
-					ret[1].append(("invalid-filename", i))
+					self.warnings.append(("invalid-filename", i))
 					break
-		return ret
+
 # vim: set ts=4 sw=4 noet:

@@ -19,19 +19,10 @@
 #   USA
 # 
 
-import os
-import unittest
-import tempfile
-import shutil
-
-import pacman
-from . import valid_pkgbuilds
-
+from Namcap.tests.pkgbuild_test import PkgbuildTest
 import Namcap.rules.sfurl as module
 
-EMPTY_RESULT = [ [] , [] , [] ]
-
-class NamcapSourceForgeUrlTest(unittest.TestCase):
+class NamcapSourceForgeUrlTest(PkgbuildTest):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
@@ -60,28 +51,15 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
-	def run_on_pkg(self, p):
-		with open(self.tmpname, 'w') as f:
-			f.write(p)
-		pkginfo = pacman.load(self.tmpname)
-		return self.rule.analyze(pkginfo, self.tmpname)
+	def preSetUp(self):
+		self.rule = module.package
+		self.test_valid = PkgbuildTest.valid_tests
 
-	def runTest(self):
-		self.rule = module.package()
-		self.tmpdir = tempfile.mkdtemp()
-		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
-
-		# Valid PKGBUILDS
-		for p in valid_pkgbuilds.all_pkgbuilds:
-			ret = self.run_on_pkg(p)
-			self.assertEqual(ret, EMPTY_RESULT)
-
+	def test_example1(self):
 		# Example 1
-		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [])
-		self.assertEqual(ret[1], [("specific-sourceforge-mirror", ())])
-		self.assertEqual(ret[2], [])
-
-		shutil.rmtree(self.tmpdir)
+		r = self.run_on_pkg(self.pkgbuild1)
+		self.assertEqual(r.errors, [])
+		self.assertEqual(r.warnings, [("specific-sourceforge-mirror", ())])
+		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:

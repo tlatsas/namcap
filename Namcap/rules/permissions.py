@@ -23,16 +23,14 @@ class package(TarballRule):
 	name = "permissions"
 	description = "Checks file permissions."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		for i in tar.getmembers():
 			if not i.mode & 4 and not (i.issym() or i.islnk()):
-				ret[1].append(("file-not-world-readable %s", i.name))
+				self.warnings.append(("file-not-world-readable %s", i.name))
 			if i.mode & 2 and not (i.issym() or i.islnk()):
-				ret[1].append(("file-world-writable %s", i.name))
+				self.warnings.append(("file-world-writable %s", i.name))
 			if not i.mode & 1 and i.isdir():
-				ret[1].append(("directory-not-world-executable %s", i.name))
+				self.warnings.append(("directory-not-world-executable %s", i.name))
 			if str(i.name).endswith('.a') and i.mode != 0o644 and i.mode != 0o444:
-				ret[1].append(("incorrect-library-permissions %s", i.name))
-		return ret
+				self.warnings.append(("incorrect-library-permissions %s", i.name))
 
 # vim: set ts=4 sw=4 noet:

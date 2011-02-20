@@ -23,9 +23,8 @@ class package(TarballRule):
 	name = "infodirectory"
 	description = "Checks for info directory file."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		for i in tar.getnames():
 			if i == "usr/share/info/dir":
-				ret[0].append(("info-dir-file-present %s", i))
-		return ret
+				self.errors.append(("info-dir-file-present %s", i))
+
 # vim: set ts=4 sw=4 noet:

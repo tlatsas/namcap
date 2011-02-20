@@ -30,7 +30,6 @@ class ChecksumsRule(PkgbuildRule):
 	name = "checksums"
 	description = "Verifies checksums are included in a PKGBUILD"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		checksums=[('md5', 32), ('sha1', 40), ('sha256', 64), ('sha384', 96), ('sha512', 128)]
 
 		if hasattr(pkginfo, 'source'):
@@ -39,28 +38,25 @@ class ChecksumsRule(PkgbuildRule):
 				if hasattr(pkginfo, sumname + 'sums'):
 					haschecksums = True
 			if not haschecksums:
-				ret[0].append(("missing-checksums", ()))
+				self.errors.append(("missing-checksums", ()))
 
 		for sumname, sumlen in checksums:
 			sumname += 'sums'
 			if hasattr(pkginfo, sumname):
 				if len(pkginfo.source) > len(getattr(pkginfo, sumname)):
-					ret[0].append(("not-enough-checksums %s %i needed",
+					self.errors.append(("not-enough-checksums %s %i needed",
 						          (sumname, len(pkginfo.source))))
 				elif len(pkginfo.source) < len(getattr(pkginfo, sumname)):
-					ret[0].append(("too-many-checksums %s %i needed",
+					self.errors.append(("too-many-checksums %s %i needed",
 						          (sumname, len(pkginfo.source))))
 				for sum in getattr(pkginfo, sumname):
 					if len(sum) != sumlen or not RE_IS_HEXNUMBER.match(sum):
-						ret[0].append(("improper-checksum %s %s", (sumname, sum)))
-
-		return ret
+						self.errors.append(("improper-checksum %s %s", (sumname, sum)))
 
 class TagsRule(PkgbuildRule):
 	name = "tags"
 	description = "Looks for Maintainer and Contributor comments"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		contributortag = 0
 		maintainertag = 0
 		idtag = 0
@@ -71,11 +67,9 @@ class TagsRule(PkgbuildRule):
 				maintainertag = 1
 
 		if contributortag != 1:
-			ret[2].append(("missing-contributor", ()))
+			self.infos.append(("missing-contributor", ()))
 
 		if maintainertag != 1:
-			ret[1].append(("missing-maintainer", ()))
-
-		return ret
+			self.warnings.append(("missing-maintainer", ()))
 
 # vim: set ts=4 sw=4 noet:

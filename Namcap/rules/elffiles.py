@@ -29,7 +29,6 @@ class package(TarballRule):
 	name = "elffiles"
 	description = "Check about ELF files outside some standard paths."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		invalid_elffiles = []
 
 		for entry in tar:
@@ -49,8 +48,7 @@ class package(TarballRule):
 			if f.read(4) == b"\x7fELF":
 				invalid_elffiles.append(entry.name)
 
-		ret[0] = [("elffile-not-in-allowed-dirs %s", i)
+		self.errors = [("elffile-not-in-allowed-dirs %s", i)
 				for i in invalid_elffiles]
-		return ret
 
 # vim: set ts=4 sw=4 noet:

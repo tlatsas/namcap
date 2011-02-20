@@ -24,11 +24,10 @@ class package(TarballRule):
 	name = "kdeprograms"
 	description = "Checks that KDE programs have kdebase-runtime as a dependency"
 	def analyze(self, pkginfo, tar):
-		ret = [ [], [], [] ]
 		if hasattr(pkginfo, "depends") and 'kdelibs' in pkginfo.depends:
 			binaries = [ f.name for f in tar
 					if f.name.startswith("usr/bin") and f.isfile() ]
 			if len(binaries) > 0:
-				ret[1].append(("kdebase-runtime-missing-dep %s", binaries))
-		return ret
+				self.warnings.append(("kdebase-runtime-missing-dep %s", binaries))
+
 # vim: set ts=4 sw=4 noet:

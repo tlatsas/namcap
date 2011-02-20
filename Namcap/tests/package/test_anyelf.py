@@ -66,27 +66,27 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_any)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.anyelf.package
 				)
-		self.assertEqual(ret[0], [])
-		self.assertEqual(ret[1], [('no-elffiles-not-any-package', ())])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.errors, [])
+		self.assertEqual(r.warnings, [('no-elffiles-not-any-package', ())])
+		self.assertEqual(r.infos, [])
 
 	def test_any_but_elf(self):
 		pkgfile = "__namcap_test_anyelf-1.0-1-any.pkg.tar"
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_elf)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.anyelf.package
 				)
-		self.assertEqual(ret[0], 
+		self.assertEqual(r.errors, 
 				[("elffile-in-any-package %s", "usr/bin/ls")])
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
 
 # vim: set ts=4 sw=4 noet:

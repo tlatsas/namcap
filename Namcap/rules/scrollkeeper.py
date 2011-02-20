@@ -24,12 +24,10 @@ class package(TarballRule):
 	name = "scrollkeeper"
 	description = "Verifies that there aren't any scrollkeeper directories."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		scroll = re.compile("var.*/scrollkeeper/?$")
 		for i in tar.getnames():
 			n = scroll.search(i)
 			if n != None:
-				ret[0].append(("scrollkeeper-dir-exists %s", i))
-		return ret
+				self.errors.append(("scrollkeeper-dir-exists %s", i))
 
 # vim: set ts=4 sw=4 noet:

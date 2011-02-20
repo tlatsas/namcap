@@ -19,19 +19,10 @@
 #   USA
 # 
 
-import os
-import unittest
-import tempfile
-import shutil
-
-import pacman
-from . import valid_pkgbuilds
-
+from Namcap.tests.pkgbuild_test import PkgbuildTest
 import Namcap.rules
 
-EMPTY_RESULT = [ [] , [] , [] ]
-
-class NamcapArraysTest(unittest.TestCase):
+class NamcapArraysTest(PkgbuildTest):
 	pkgbuild1 = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
@@ -60,32 +51,16 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
-	def setUp(self):
-		self.rule = Namcap.rules.arrays.package()
-		self.tmpdir = tempfile.mkdtemp()
-		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
-
-	def tearDown(self):
-		shutil.rmtree(self.tmpdir)
-
-	def run_on_pkg(self, p):
-		with open(self.tmpname, 'w') as f:
-			f.write(p)
-		pkginfo = pacman.load(self.tmpname)
-		return self.rule.analyze(pkginfo, self.tmpname)
-
-	def test_valid(self):
-		# Valid PKGBUILDS
-		for p in valid_pkgbuilds.all_pkgbuilds:
-			ret = self.run_on_pkg(p)
-			self.assertEqual(ret, EMPTY_RESULT)
+	def preSetUp(self):
+		self.rule = Namcap.rules.arrays.package
+		self.test_valid = PkgbuildTest.valid_tests
 
 	def test_example1(self):
 		# Example 1
-		ret = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(ret[0], [])
-		self.assertEqual(set(ret[1]), set(("variable-not-array %s", i) for i in ["depends", "license"]))
-		self.assertEqual(ret[2], [])
-
+		r = self.run_on_pkg(self.pkgbuild1)
+		self.assertEqual(r.errors, [])
+		self.assertEqual(set(r.warnings),
+			set(("variable-not-array %s", i) for i in ["depends", "license"]))
+		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:

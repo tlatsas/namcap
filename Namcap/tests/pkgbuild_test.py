@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# namcap tests - badbackups
+# namcap tests - pkgbuild rule testing template
 # Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
@@ -19,11 +19,55 @@
 #   USA
 # 
 
-from Namcap.tests.pkgbuild_test import PkgbuildTest
-import Namcap.rules.badbackups as module
+import os
+import unittest
+import tempfile
+import shutil
 
-class NamcapBadBackupsTest(PkgbuildTest):
-	pkgbuild1 = """
+import pacman
+
+class PkgbuildTest(unittest.TestCase):
+	"""
+	This class is the template for unit tests concerning PKGBUILD rules.
+	The setUp()	method should set self.rule to a class derived from
+	PkgbuildRule.
+
+	The usual way to do that is by defining
+
+	def preSetUp(self):
+		self.rule = myRuleClass
+		# Add standard valid PKGBUILDs to tests
+		self.test_valid = PkgbuildTest.valid_tests
+	"""
+
+	def preSetUp(self):
+		pass
+
+	def setUp(self):
+		self.preSetUp()
+		self.tmpdir = tempfile.mkdtemp()
+		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
+
+	def run_on_pkg(self, p):
+		with open(self.tmpname, 'w') as f:
+			f.write(p)
+		pkginfo = pacman.load(self.tmpname)
+		r = self.rule()
+		r.analyze(pkginfo, self.tmpname)
+		return r
+
+	def valid_tests(self):
+		# Valid PKGBUILDS
+		for p in all_pkgbuilds:
+			r = self.run_on_pkg(p)
+			self.assertEqual(r.errors, [])
+			self.assertEqual(r.warnings, [])
+			self.assertEqual(r.errors, [])
+
+	def tearDown(self):
+		shutil.rmtree(self.tmpdir)
+
+basic = """
 # Maintainer: Arch Linux <archlinux@example.com>
 # Contributor: Arch Linux <archlinux@example.com>
 
@@ -34,8 +78,7 @@ pkgdesc="A package"
 arch=('i686' 'x86_64')
 url="http://www.example.com/"
 license=('GPL')
-depends=('glibc')
-backup=('/etc/rc.conf')
+depends=('glibc' 'pacman')
 options=('!libtool')
 source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz)
 md5sums=('abcdefabcdef12345678901234567890')
@@ -52,15 +95,7 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
-	def preSetUp(self):
-		self.rule = module.package
-		self.test_valid = PkgbuildTest.valid_tests
 
-	def test_example1(self):
-		# Example 1
-		r = self.run_on_pkg(self.pkgbuild1)
-		self.assertEqual(r.errors, [("backups-preceding-slashes", ())])
-		self.assertEqual(r.warnings, [])
-		self.assertEqual(r.infos, [])
+all_pkgbuilds = [basic]
 
 # vim: set ts=4 sw=4 noet:

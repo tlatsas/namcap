@@ -49,16 +49,16 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.hardlinks.package
 				)
-		ret[0] = [(s, set(tup)) for (s, tup) in ret[0]]
-		self.assertEqual(ret[0], [
+		errors = [(s, set(tup)) for (s, tup) in r.errors]
+		self.assertEqual(errors, [
 			("cross-dir-hardlink %s %s", set(("usr/bin/prog1", "usr/sbin/prog2")))
 		])
-		self.assertEqual(ret[1], [])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:
 

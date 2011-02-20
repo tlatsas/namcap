@@ -23,7 +23,6 @@ class package(TarballRule):
 	name = "fileownership"
 	description = "Checks file ownership."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		for i in tar.getmembers():
 			if i.uname != 'root' or i.gname != 'root':
 				uname = ""
@@ -36,6 +35,6 @@ class package(TarballRule):
 					gname = str(i.gid)
 				else:
 					gname = i.gname
-				ret[0].append(("incorrect-permissions %s (%s/%s)", (i.name, uname, gname)))
-		return ret
+				self.errors.append(("incorrect-permissions %s (%s/%s)", (i.name, uname, gname)))
+
 # vim: set ts=4 sw=4 noet:

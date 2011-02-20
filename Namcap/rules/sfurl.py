@@ -24,12 +24,11 @@ class package(PkgbuildRule):
 	name = "sfurl"
 	description = "Checks for proper sourceforge URLs"
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		if hasattr(pkginfo, 'source'):
 			for source in pkginfo.source:
 				if re.match('(http://|ftp://)\w+.dl.(sourceforge|sf).net', source) != None:
-					ret[1].append(("specific-sourceforge-mirror", ()))
+					self.warnings.append(("specific-sourceforge-mirror", ()))
 				if re.match('(http://|ftp://)dl.(sourceforge|sf).net', source) != None:
-					ret[1].append(("using-dl-sourceforge", ()))
-		return ret
+					self.warnings.append(("using-dl-sourceforge", ()))
+
 # vim: set ts=4 sw=4 noet:

@@ -48,14 +48,14 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		ret = self.run_rule_on_tarball(
+		r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.permissions.package
 				)
-		self.assertEqual(ret[0], [])
-		self.assertEqual(ret[1], [("file-world-writable %s",
+		self.assertEqual(r.errors, [])
+		self.assertEqual(r.warnings, [("file-world-writable %s",
 			"usr/bin/program")])
-		self.assertEqual(ret[2], [])
+		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:
 

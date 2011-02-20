@@ -24,10 +24,8 @@ class package(TarballRule):
 	name = "libtool"
 	description = "Checks for libtool (*.la) files."
 	def analyze(self, pkginfo, tar):
-		ret = [[], [], []]
 		for i in tar.getnames():
 			if re.search('\.la$', i) != None:
-				ret[1].append(("libtool-file-present %s", i))
-		return ret
+				self.warnings.append(("libtool-file-present %s", i))
 
 # vim: set ts=4 sw=4 noet:
