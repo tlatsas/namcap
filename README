@@ -2,7 +2,7 @@
 WHAT IS IT?
 -----------------------------
 
-Namcap is a tool for pacman checks binary packages and source PKGBUILDs for 
+Namcap is a tool for pacman checking binary packages and source PKGBUILDs for 
 common packaging errors.
 
 
@@ -10,12 +10,15 @@ HOW CAN I HELP?
 -----------------------------
 
 There are several ways that you can contribute and help namcap's development. 
-You can contribute with code, patchs, bugs and feature requests.
+You can contribute with code, patches, tests, bugs and feature requests.
 
 To report a bug or a feature request for namcap, file a bug in the 
 Packages:Extra section of the Arch Linux bugtracker and the set the importance 
 accordingly. If you're reporting a bug, please give concrete examples of 
 packages where the problem occurs.
+
+Minimal examples (very simple packages forged to exhibit unexpected
+behaviour from namcap) are also welcome to extend namcap's test suite.
 
 If you've a patch (fixing a bug or a new namcap module), then you can send it 
 to the arch-general mailing list. Namcap development is managed with git, so 
@@ -29,7 +32,7 @@ http://projects.archlinux.org/?p=namcap.git;a=summary
 HOW TO USE
 -----------------------------
 
-To run namcap on a PKGBUILD or a binary pkg.tar.gz:
+To run namcap on a PKGBUILD or a binary pkg.tar.xz:
 
 $ namcap FILENAME
 
@@ -62,8 +65,8 @@ program, then pass the -m (machine-readable) flag to namcap.
 HOW IT WORKS
 -----------------------------
 
-Namcap takes the package name (or a PKGBUILD) as an arguement then runs through 
-all the modules in Namcap.__all__ variable and tests them against the arguement 
+Namcap takes the package name (or a PKGBUILD) as an argument that runs through 
+all the rules defined in Namcap.rules submodules and tests them against the argument 
 looking for flaws.
 
 
@@ -71,58 +74,49 @@ HOW TO CREATE A MODULE
 -----------------------------
 
 This section documents the innards of namcap and specifies how to create a new 
-namcap module.
+namcap rule.
 
 The main namcap program namcap.py takes as parameters the filename of a package 
 or a PKGBUILD and makes a pkginfo object, which it passes to a list of rules 
-defined in __tarball__ and __pkgbuild__.
+defined in Namcap.rules.all_rules :
 
-	* __tarball__ defines the rules which process binary packages.
-	* __pkgbuild__ defines the rules which process PKGBUILDs. 
+	* a rule is a subclass of AbstractRule (defined in Namcap.ruleclass)
+	* PkgInfoRule classes process any pkginfo object
+	* PkgbuildRule classes process only PKGBUILDs
+	* TarballRule classes process binary packages
+	* PkgdirRule classes (unused) process uncompressed binary packages
 
-Once your module is finalized, remember to add it to the appropriate array 
-(__tarball__ or __pkgbuild__) defined in Namcap/__init__.py
+Put the new rule in a module and make sure it is imported in
+Namcap/rules/__init__.py
 
-A sample namcap module is like this (Namcap/url.py):
+A very simple rule is the "url" rule (Namcap/rules/pkginfo.py):
 
-import pacman
+from Namcap.ruleclass import PkgInfoRule
 
-  class package:
-  	def short_name(self):
-		return "url"
-	def long_name(self):
-		return "Verifies url is included in a PKGBUILD"
-	def prereq(self):
-		return ""
+class UrlRule(PkgInfoRule):
+	name = "url"
+	description = "Verifies the package comes with an URL"
 	def analyze(self, pkginfo, tar):
-		ret = [[],[],[]]
 		if not hasattr(pkginfo, 'url'):
-			ret[0].append(("missing-url", ()))
-		return ret
-	def type(self):
-		return "pkgbuild"
+			self.errors.append(("missing-url", ()))
 
-Mostly, the code is self-explanatory. The following are the list of the methods 
-that each namcap module must have:
+Mostly, the code is self-explanatory. The following are the list of
+attributes that each namcap rule must have:
 
-	* short_name(self) 
-	Returns a string containing a short name of the module. Usually,this is the 
-	same as the basename of the module file.
+	* base class
+	Either PkgInfoRull, PkgbuildRule, TarballRule.
 	
-	* long_name(self) 
-	Returns a string containing a concise description of the module. This 
+	* name
+	Contains a string containing a short name of the module. Usually, this
+	is the same as the basename of the module file.
+	
+	* description
+	A string containing a concise description of the module. This 
 	description is used when listing all the rules using namcap -r list.
 	
-	* prereq(self) 
-	Return a string containing the prerequisites needed for the module to 
-	operate properly. Usually "" for modules processing PKGBUILDs and "tar" 
-	for modules processing package files. "extract" should be specified if 
-	the package contents should be extracted to a temporary directory before 
-	further processing.
-	
 	* analyze(self, pkginfo, tar) 
-	Should return a list comprising in turn of three lists: of error tags, 
-	warning tags and information tags respectively. 
+	Should fill three lists self.errors, self.warnings and self.infos
+	with error tags, warning tags and information tags respectively. 
 	Each member of these tag lists should be a tuple consisting of two 
 	components: the short, hyphenated form of the tag with the appropriate 
 	format specifiers (%s, etc.) The first word of this string must be the tag 
@@ -130,10 +124,6 @@ that each namcap module must have:
 	file. The format of the tags file is described below; and the parameters
 	which should replace the format specifier tokens in the final output. 
 	
-	* type(self) 
-	"pkgbuild" for a module processing PKGBUILDs
-	"tarball" for a module processing a binary package file. 
-
 
 The namcap-tags file consists of lines specifying the human readable form of
 the hyphenated tags used in the namcap code. A line beginning with a '#' is
@@ -144,6 +134,38 @@ treated as a comment. Otherwise the format of the file is:
 Note that a double colon (::) is used to separate the hyphenated tag from the 
 human readable description.
 
+HOW TO TEST A RULE
+-----------------------------
+
+Namcap comes with a test suite covering the classical mistakes or
+warnings we are expecting from the rules. The test suite
+is in Namcap/tests. The makepkg and pkgbuild_test submodules
+provide easy generic methods to test a rule.
+
+Here is an example testing the rule "pkgnameindesc"
+
+from Namcap.tests.pkgbuild_test import PkgbuildTest
+import Namcap.rules.pkgnameindesc
+
+class NamcapPkgnameInDescTest(PkgbuildTest):
+	pkgbuild1 = "...some bogus pkgbuild..."
+	def preSetUp(self):
+		self.rule = Namcap.rules.pkgnameindesc.package
+
+	def test_example1(self):
+		r = self.run_on_pkg(self.pkgbuild1)
+		self.assertEqual(r.errors, [])
+		self.assertEqual(set(r.warnings), set(
+			[("pkgname-in-description", ())] ))
+		self.assertEqual(r.infos, [])
+
+* the preSetUp() method sets the rule to be used in the test
+
+* the test_example1() method runs the rule on the given PKGBUILD and
+  tests whether the results are as expected
+
+* the PkgbuildTest also automatically tests the rule against a set
+  of known valid PKGBUILDs.
 
 MORE INFORMATION
 -----------------------------
