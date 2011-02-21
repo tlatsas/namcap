@@ -20,18 +20,19 @@
 from Namcap.ruleclass import *
 
 class package(TarballRule):
-    name = "mimefiles"
-    description = "Check for files in /usr/share/mime"
-    def analyze(self, pkginfo, tar):        
-        if 'usr/share/mime' in tar.getnames():            
-            if hasattr(pkginfo, "depends"):
-                if "shared-mime-info" not in pkginfo.depends:
-                    self.errors.append(("dependency-detected-not-included %s", ("shared-mime-info",)))
-            if ".INSTALL" not in tar.getnames():
-                self.errors.append(("mime-cache-not-updated", ()))
-            else:
-                f = tar.extractfile(".INSTALL")                    
-                if b"update-mime-database" not in f.read():
-                    self.errors.append(("mime-cache-not-updated", ()))
+	name = "mimefiles"
+	description = "Check for files in /usr/share/mime"
+	def analyze(self, pkginfo, tar):
+		if 'usr/share/mime' in tar.getnames():
+			pkginfo.detected_deps.append("shared-mime-info")
+			if hasattr(pkginfo, "depends"):
+				if "shared-mime-info" not in pkginfo.depends:
+					self.errors.append(("dependency-detected-not-included %s", ("shared-mime-info",)))
+			if ".INSTALL" not in tar.getnames():
+				self.errors.append(("mime-cache-not-updated", ()))
+			else:
+				f = tar.extractfile(".INSTALL")
+				if b"update-mime-database" not in f.read():
+					self.errors.append(("mime-cache-not-updated", ()))
 
 # vim: set ts=4 sw=4 noet:

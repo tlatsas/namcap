@@ -104,7 +104,7 @@ def process_realpackage(package, modules):
 		return 1
 
 	pkginfo = pacman.load(package)
-
+	pkginfo.detected_deps = []
 	# Loop through each one, load them apply if possible
 	for i in modules:
 		rule = get_modules()[i]()

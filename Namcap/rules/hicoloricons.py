@@ -24,6 +24,7 @@ class package(TarballRule):
 	description = "Checks whether the hicolor icon cache is updated."
 	def analyze(self, pkginfo, tar):
 		if "usr/share/icons/hicolor" in tar.getnames():
+			pkginfo.detected_deps.append("hicolor-icon-theme")
 			if hasattr(pkginfo, "depends"):
 				if "hicolor-icon-theme" not in pkginfo.depends:
 					self.errors.append(("dependency-detected-not-included %s", ("hicolor-icon-theme",)))
