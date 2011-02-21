@@ -43,6 +43,7 @@ from . import (
   permissions,
   rpath,
   scrollkeeper,
+  sodepends,
   symlink
 )
 
