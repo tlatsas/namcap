@@ -21,6 +21,7 @@
 
 import os
 from Namcap.tests.makepkg import MakepkgTest
+import Namcap.depends
 import Namcap.rules.hicoloricons
 
 class hicoloriconsTest(MakepkgTest):
@@ -32,7 +33,7 @@ pkgdesc="A package"
 arch=('i686' 'x86_64')
 url="http://www.example.com/"
 license=('GPL')
-depends=('glibc')
+depends=()
 source=()
 options=(!purge !zipman)
 build() {
@@ -51,12 +52,56 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.hicoloricons.package
 				)
+		e, w, i = Namcap.depends.analyze_depends(pkg)
 		self.assertEqual(pkg.detected_deps, ["hicolor-icon-theme"])
-		self.assertEqual(r.errors, [
+		self.assertEqual(set(r.errors + e), set([
+			('dependency-detected-not-included %s',
+				'hicolor-icon-theme'),
 			("hicolor-icon-cache-not-updated", ())
-		])
-		self.assertEqual(r.warnings, [])
-		self.assertEqual(r.infos, [])
+		]))
+		self.assertEqual(r.warnings + w, [])
+		self.assertEqual(r.infos + i, [
+			('depends-by-namcap-sight depends=(%s)', 'hicolor-icon-theme')
+			])
+
+	valid_pkgbuild = """
+pkgname=__namcap_test_hicoloricons
+pkgver=1.0
+pkgrel=1
+pkgdesc="A package"
+arch=('i686' 'x86_64')
+url="http://www.example.com/"
+license=('GPL')
+depends=('hicolor-icon-theme')
+source=()
+options=(!purge !zipman)
+build() {
+  true
+}
+package() {
+  mkdir -p "${pkgdir}/usr/share/icons/hicolor/64x64"
+}
+"""
+
+	def test_hicoloricons_normal(self):
+		pkgfile = "__namcap_test_hicoloricons-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
+		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
+			f.write(self.valid_pkgbuild)
+		self.run_makepkg()
+		pkg, r = self.run_rule_on_tarball(
+				os.path.join(self.tmpdir, pkgfile),
+				Namcap.rules.hicoloricons.package
+				)
+		e, w, i = Namcap.depends.analyze_depends(pkg)
+		self.assertEqual(pkg.detected_deps, ["hicolor-icon-theme"])
+		self.assertEqual(r.errors + e, [
+			("hicolor-icon-cache-not-updated", ())
+			])
+		self.assertEqual(r.warnings + w, [])
+		self.assertEqual(r.infos + i, [
+			('depends-by-namcap-sight depends=(%s)', 'hicolor-icon-theme')
+			])
+
 
 # vim: set ts=4 sw=4 noet:
 

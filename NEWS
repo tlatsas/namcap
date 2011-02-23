@@ -1,7 +1,10 @@
 namcap (3.0)
-	- rework the implementation of rules
 	- switch to Python 3
+	- rework the implementation of rules
+	- rework dependency analysis
 	- fix: test suite ran with i686 architecture set
+	- fix: FS#15591 consistent hicolor-icon-theme messages
+	- fix: FS#17166 consistent shared-mime-info messages
 	- test: add unit test for the rpath rule
 
 namcap (2.8.2)
