@@ -66,7 +66,7 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_any)
 		self.run_makepkg()
-		r = self.run_rule_on_tarball(
+		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.anyelf.package
 				)
@@ -79,7 +79,7 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_elf)
 		self.run_makepkg()
-		r = self.run_rule_on_tarball(
+		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.anyelf.package
 				)

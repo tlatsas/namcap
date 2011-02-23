@@ -47,10 +47,11 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		r = self.run_rule_on_tarball(
+		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.mimefiles.package
 				)
+		self.assertEqual(pkg.detected_deps, ["shared-mime-info"])
 		self.assertEqual(r.errors, [("mime-cache-not-updated", ())])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])

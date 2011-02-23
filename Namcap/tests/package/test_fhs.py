@@ -47,7 +47,7 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		r = self.run_rule_on_tarball(
+		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				fhs.FHSRule
 				)
@@ -82,7 +82,7 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_man)
 		self.run_makepkg()
-		r = self.run_rule_on_tarball(
+		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				fhs.FHSManpagesRule
 				)
@@ -114,7 +114,7 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_info)
 		self.run_makepkg()
-		r = self.run_rule_on_tarball(
+		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				fhs.FHSInfoPagesRule
 				)

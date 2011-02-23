@@ -47,7 +47,7 @@ package() {
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
-		r = self.run_rule_on_tarball(
+		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.emptydir.package
 				)

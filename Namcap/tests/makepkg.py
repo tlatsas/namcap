@@ -92,7 +92,7 @@ class MakepkgTest(unittest.TestCase):
 		r = rule()
 		r.analyze(pkg, tar)
 		tar.close()
-		return r
+		return pkg, r
 
 # vim: set ts=4 sw=4 noet:
 
