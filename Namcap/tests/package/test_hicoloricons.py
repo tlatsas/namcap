@@ -52,7 +52,6 @@ package() {
 				Namcap.rules.hicoloricons.package
 				)
 		self.assertEqual(r.errors, [
-			("dependency-detected-not-included %s", ("hicolor-icon-theme",)),
 			("hicolor-icon-cache-not-updated", ())
 		])
 		self.assertEqual(r.warnings, [])

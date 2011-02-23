@@ -51,10 +51,7 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.mimefiles.package
 				)
-		self.assertEqual(r.errors, [
-			("dependency-detected-not-included %s", ("shared-mime-info",)),
-			("mime-cache-not-updated", ())
-		])
+		self.assertEqual(r.errors, [("mime-cache-not-updated", ())])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])
 

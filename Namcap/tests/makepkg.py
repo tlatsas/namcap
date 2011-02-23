@@ -77,7 +77,7 @@ class MakepkgTest(unittest.TestCase):
 		self.assertEqual(ret, 0)
 
 		# process PKGINFO
-		pkg = pacman.PacmanPackage()
+		pkg = pacman.PacmanPackage(detected_deps = [])
 		tar = tarfile.open(filename)
 		pkginfo = tar.extractfile('.PKGINFO')
 		for i in pkginfo:
