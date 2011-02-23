@@ -50,10 +50,25 @@ package() {
 		self.run_makepkg()
 		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.rules.infodirectory.package
+				Namcap.rules.infodirectory.InfodirRule
 				)
 		self.assertEqual(r.errors, [
 			("info-dir-file-present %s", "usr/share/info/dir")
+		])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
+
+	def test_info_dir_updated(self):
+		pkgfile = "__namcap_test_infodirectory-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
+		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
+			f.write(self.pkgbuild)
+		self.run_makepkg()
+		pkg, r = self.run_rule_on_tarball(
+				os.path.join(self.tmpdir, pkgfile),
+				Namcap.rules.infodirectory.InfoInstallRule
+				)
+		self.assertEqual(r.errors, [
+			("info-dir-not-updated", ())
 		])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])

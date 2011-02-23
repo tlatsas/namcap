@@ -2,6 +2,7 @@ namcap (3.0)
 	- switch to Python 3
 	- rework the implementation of rules
 	- rework dependency analysis
+	- new rule checking whether info files are installed (FS#23003)
 	- fix: test suite ran with i686 architecture set
 	- fix: FS#15591 consistent hicolor-icon-theme messages
 	- fix: FS#17166 consistent shared-mime-info messages

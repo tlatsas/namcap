@@ -38,6 +38,7 @@ incorrect-library-permissions %s :: Library (%s) does not have permission set to
 incorrect-permissions %s (%s/%s) :: File (%s) has %s/%s permissions
 invalid-filename :: File name %s contains non standard characters
 info-dir-file-present %s :: Info directory file (%s) should not be present
+info-dir-not-updated :: Info files detected but not updated with "install-info" in install file
 insecure-rpath %s %s :: Insecure RPATH '%s' in file ('%s')
 libtool-file-present %s :: File (%s) is a libtool file
 library-no-package-associated %s :: Referenced library '%s' is an uninstalled dependency

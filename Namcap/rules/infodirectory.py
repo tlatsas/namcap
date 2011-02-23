@@ -19,12 +19,32 @@
 
 from Namcap.ruleclass import *
 
-class package(TarballRule):
+class InfodirRule(TarballRule):
 	name = "infodirectory"
 	description = "Checks for info directory file."
 	def analyze(self, pkginfo, tar):
 		for i in tar.getnames():
 			if i == "usr/share/info/dir":
 				self.errors.append(("info-dir-file-present %s", i))
+
+class InfoInstallRule(TarballRule):
+	name = "infoinstall"
+	description = "Checks that info files are correctly installed."
+	def analyze(self, pkginfo, tar):
+		info_installed = False
+		info_present = False
+
+		for i in tar:
+			if i.name == ".INSTALL":
+				install = tar.extractfile(i)
+				if b"install-info" in install.read():
+					info_installed = True
+				install.close()
+
+			if i.name.startswith("usr/share/info/"):
+				info_present = True
+
+		if info_present and not info_installed:
+			self.errors.append(("info-dir-not-updated", ()))
 
 # vim: set ts=4 sw=4 noet:
