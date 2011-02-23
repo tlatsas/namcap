@@ -22,6 +22,7 @@
 # System wide global stuff
 import sys, os, os.path, imp, getopt, types, tarfile, re, string, Namcap, pacman
 import shutil
+import Namcap.rules.depends
 
 sandbox_directory = '/tmp/namcap.' + str(os.getpid())
 
@@ -132,6 +133,13 @@ def process_realpackage(package, modules):
 		show_messages(pkginfo.name, 'W', rule.warnings)
 		if info_reporting:
 			show_messages(pkginfo.name, 'I', rule.infos)
+	
+	# dependency analysis
+	errs, warns, infos = Namcap.rules.depends.analyze_depends(pkginfo)
+	show_messages(pkginfo.name, 'E', errs)
+	show_messages(pkginfo.name, 'W', warns)
+	if info_reporting:
+		show_messages(pkginfo.name, 'I', infos)
 
 	# Clean up if we extracted anything
 	if extracted:

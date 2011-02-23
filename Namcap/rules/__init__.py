@@ -23,7 +23,6 @@ import Namcap.ruleclass
 # Tarball rules
 from . import (
   anyelf,
-  depends,
   elffiles,
   emptydir,
   fhs,
@@ -43,6 +42,7 @@ from . import (
   permissions,
   rpath,
   scrollkeeper,
+  shebangdepends,
   sodepends,
   symlink
 )

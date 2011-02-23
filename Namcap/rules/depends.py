@@ -51,121 +51,68 @@ def getcovered(current, dependlist, covereddepend):
 					covereddepend[i] = 1
 					getcovered(i, dependlist, covereddepend)
 
-def scanshebangs(fileobj, filename, scripts):
-	"""
-	Scan a file for shebang and stores the interpreter name.
-	"""
-
-	# test magic bytes
-	magic = fileobj.read(2)
-	if magic != b"#!":
-		return
-	# read the rest of file
-	tmp = tempfile.NamedTemporaryFile(delete=False)
-	tmp.write(magic + fileobj.read())
-	tmp.close()
-
-	try:
-		cmd = script_type(tmp.name)
-		if cmd != None:
-			assert(isinstance(cmd, str))
-			scripts.setdefault(cmd, {})[filename] = 1
-	finally:
-		os.unlink(tmp.name)
-
 def getprovides(depends, provides):
-	for i in depends.keys():
+	for i in depends:
 		pac = load(i)
 
 		if pac != None and hasattr(pac, 'provides') and pac.provides != None:
 			provides[i] = pac.provides
 
-class package(TarballRule):
-	name = "depends"
-	description = "Checks dependencies semi-smartly."
-	def analyze(self, pkginfo, tar):
-		scriptlist = {}
-		dependlist = {}
-		smartdepend = {}
-		smartprovides = {}
-		covereddepend = {}
-		pkgcovered = {}
+def analyze_depends(pkginfo):
+	errors, warnings, infos = [], [], []
+	dependlist = pkginfo.detected_deps
+	smartdepend = {}
+	smartprovides = {}
+	covereddepend = {}
+	pkgcovered = {}
 
-		for entry in tar:
-			if not entry.isfile():
-				continue
-			f = tar.extractfile(entry)
-			scanshebangs(f, entry.name, scriptlist)
-			f.close()
+	# Find all the covered dependencies from the PKGBUILD
+	pkgdepend = {}
+	if hasattr(pkginfo, 'depends'):
+		for i in pkginfo.depends:
+			pkgdepend[i] = 1
 
-		# TODO: find packages owning interpreters
+	# Include the optdepends from the PKGBUILD
+	if hasattr(pkginfo, 'optdepends'):
+		for i in pkginfo.optdepends:
+			pkgdepend[i] = 1
 
-		# Do the script handling stuff
-		for i, v in scriptlist.items():
-			if i not in dependlist:
-				dependlist[i] = {}
-			for j in v.keys():
-				dependlist[i][j] = 1
-			files = list(v.keys())
-			self.infos.append(("script-link-detected %s in %s", (i, str(files))))
+	getcovered(None, pkgdepend, pkgcovered)
 
-		# Check for packages in testing
-		if os.path.isdir('/var/lib/pacman/sync/testing'):
-			for i in dependlist.keys():
-				p = pacman.load(i, '/var/lib/pacman/sync/testing/')
-				q = load(i)
-				if p != None and q != None and p.version == q.version:
-					self.warnings.append(("dependency-is-testing-release %s", i))
+	# Do tree walking to find all the non-leaves (branches?)
+	getcovered(None, dependlist, covereddepend)
+	for i in covereddepend.keys():
+		infos.append(("dependency-covered-by-link-dependence %s", i))
 
-		# Find all the covered dependencies from the PKGBUILD
-		pkgdepend = {}
-		if hasattr(pkginfo, 'depends'):
-			for i in pkginfo.depends:
-				pkgdepend[i] = 1
+	# Set difference them to find the leaves
+	for i in dependlist:
+		if not i in covereddepend:
+			smartdepend[i] = 1
 
-		# Include the optdepends from the PKGBUILD
-		if hasattr(pkginfo, 'optdepends'):
-			for i in pkginfo.optdepends:
-				pkgdepend[i] = 1
+	# Get the provides so we can reference them later
+	getprovides(dependlist, smartprovides)
 
-		getcovered(None, pkgdepend, pkgcovered)
+	# Do the actual message outputting stuff
+	for i in smartdepend.keys():
+		# If (i is not in the PKGBUILD's dependencies
+		# and i isn't the package name
+		# and (if (there are provides for i) then
+		#      (those provides aren't included in the package's dependencies))
+		# )
+		all_dependencies = getattr(pkginfo, 'depends', []) + getattr(pkginfo, 'optdepends', []) + list(pkgcovered.keys())
+		if (i not in all_dependencies and i != pkginfo.name
+				and ((i not in smartprovides)
+					or len([c for c in smartprovides[i] if c in pkgcovered]) == 0)):
+			errors.append(("dependency-detected-not-included %s", i))
+	if hasattr(pkginfo, 'depends'):
+		for i in pkginfo.depends:
+			if i in covereddepend and i in dependlist:
+				warnings.append(("dependency-already-satisfied %s", i))
+			# if i is not in the depends as we see them and it's not in any of the provides from said depends
+			elif i not in smartdepend and i not in [y for x in smartprovides.values() for y in x]:
+				warnings.append(("dependency-not-needed %s", i))
+	infos.append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend.keys()) ))
 
-		# Do tree walking to find all the non-leaves (branches?)
-		getcovered(None, dependlist, covereddepend)
-		for i in covereddepend.keys():
-			self.infos.append(("dependency-covered-by-link-dependence %s", i))
-
-		# Set difference them to find the leaves
-		for i in dependlist.keys():
-			if not i in covereddepend:
-				smartdepend[i] = 1
-
-		# Get the provides so we can reference them later
-		getprovides(dependlist, smartprovides)
-
-		# Do the actual message outputting stuff
-		for i in smartdepend.keys():
-			# If (i is not in the PKGBUILD's dependencies
-			# and i isn't the package name
-			# and (if (there are provides for i) then
-			#      (those provides aren't included in the package's dependencies))
-			# )
-			all_dependencies = getattr(pkginfo, 'depends', []) + getattr(pkginfo, 'optdepends', []) + list(pkgcovered.keys())
-			if (i not in all_dependencies and i != pkginfo.name
-					and ((i not in smartprovides)
-						or len([c for c in smartprovides[i] if c in pkgcovered]) == 0)):
-					if type(dependlist[i]) == dict:
-						self.errors.append(("dependency-detected-not-included %s from files %s",
-							(i, str(list(dependlist[i]))) ))
-					else:
-						self.errors.append(("dependency-detected-not-included %s", i))
-		if hasattr(pkginfo, 'depends'):
-			for i in pkginfo.depends:
-				if i in covereddepend and i in dependlist:
-					self.warnings.append(("dependency-already-satisfied %s", i))
-				# if i is not in the depends as we see them and it's not in any of the provides from said depends
-				elif i not in smartdepend and i not in [y for x in smartprovides.values() for y in x]:
-					self.warnings.append(("dependency-not-needed %s", i))
-		self.infos.append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend.keys()) ))
+	return errors, warnings, infos
 
 # vim: set ts=4 sw=4 noet:
