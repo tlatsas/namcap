@@ -3,6 +3,10 @@ namcap (3.0)
 	- rework the implementation of rules
 	- rework dependency analysis
 	- new rule checking whether info files are installed (FS#23003)
+	- new rule checking that glib schemas and gio modules are
+	  registered (FS#22881)
+	- the permissions rule warns against setuid/setgid files
+	  (FS#18852)
 	- fix: test suite ran with i686 architecture set
 	- fix: FS#15591 consistent hicolor-icon-theme messages
 	- fix: FS#17166 consistent shared-mime-info messages

@@ -38,9 +38,18 @@ build() {
   true
 }
 package() {
-  mkdir -p ${pkgdir}/usr/bin
+  install -d -m 755 ${pkgdir}/usr/bin
+
   touch ${pkgdir}/usr/bin/program
   chmod 777 ${pkgdir}/usr/bin/program
+
+  touch ${pkgdir}/usr/bin/secret
+  chmod 700 ${pkgdir}/usr/bin/secret
+
+  touch ${pkgdir}/usr/bin/unsafe
+  chmod u+rwxs ${pkgdir}/usr/bin/unsafe
+
+  install -d -m 744 ${pkgdir}/usr/share/broken
 }
 """
 	def test_nonrootowner(self):
@@ -53,8 +62,12 @@ package() {
 				Namcap.rules.permissions.package
 				)
 		self.assertEqual(r.errors, [])
-		self.assertEqual(r.warnings, [("file-world-writable %s",
-			"usr/bin/program")])
+		self.assertEqual(set(r.warnings), set([
+			("file-world-writable %s", "usr/bin/program"),
+			("file-not-world-readable %s", "usr/bin/secret"),
+			("file-setugid %s", "usr/bin/unsafe"),
+			("directory-not-world-executable %s", "usr/share/broken")
+			]))
 		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:

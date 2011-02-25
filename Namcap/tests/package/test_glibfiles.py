@@ -74,6 +74,5 @@ package() {
 		self.assertEqual(r.warnings, [("gio-modules-not-registered", ())])
 		self.assertEqual(r.infos, [])
 
-
 # vim: set ts=4 sw=4 noet:
 

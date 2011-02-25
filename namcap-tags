@@ -29,6 +29,7 @@ extra-var-begins-without-underscore %s :: Non standard variable '%s' doesn't sta
 file-in-non-standard-dir %s :: File (%s) exists in a non-standard directory.
 file-not-world-readable %s :: File (%s) does not have the world readable bit set.
 file-referred-in-startdir :: File referenced in $startdir
+file-setugid %s :: File (%s) is setuid or setgid.
 file-world-writable %s :: File (%s) has the world writable bit set.
 gio-modules-not-registered :: Package installs GIO modules but does not register them with gio-querymodules in install script.
 gnome-mime-file %s :: File (%s) is an auto-generated GNOME mime file
