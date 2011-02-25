@@ -40,6 +40,9 @@ build() {
 }
 package() {
   mkdir -p "${pkgdir}/usr/share/mime/applications"
+
+  mkdir -p "${pkgdir}/usr/share/applications"
+  echo "MimeType=applcation/pdf" > "${pkgdir}/usr/share/applications/foobar.desktop"
 }
 """
 	def test_mimefiles_file_exists(self):
@@ -49,10 +52,24 @@ package() {
 		self.run_makepkg()
 		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.rules.mimefiles.package
+				Namcap.rules.mimefiles.MimeInfoRule
 				)
 		self.assertEqual(pkg.detected_deps, ["shared-mime-info"])
 		self.assertEqual(r.errors, [("mime-cache-not-updated", ())])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
+
+	def test_mimetype_in_desktop(self):
+		pkgfile = "__namcap_test_mimefiles-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
+		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
+			f.write(self.pkgbuild)
+		self.run_makepkg()
+		pkg, r = self.run_rule_on_tarball(
+				os.path.join(self.tmpdir, pkgfile),
+				Namcap.rules.mimefiles.MimeDesktopRule
+				)
+		self.assertEqual(pkg.detected_deps, ["desktop-file-utils"])
+		self.assertEqual(r.errors, [("desktop-database-not-updated", ())])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])
 

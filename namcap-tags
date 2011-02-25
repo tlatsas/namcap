@@ -20,6 +20,7 @@ dependency-detected-not-included %s from files %s :: Dependency detected and not
 dependency-is-testing-release %s :: Dependency '%s' on your system is a testing release
 dependency-not-needed %s :: Dependency included and not needed ('%s')
 depends-by-namcap-sight depends=(%s) :: Depends as namcap sees them: depends=(%s)
+desktop-database-not-updated :: Mime type handler found. Add "update-desktop-database -q" to the install file
 directory-not-world-executable %s :: Directory (%s) does not have the world executable bit set.
 elffile-in-any-package %s :: ELF file ('%s') found in an 'any' package.
 elffile-not-in-allowed-dirs %s :: ELF file ('%s') outside of a valid path.

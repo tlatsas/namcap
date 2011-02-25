@@ -5,6 +5,7 @@ namcap (3.0)
 	- new rule checking whether info files are installed (FS#23003)
 	- new rule checking that glib schemas and gio modules are
 	  registered (FS#22881)
+	- new rule checking update-desktop-database is run (FS#22929)
 	- the permissions rule warns against setuid/setgid files
 	  (FS#18852)
 	- fix: test suite ran with i686 architecture set

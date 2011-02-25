@@ -1,6 +1,7 @@
 # 
 # namcap rules - mimefiles
 # Copyright (C) 2009 Hugo Doria <hugo@archlinux.org>
+# Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -19,7 +20,7 @@
 
 from Namcap.ruleclass import *
 
-class package(TarballRule):
+class MimeInfoRule(TarballRule):
 	name = "mimefiles"
 	description = "Check for files in /usr/share/mime"
 	def analyze(self, pkginfo, tar):
@@ -31,5 +32,31 @@ class package(TarballRule):
 				f = tar.extractfile(".INSTALL")
 				if b"update-mime-database" not in f.read():
 					self.errors.append(("mime-cache-not-updated", ()))
+
+class MimeDesktopRule(TarballRule):
+	name = "mimedesktop"
+	description = "Check that MIME associations are updated"
+	def analyze(self, pkginfo, tar):
+		desktop_db_updated = False
+		has_mime_desktop = False
+		for entry in tar:
+			if (entry.name.startswith("usr/share/applications")
+					and entry.name.endswith(".desktop")):
+				f = tar.extractfile(entry)
+				for l in f:
+					if l.startswith(b"MimeType="):
+						has_mime_desktop = True
+						break
+				f.close()
+			if entry.name == ".INSTALL":
+				f = tar.extractfile(entry)
+				if b"update-desktop-database" in f.read():
+					desktop_db_updated = True
+				f.close()
+
+		if has_mime_desktop:
+			pkginfo.detected_deps.append("desktop-file-utils")
+			if not desktop_db_updated:
+				self.errors.append(("desktop-database-not-updated", ()))
 
 # vim: set ts=4 sw=4 noet:
