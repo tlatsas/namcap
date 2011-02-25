@@ -28,6 +28,7 @@ from . import (
   fhs,
   filenames,
   fileownership,
+  glibfiles,
   gnomemime,
   hardlinks,
   hicoloricons,
