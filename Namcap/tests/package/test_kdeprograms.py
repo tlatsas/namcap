@@ -44,7 +44,50 @@ package() {
   touch "${pkgdir}/usr/bin/kfoobar"
 }
 """
-	def test_kdeprograms_files(self):
+
+	pkgbuild2 = """
+pkgname=__namcap_test_kdeprograms
+pkgver=1.0
+pkgrel=1
+pkgdesc="A KDE package"
+arch=('i686' 'x86_64')
+url="http://www.example.com/"
+license=('GPL')
+depends=('kdegraphics-libs')
+source=()
+options=(!purge !zipman)
+backup=(etc/imaginary_file.conf)
+build() {
+  true
+}
+package() {
+  mkdir -p "${pkgdir}/usr/bin"
+  touch "${pkgdir}/usr/bin/kfoobar"
+}
+"""
+
+	pkgbuild3 = """
+pkgname=__namcap_test_kdeprograms
+pkgver=1.0
+pkgrel=1
+pkgdesc="A KDE package"
+arch=('i686' 'x86_64')
+url="http://www.example.com/"
+license=('GPL')
+depends=('kdegraphics-libs' 'kdebase-runtime')
+source=()
+options=(!purge !zipman)
+backup=(etc/imaginary_file.conf)
+build() {
+  true
+}
+package() {
+  mkdir -p "${pkgdir}/usr/bin"
+  touch "${pkgdir}/usr/bin/kfoobar"
+}
+"""
+
+	def test_kdeprograms_files_a(self):
 		pkgfile = "__namcap_test_kdeprograms-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
@@ -58,6 +101,36 @@ package() {
 			("kdebase-runtime-missing-dep %s", ["usr/bin/kfoobar"])
 		])
 		self.assertEqual(r.infos, [])
+
+	def test_kdeprograms_files_b(self):
+		pkgfile = "__namcap_test_kdeprograms-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
+		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
+			f.write(self.pkgbuild2)
+		self.run_makepkg()
+		pkg, r = self.run_rule_on_tarball(
+				os.path.join(self.tmpdir, pkgfile),
+				Namcap.rules.kdeprograms.package
+				)
+		self.assertEqual(r.errors, [])
+		self.assertEqual(r.warnings, [
+			("kdebase-runtime-missing-dep %s", ["usr/bin/kfoobar"])
+		])
+		self.assertEqual(r.infos, [])
+
+	def test_kdeprograms_files_c(self):
+		pkgfile = "__namcap_test_kdeprograms-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
+		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
+			f.write(self.pkgbuild3)
+		self.run_makepkg()
+		pkg, r = self.run_rule_on_tarball(
+				os.path.join(self.tmpdir, pkgfile),
+				Namcap.rules.kdeprograms.package
+				)
+		self.assertEqual(r.errors, [])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
+
+
 
 # vim: set ts=4 sw=4 noet:
 
