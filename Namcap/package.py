@@ -20,18 +20,19 @@
 # 
 
 import re
+import collections
 
-class PacmanPackage(object):
+class PacmanPackage(collections.MutableMapping):
 	strings = ['name', 'version', 'desc', 'url', 'builddate', 'packager', 'install', 'filename', 'csize', 'isize', ]
-	equiv_vars = [
-			('name', 'pkgname'),
-			('md5sums', 'md5sum'),
-			('sha1sums', 'sha1sum'),
-			('depends', 'depend'),
-			('desc', 'pkgdesc'),
-			('isize', 'size'),
-			('optdepends', 'optdepend'),
-	]
+	equiv_vars = {
+		'pkgname': 'name',
+		'md5sum': 'md5sums',
+		'sha1sum': 'sha1sums',
+		'depend': 'depends',
+		'pkgdesc': 'desc',
+		'size': 'isize',
+		'optdepend': 'optdepends',
+		}
 
 	def __init__(self, data = None, pkginfo = None, db = None):
 		"""
@@ -77,6 +78,25 @@ class PacmanPackage(object):
 		# Cleanup
 		self.process()
 
+	def __iter__(self):
+		return iter(self._data)
+
+	def __len__(self):
+		return len(self._data)
+
+	def __getitem__(self, key):
+		return self._data[self.canonical_varname(key)]
+
+	def __setitem__(self, key, value):
+		k = self.canonical_varname(key)
+		self._data[k] = value
+
+	def __contains__(self, key):
+		return self.canonical_varname(key) in self._data
+
+	def __delitem__(self, key):
+		del self._data[self.canonical_varname(key)]
+
 	def process_strings(self):
 		"""
 		Turn all the instance properties listed in self.strings into strings instead of lists
@@ -88,9 +108,9 @@ class PacmanPackage(object):
 
 	def fix_equiv(self):
 		"""
-		Go through self.equiv_vars ( (new, old) ) and set all the old vars to new vars
+		Go through self.equiv_vars { old: new } and set all the old vars to new vars
 		"""
-		for new, old in self.equiv_vars:
+		for old, new in self.equiv_vars.items():
 			if hasattr(self, old):
 				setattr(self, new, getattr(self, old))
 				del self.__dict__[old]
