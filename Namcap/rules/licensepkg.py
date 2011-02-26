@@ -34,10 +34,10 @@ class package(TarballRule):
 			for license in pkginfo.license:
 				lowerlicense = license.lower()
 				if lowerlicense.startswith('custom') or lowerlicense in ("bsd", "mit", "isc", "python", "zlib", "libpng"):
-					if pkginfo.name not in licensedirs:
-						self.errors.append(("missing-custom-license-dir usr/share/licenses/%s", pkginfo.name))
+					if pkginfo["name"] not in licensedirs:
+						self.errors.append(("missing-custom-license-dir usr/share/licenses/%s", pkginfo["name"]))
 					elif len(licensefiles) == 0:
-						self.errors.append(("missing-custom-license-file usr/share/licenses/%s/*", pkginfo.name))
+						self.errors.append(("missing-custom-license-file usr/share/licenses/%s/*", pkginfo["name"]))
 				# A common license
 				else:
 					commonlicenses = [x.lower() for x in os.listdir('/usr/share/licenses/common')]

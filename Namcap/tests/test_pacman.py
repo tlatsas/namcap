@@ -48,7 +48,8 @@ class PkgbuildLoaderTests(unittest.TestCase):
 		shutil.rmtree(self.tmpdir)
 
 	def test_pkgname(self):
-		self.assertEqual(self.pkginfo.name, "mypackage")
+		self.assertEqual(self.pkginfo['name'], "mypackage")
+		self.assertEqual(self.pkginfo['pkgname'], "mypackage")
 	def test_version(self):
 		self.assertEqual(self.pkginfo.version, "1.0-1")
 	def test_pkgdesc(self):

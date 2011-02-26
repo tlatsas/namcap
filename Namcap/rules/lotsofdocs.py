@@ -25,7 +25,7 @@ class package(TarballRule):
 	def analyze(self, pkginfo, tar):
 		if hasattr(pkginfo, 'name'):
 			# Don't do anything if the package is called "*-doc"
-			if pkginfo.name.endswith('-doc'):
+			if pkginfo["name"].endswith('-doc'):
 				return
 		docdir = 'usr/share/doc'
 		size = 0
@@ -39,8 +39,8 @@ class package(TarballRule):
 		if size > 0:
 			ratio = docsize / float(size)
 			if hasattr(pkginfo, 'name') and (
-					pkginfo.name.endswith('-docs') or
-					pkginfo.name.endswith('-doc')):
+					pkginfo["name"].endswith('-docs') or
+					pkginfo["name"].endswith('-doc')):
 				pass
 			elif ratio > 0.50:
 				self.warnings.append(("lots-of-docs %f", ratio * 100))

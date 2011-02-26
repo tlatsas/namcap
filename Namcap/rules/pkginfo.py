@@ -26,7 +26,7 @@ class CapsPkgnameRule(PkgInfoRule):
 	name = "capsnamespkg"
 	description = "Verifies package name in package does not include upper case letters"
 	def analyze(self, pkginfo, tar):
-		if re.search('[A-Z]', pkginfo.name) != None:
+		if re.search('[A-Z]', pkginfo["name"]) != None:
 			self.errors.append(("package-name-in-uppercase", ()))
 
 class UrlRule(PkgInfoRule):
