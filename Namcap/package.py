@@ -22,6 +22,18 @@
 import re
 import collections
 
+DEPENDS_RE = re.compile("([^<>=:]+)([<>]?=.*)?(: .*)?")
+
+def strip_depend_info(value):
+	"""
+	Strip all the depend version info off ('neon>=0.25.5-4' => 'neon').
+	Also remove any trailing description (for optdepends)
+	"""
+	m = DEPENDS_RE.match(value)
+	if m is None:
+		raise ValueError("Invalid dependency specification")
+	return m.group(1)
+
 class PacmanPackage(collections.MutableMapping):
 	strings = ['name', 'version', 'desc', 'url', 'builddate', 'packager', 'install', 'filename', 'csize', 'isize', ]
 	equiv_vars = {
@@ -34,6 +46,13 @@ class PacmanPackage(collections.MutableMapping):
 		'optdepend': 'optdepends',
 		}
 
+	@classmethod
+	def canonical_varname(cls, varname):
+		try:
+			return cls.equiv_vars[varname]
+		except KeyError:
+			return varname
+
 	def __init__(self, data = None, pkginfo = None, db = None):
 		"""
 		A PacmanPackage object can be ininitialised from:
@@ -45,10 +64,14 @@ class PacmanPackage(collections.MutableMapping):
 		# Usual attributes
 		self.is_split = False
 		self.detected_deps = []
+		self._data = {}
 
 		# Init from a dictionary
 		if data is not None:
 			self.__dict__.update(data)
+		if isinstance(data, dict):
+			for k, v in data.items():
+				self[k] = v
 
 		# Parsing of .PKGINFO files from tarballs
 		if isinstance(pkginfo, str):
@@ -59,6 +82,7 @@ class PacmanPackage(collections.MutableMapping):
 					rhs = m.group(2)
 					if rhs != '':
 						self.__dict__.setdefault(lhs, []).append(rhs)
+						self.setdefault(lhs, []).append(rhs)
 		elif pkginfo is not None:
 			raise TypeError("argument 'pkginfo' must be a string")
 
@@ -72,6 +96,7 @@ class PacmanPackage(collections.MutableMapping):
 					attrname = None
 				elif attrname != None:
 					self.__dict__.setdefault(attrname, []).append(line)
+					self.setdefault(attrname, []).append(line)
 		elif db is not None:
 			raise TypeError("argument 'pkginfo' must be a string")
 
@@ -105,6 +130,9 @@ class PacmanPackage(collections.MutableMapping):
 			value = getattr(self, i, None)
 			if type(value) == list:
 				setattr(self, i, value[0])
+			if i in self:
+				if isinstance(self[i], list):
+					self[i] = self[i][0]
 
 	def fix_equiv(self):
 		"""
@@ -137,6 +165,19 @@ class PacmanPackage(collections.MutableMapping):
 		if hasattr(self, 'provides'):
 			self.orig_provides = self.provides[:]
 			strip_depend_info(self.provides)
+
+		if 'depends' in self._data:
+			self["orig_depends"] = self["depends"]
+			self["depends"] = [strip_depend_info(d) for d in self['orig_depends']]
+		if 'makedepends' in self._data:
+			self["orig_makedepends"] = self["makedepends"]
+			self["makedepends"] = [strip_depend_info(d) for d in self['orig_makedepends']]
+		if 'optdepends' in self._data:
+			self["orig_optdepends"] = self["optdepends"]
+			self["optdepends"] = [strip_depend_info(d) for d in self['orig_optdepends']]
+		if 'provides' in self._data:
+			self["orig_provides"] = self["provides"]
+			self["provides"] = [strip_depend_info(d) for d in self['orig_provides']]
 
 	def process(self):
 		"""
