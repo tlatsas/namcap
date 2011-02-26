@@ -26,7 +26,7 @@ import unittest
 import shutil
 import tarfile
 
-import pacman
+from ..package import PacmanPackage
 
 makepkg_conf = """
 DLAGENTS=('ftp::/usr/bin/wget -c --passive-ftp -t 3 --waitretry=3 -O %%o %%u'
@@ -77,14 +77,12 @@ class MakepkgTest(unittest.TestCase):
 		self.assertEqual(ret, 0)
 
 		# process PKGINFO
-		pkg = pacman.PacmanPackage(detected_deps = [])
 		tar = tarfile.open(filename)
-		pkginfo = tar.extractfile('.PKGINFO')
-		for i in pkginfo:
-			i = i.decode("utf-8", "ignore")
-			m = i.strip().split(" = ")
-			if len(m) == 2:
-				pkg.__dict__.setdefault(m[0], []).append(m[1])
+		info = tar.extractfile('.PKGINFO')
+		pkg = PacmanPackage(pkginfo =
+				info.read().decode("utf-8", "ignore"))
+		info.close()
+		pkg.detected_deps = []
 		pkg.process()
 		tar.close()
 
