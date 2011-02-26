@@ -149,22 +149,22 @@ class PacmanPackage(collections.MutableMapping):
 		Also clean our optdepends and remove any trailing description.
 		The original arrays are copied to orig_depends and orig_optdepends respectively.
 		"""
-		def strip_depend_info(l):
+		def strip_depend(l):
 			for item, value in enumerate(l):
 				l[item] = value.split(':')[0].split('>')[0].split('<')[0].split('=')[0]
 
 		if hasattr(self, 'depends'):
 			self.orig_depends = self.depends[:]
-			strip_depend_info(self.depends)
+			strip_depend(self.depends)
 		if hasattr(self, 'makedepends'):
 			self.orig_makedepends = self.makedepends[:]
-			strip_depend_info(self.makedepends)
+			strip_depend(self.makedepends)
 		if hasattr(self, 'optdepends'):
 			self.orig_optdepends = self.optdepends[:]
-			strip_depend_info(self.optdepends)
+			strip_depend(self.optdepends)
 		if hasattr(self, 'provides'):
 			self.orig_provides = self.provides[:]
-			strip_depend_info(self.provides)
+			strip_depend(self.provides)
 
 		if 'depends' in self._data:
 			self["orig_depends"] = self["depends"]
