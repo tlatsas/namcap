@@ -24,8 +24,8 @@ class package(PkgbuildRule):
 	name = "sfurl"
 	description = "Checks for proper sourceforge URLs"
 	def analyze(self, pkginfo, tar):
-		if hasattr(pkginfo, 'source'):
-			for source in pkginfo.source:
+		if 'source' in pkginfo:
+			for source in pkginfo["source"]:
 				if re.match('(http://|ftp://)\w+.dl.(sourceforge|sf).net', source) != None:
 					self.warnings.append(("specific-sourceforge-mirror", ()))
 				if re.match('(http://|ftp://)dl.(sourceforge|sf).net', source) != None:

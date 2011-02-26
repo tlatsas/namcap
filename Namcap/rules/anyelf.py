@@ -39,7 +39,7 @@ class package(TarballRule):
 				found_elffiles.append(entry.name)
 			f.close()
 
-		if pkginfo.arch and pkginfo.arch[0] == 'any':
+		if pkginfo["arch"] and pkginfo["arch"][0] == 'any':
 			self.errors = [("elffile-in-any-package %s", i)
 					for i in found_elffiles]
 		else:

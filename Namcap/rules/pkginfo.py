@@ -33,14 +33,14 @@ class UrlRule(PkgInfoRule):
 	name = "urlpkg"
 	description = "Verifies url is included in a package file"
 	def analyze(self, pkginfo, tar):
-		if not hasattr(pkginfo, 'url'):
+		if "url" not in pkginfo:
 			self.errors.append(("missing-url", ()))
 
 class LicenseRule(PkgInfoRule):
 	name = "license"
 	description = "Verifies license is included in a PKGBUILD"
 	def analyze(self, pkginfo, tar):
-		if not hasattr(pkginfo, 'license') or len(pkginfo.license) == 0:
+		if "license" not in pkginfo or len(pkginfo["license"]) == 0:
 			self.errors.append(("missing-license", ()))
 
 # vim: set ts=4 sw=4 noet:

@@ -108,7 +108,7 @@ def getprovides(provides):
 	searchstr = re.compile('(.*)-([^-]*)-([^-]*)')
 	for i in os.listdir(pacmandb):
 		pac = loadfromdir(os.path.join(pacmandb, i))
-		if hasattr(pac, 'provides') and provides in pac.provides:
+		if 'provides' in pac and provides in pac["provides"]:
 			packagelist.append(pac.name)
 
 	return packagelist

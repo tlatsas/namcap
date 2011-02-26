@@ -32,24 +32,24 @@ class ChecksumsRule(PkgbuildRule):
 	def analyze(self, pkginfo, tar):
 		checksums=[('md5', 32), ('sha1', 40), ('sha256', 64), ('sha384', 96), ('sha512', 128)]
 
-		if hasattr(pkginfo, 'source'):
+		if "source" in pkginfo:
 			haschecksums = False
 			for sumname, sumlen in checksums:
-				if hasattr(pkginfo, sumname + 'sums'):
+				if (sumname + 'sums') in pkginfo:
 					haschecksums = True
 			if not haschecksums:
 				self.errors.append(("missing-checksums", ()))
 
 		for sumname, sumlen in checksums:
 			sumname += 'sums'
-			if hasattr(pkginfo, sumname):
-				if len(pkginfo.source) > len(getattr(pkginfo, sumname)):
+			if sumname in pkginfo:
+				if len(pkginfo["source"]) > len(pkginfo[sumname]):
 					self.errors.append(("not-enough-checksums %s %i needed",
-						          (sumname, len(pkginfo.source))))
-				elif len(pkginfo.source) < len(getattr(pkginfo, sumname)):
+						          (sumname, len(pkginfo["source"]))))
+				elif len(pkginfo["source"]) < len(pkginfo[sumname]):
 					self.errors.append(("too-many-checksums %s %i needed",
 						          (sumname, len(pkginfo.source))))
-				for sum in getattr(pkginfo, sumname):
+				for sum in pkginfo[sumname]:
 					if len(sum) != sumlen or not RE_IS_HEXNUMBER.match(sum):
 						self.errors.append(("improper-checksum %s %s", (sumname, sum)))
 

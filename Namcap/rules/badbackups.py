@@ -26,8 +26,8 @@ class package(PkgbuildRule):
 	name = "badbackups"
 	description = "Checks for bad backup entries"
 	def analyze(self, pkginfo, tar):
-		if hasattr(pkginfo, 'backup'):
-			for item in pkginfo.backup:
+		if "backup" in pkginfo:
+			for item in pkginfo["backup"]:
 				if re.match('^/', item) != None:
 					self.errors.append(("backups-preceding-slashes", ()))
 
