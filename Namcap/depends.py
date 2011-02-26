@@ -38,15 +38,15 @@ def getcovered(current, dependlist, covereddepend):
 	if current == None:
 		for i in dependlist:
 			pac = load(i)
-			if pac != None and hasattr(pac, 'depends'):
-				for j in pac.depends:
+			if pac != None and "depends" in pac:
+				for j in pac["depends"]:
 					if j != None and not j in covereddepend:
 						covereddepend[j] = 1
 						getcovered(j, dependlist, covereddepend)
 	else:
 		pac = load(current)
-		if pac != None and hasattr(pac, 'depends'):
-			for i in pac.depends:
+		if pac != None and "depends" in pac:
+			for i in pac["depends"]:
 				if i != None and not i in covereddepend:
 					covereddepend[i] = 1
 					getcovered(i, dependlist, covereddepend)
@@ -55,8 +55,8 @@ def getprovides(depends, provides):
 	for i in depends:
 		pac = load(i)
 
-		if pac != None and hasattr(pac, 'provides') and pac.provides != None:
-			provides[i] = pac.provides
+		if pac != None and "provides" in pac and pac["provides"] != None:
+			provides[i] = pac["provides"]
 
 def analyze_depends(pkginfo):
 	errors, warnings, infos = [], [], []
@@ -67,15 +67,13 @@ def analyze_depends(pkginfo):
 	pkgcovered = {}
 
 	# Find all the covered dependencies from the PKGBUILD
-	pkgdepend = {}
-	if hasattr(pkginfo, 'depends'):
-		for i in pkginfo.depends:
-			pkgdepend[i] = 1
+	pkginfo.setdefault("depends", [])
+	pkginfo.setdefault("optdepends", [])
+
+	pkgdepend = dict( (dep, 1) for dep in pkginfo["depends"] )
 
 	# Include the optdepends from the PKGBUILD
-	if hasattr(pkginfo, 'optdepends'):
-		for i in pkginfo.optdepends:
-			pkgdepend[i] = 1
+	pkgdepend.update( (dep, 1) for dep in pkginfo["optdepends"] )
 
 	getcovered(None, pkgdepend, pkgcovered)
 
@@ -92,6 +90,11 @@ def analyze_depends(pkginfo):
 	# Get the provides so we can reference them later
 	getprovides(dependlist, smartprovides)
 
+	# The set of all provides for detected dependencies
+	allprovides = set()
+	for plist in smartprovides.values():
+		allprovides |= set(plist)
+
 	# Do the actual message outputting stuff
 	for i in smartdepend.keys():
 		# If (i is not in the PKGBUILD's dependencies
@@ -99,18 +102,19 @@ def analyze_depends(pkginfo):
 		# and (if (there are provides for i) then
 		#      (those provides aren't included in the package's dependencies))
 		# )
-		all_dependencies = getattr(pkginfo, 'depends', []) + getattr(pkginfo, 'optdepends', []) + list(pkgcovered.keys())
-		if (i not in all_dependencies and i != pkginfo.name
+		all_dependencies = pkginfo['depends'] + pkginfo['optdepends'] + list(pkgcovered)
+		if (i not in all_dependencies and i != pkginfo["name"]
 				and ((i not in smartprovides)
 					or len([c for c in smartprovides[i] if c in pkgcovered]) == 0)):
 			errors.append(("dependency-detected-not-included %s", i))
-	if hasattr(pkginfo, 'depends'):
-		for i in pkginfo.depends:
-			if i in covereddepend and i in dependlist:
-				warnings.append(("dependency-already-satisfied %s", i))
-			# if i is not in the depends as we see them and it's not in any of the provides from said depends
-			elif i not in smartdepend and i not in [y for x in smartprovides.values() for y in x]:
-				warnings.append(("dependency-not-needed %s", i))
+
+	for i in pkginfo["depends"]:
+		if i in covereddepend and i in dependlist:
+			warnings.append(("dependency-already-satisfied %s", i))
+		# if i is not in the depends as we see them
+		# and it's not in any of the provides from said depends
+		elif i not in smartdepend and i not in allprovides:
+			warnings.append(("dependency-not-needed %s", i))
 	infos.append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend.keys()) ))
 
 	return errors, warnings, infos

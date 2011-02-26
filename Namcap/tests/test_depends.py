@@ -28,12 +28,9 @@ import Namcap.depends
 
 class DependsTests(unittest.TestCase):
 	def setUp(self):
-		self.pkginfo = pacman.PacmanPackage()
-		self.pkginfo.name = "package"
-		self.pkginfo.detected_deps = []
+		self.pkginfo = pacman.PacmanPackage({'name': 'package'})
 
 	def test_missing(self):
-		self.pkginfo.depends = []
 		self.pkginfo.detected_deps = ["pkg1"]
 		e, w, i = Namcap.depends.analyze_depends(self.pkginfo)
 		expected_e = [("dependency-detected-not-included %s", "pkg1")]
@@ -43,8 +40,7 @@ class DependsTests(unittest.TestCase):
 				[('depends-by-namcap-sight depends=(%s)', 'pkg1')])
 
 	def test_unneeded(self):
-		self.pkginfo.depends = ["pkg1"]
-		self.pkginfo.detected_deps = []
+		self.pkginfo["depends"] = ["pkg1"]
 		e, w, i = Namcap.depends.analyze_depends(self.pkginfo)
 		expected_w = [("dependency-not-needed %s", "pkg1")]
 		self.assertEqual(e, [])
