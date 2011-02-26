@@ -1,6 +1,7 @@
 namcap (3.0)
 	- switch to Python 3
 	- rework dependency analysis
+	- add split package parsing capabilities to parsepkgbuild
 	- new rule checking whether info files are installed (FS#23003)
 	- new rule checking that glib schemas and gio modules are
 	  registered (FS#22881)
