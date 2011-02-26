@@ -123,7 +123,8 @@ def load(package, root=None):
 		if workingdir == '':
 			workingdir = None
 		filename = os.path.basename(package)
-		process = subprocess.Popen(['parsepkgbuild',filename], stdout=subprocess.PIPE, cwd=workingdir)
+		process = subprocess.Popen(['parsepkgbuild',filename],
+				stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=workingdir)
 		data = process.communicate()
 		# this means parsepkgbuild returned an error, so we are not valid
 		if process.returncode > 0:

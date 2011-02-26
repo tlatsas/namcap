@@ -8,6 +8,8 @@ if [ -z "$pkgname" -o -z "$pkgver" -o -z "$pkgrel" ]; then
 	exit 1
 fi
 
+function pkginfo() {
+
 # create desc entry
 echo -e "%NAME%\n$pkgname\n"
 echo -e "%VERSION%\n$pkgver-$pkgrel\n"
@@ -119,4 +121,32 @@ fi
 if [ -n "$install" ]; then
 	echo -e "%INSTALL%\n$install\n"
 fi
+
+}
+
+# is it a split pkgbuild ?
+if [ -n "${pkgbase}" ]; then
+	pkgnames=(${pkgname[@]})
+	echo -e "%SPLIT%\n1\n"
+	echo -e "%BASE%\n${pkgbase}\n"
+	echo "%NAMES%"
+	for i in ${pkgnames[@]}; do echo $i; done
+	echo ""
+	echo -e '\0'
+fi
+
+# print per package information
+if [ -n "${pkgbase}" ]; then
+	for i in ${pkgnames[@]}
+	do
+		pkgname=$i
+		package_$i
+		pkginfo
+		echo -e '\0'
+	done
+else
+	pkginfo
+fi
+
+# vim: set noet ts=4 sw=4:
 
