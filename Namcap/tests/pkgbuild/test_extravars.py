@@ -56,9 +56,11 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
+
+	test_valid = PkgbuildTest.valid_tests
+
 	def preSetUp(self):
 		self.rule = Namcap.rules.extravars.package
-		self.test_valid = PkgbuildTest.valid_tests
 
 	def test_example1(self):
 		# Example 1

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# namcap tests - carch
+# namcap tests - pkginfo
 # Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
@@ -52,9 +52,10 @@ package() {
 }
 """
 
+	test_valid = PkgbuildTest.valid_tests
+
 	def preSetUp(self):
 		self.rule = CapsPkgnameRule
-		self.test_valid = PkgbuildTest.valid_tests
 
 	def test_example1(self):
 		# Example 1
@@ -91,9 +92,10 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
+	test_valid = PkgbuildTest.valid_tests
+
 	def preSetUp(self):
 		self.rule = LicenseRule
-		self.test_valid = PkgbuildTest.valid_tests
 
 	def test_example1(self):
 		# Example 1
@@ -130,9 +132,11 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 """
+
+	test_valid = PkgbuildTest.valid_tests
+
 	def preSetUp(self):
 		self.rule = UrlRule
-		self.test_valid = PkgbuildTest.valid_tests
 
 	def test_example1(self):
 		# Example 1

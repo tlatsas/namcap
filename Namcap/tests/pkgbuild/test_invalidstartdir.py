@@ -52,9 +52,11 @@ package() {
   make DESTDIR="$startdir/pkg" install
 }
 """
+
+	test_valid = PkgbuildTest.valid_tests
+
 	def preSetUp(self):
 		self.rule = module.package
-		self.test_valid = PkgbuildTest.valid_tests
 
 	def test_example1(self):
 		# Example 1

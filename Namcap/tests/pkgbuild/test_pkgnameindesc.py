@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# namcap tests - carch
+# namcap tests - pkgnameindesc
 # Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
