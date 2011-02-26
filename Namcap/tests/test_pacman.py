@@ -51,18 +51,23 @@ class PkgbuildLoaderTests(unittest.TestCase):
 		self.assertEqual(self.pkginfo['name'], "mypackage")
 		self.assertEqual(self.pkginfo['pkgname'], "mypackage")
 	def test_version(self):
-		self.assertEqual(self.pkginfo.version, "1.0-1")
+		self.assertEqual(self.pkginfo['version'], "1.0-1")
 	def test_pkgdesc(self):
-		self.assertEqual(self.pkginfo.desc, "A package")
+		self.assertEqual(self.pkginfo['desc'], "A package")
 	def test_url(self):
-		self.assertEqual(self.pkginfo.url, "http://www.example.com/")
+		self.assertEqual(self.pkginfo['url'], "http://www.example.com/")
 
 	def test_depends(self):
-		self.assertEqual(self.pkginfo.depends, ["glibc", "foobar"])
+		self.assertEqual(self.pkginfo['depends'], ["glibc", "foobar"])
+		self.assertEqual(self.pkginfo['orig_depends'],
+				["glibc", "foobar"])
 	def test_optdeps(self):
-		self.assertEqual(self.pkginfo.optdepends, ["libabc"])
+		self.assertEqual(self.pkginfo['optdepends'], ["libabc"])
+		self.assertEqual(self.pkginfo['orig_optdepends'],
+				["libabc: provides the abc feature"])
 	def test_provides(self):
-		self.assertEqual(self.pkginfo.provides, ["yourpackage"])
-
+		self.assertEqual(self.pkginfo['provides'], ["yourpackage"])
+		self.assertEqual(self.pkginfo['orig_provides'],
+				["yourpackage>=0.9"])
 
 # vim: set ts=4 sw=4 noet:

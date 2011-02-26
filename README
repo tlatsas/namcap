@@ -97,7 +97,7 @@ class UrlRule(PkgInfoRule):
 	name = "url"
 	description = "Verifies the package comes with an URL"
 	def analyze(self, pkginfo, tar):
-		if not hasattr(pkginfo, 'url'):
+		if 'url' not in pkginfo:
 			self.errors.append(("missing-url", ()))
 
 Mostly, the code is self-explanatory. The following are the list of
