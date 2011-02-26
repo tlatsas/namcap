@@ -24,7 +24,7 @@ class package(TarballRule):
 	name = "kdeprograms"
 	description = "Checks that KDE programs have kdebase-runtime as a dependency"
 	def analyze(self, pkginfo, tar):
-		if hasattr(pkginfo, "depends") and 'kdelibs' in pkginfo.depends:
+		if "depends" in pkginfo and 'kdelibs' in pkginfo["depends"]:
 			binaries = [ f.name for f in tar
 					if f.name.startswith("usr/bin") and f.isfile() ]
 			if len(binaries) > 0:

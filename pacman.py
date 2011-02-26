@@ -81,7 +81,7 @@ def load(package, root=None):
 		for i in os.listdir(root):
 			prov = loadfromdir(os.path.join(root, i))
 
-			if prov != None and hasattr(prov, 'provides') and package in prov.provides:
+			if prov != None and 'provides' in prov and package in prov["provides"]:
 				return prov
 
 		return None

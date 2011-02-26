@@ -23,10 +23,11 @@ class package(TarballRule):
 	name = "lots-of-docs"
 	description = "See if a package is carrying more documentation than it should"
 	def analyze(self, pkginfo, tar):
-		if hasattr(pkginfo, 'name'):
+		if ('name' in pkginfo and
+				(pkginfo["name"].endswith('-doc') or
+				 pkginfo["name"].endswith('-docs'))):
 			# Don't do anything if the package is called "*-doc"
-			if pkginfo["name"].endswith('-doc'):
-				return
+			return
 		docdir = 'usr/share/doc'
 		size = 0
 		docsize = 0
@@ -38,11 +39,7 @@ class package(TarballRule):
 
 		if size > 0:
 			ratio = docsize / float(size)
-			if hasattr(pkginfo, 'name') and (
-					pkginfo["name"].endswith('-docs') or
-					pkginfo["name"].endswith('-doc')):
-				pass
-			elif ratio > 0.50:
+			if ratio > 0.50:
 				self.warnings.append(("lots-of-docs %f", ratio * 100))
 
 # vim: set ts=4 sw=4 noet:

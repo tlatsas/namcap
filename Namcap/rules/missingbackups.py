@@ -23,9 +23,9 @@ class package(TarballRule):
 	name = "missingbackups"
 	description = "Backup files listed in package should exist"
 	def analyze(self, pkginfo, tar):
-		if not hasattr(pkginfo, 'backup') or len(pkginfo.backup) == 0:
+		if 'backup' not in pkginfo or len(pkginfo["backup"]) == 0:
 			return
-		known_backups = set(pkginfo.backup)
+		known_backups = set(pkginfo["backup"])
 		found_backups = [x for x in tar.getnames() if x in known_backups]
 		missing_backups = known_backups - set(found_backups)
 		for backup in missing_backups:

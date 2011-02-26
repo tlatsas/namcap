@@ -88,8 +88,8 @@ def getprovides(depends, provides):
 	for i in depends.keys():
 		pac = load(i)
 
-		if pac != None and hasattr(pac, 'provides') and pac.provides != None:
-			provides[i] = pac.provides
+		if pac != None and 'provides' in pac and pac["provides"] != None:
+			provides[i] = pac["provides"]
 
 class ShebangDependsRule(TarballRule):
 	name = "depends"

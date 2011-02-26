@@ -67,8 +67,6 @@ class PacmanPackage(collections.MutableMapping):
 		self._data = {}
 
 		# Init from a dictionary
-		if data is not None:
-			self.__dict__.update(data)
 		if isinstance(data, dict):
 			for k, v in data.items():
 				self[k] = v
@@ -81,7 +79,6 @@ class PacmanPackage(collections.MutableMapping):
 					lhs = m.group(1)
 					rhs = m.group(2)
 					if rhs != '':
-						self.__dict__.setdefault(lhs, []).append(rhs)
 						self.setdefault(lhs, []).append(rhs)
 		elif pkginfo is not None:
 			raise TypeError("argument 'pkginfo' must be a string")
@@ -95,7 +92,6 @@ class PacmanPackage(collections.MutableMapping):
 				elif line.strip() == '':
 					attrname = None
 				elif attrname != None:
-					self.__dict__.setdefault(attrname, []).append(line)
 					self.setdefault(attrname, []).append(line)
 		elif db is not None:
 			raise TypeError("argument 'pkginfo' must be a string")
@@ -127,44 +123,16 @@ class PacmanPackage(collections.MutableMapping):
 		Turn all the instance properties listed in self.strings into strings instead of lists
 		"""
 		for i in self.strings:
-			value = getattr(self, i, None)
-			if type(value) == list:
-				setattr(self, i, value[0])
 			if i in self:
 				if isinstance(self[i], list):
 					self[i] = self[i][0]
 
-	def fix_equiv(self):
-		"""
-		Go through self.equiv_vars { old: new } and set all the old vars to new vars
-		"""
-		for old, new in self.equiv_vars.items():
-			if hasattr(self, old):
-				setattr(self, new, getattr(self, old))
-				del self.__dict__[old]
-
 	def clean_depends(self):
 		"""
-		Go through the special depends instance property and strip all the depend version info off ('neon>=0.25.5-4' => 'neon').
+		Strip all the depend version info off ('neon>=0.25.5-4' => 'neon').
 		Also clean our optdepends and remove any trailing description.
 		The original arrays are copied to orig_depends and orig_optdepends respectively.
 		"""
-		def strip_depend(l):
-			for item, value in enumerate(l):
-				l[item] = value.split(':')[0].split('>')[0].split('<')[0].split('=')[0]
-
-		if hasattr(self, 'depends'):
-			self.orig_depends = self.depends[:]
-			strip_depend(self.depends)
-		if hasattr(self, 'makedepends'):
-			self.orig_makedepends = self.makedepends[:]
-			strip_depend(self.makedepends)
-		if hasattr(self, 'optdepends'):
-			self.orig_optdepends = self.optdepends[:]
-			strip_depend(self.optdepends)
-		if hasattr(self, 'provides'):
-			self.orig_provides = self.provides[:]
-			strip_depend(self.provides)
 
 		if 'depends' in self._data:
 			self["orig_depends"] = self["depends"]
@@ -183,7 +151,6 @@ class PacmanPackage(collections.MutableMapping):
 		"""
 		After all the text processing happens, call this to sanitize the PacmanPackage object a bit
 		"""
-		self.fix_equiv()
 		self.process_strings()
 		self.clean_depends()
 
