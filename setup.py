@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 DATAFILES = [('/usr/share/man/man1', ['namcap.1']),
-		('/usr/share/namcap', ['namcap-tags']),
+		('/usr/share/namcap', ['namcap-tags', 'parsepkgbuild.sh']),
 		('/usr/share/doc/namcap',['README','AUTHORS','TODO'])]
 
 setup(name="namcap",
