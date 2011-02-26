@@ -82,8 +82,6 @@ class MakepkgTest(unittest.TestCase):
 		pkg = PacmanPackage(pkginfo =
 				info.read().decode("utf-8", "ignore"))
 		info.close()
-		pkg.detected_deps = []
-		pkg.process()
 		tar.close()
 
 		tar = tarfile.open(filename)

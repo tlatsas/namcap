@@ -40,9 +40,16 @@ class PacmanPackage(object):
 		* the contents of a .PKGINFO file
 		* the contents of a database entry or the output of parsepkgbuild
 		"""
+
+		# Usual attributes
+		self.is_split = False
+		self.detected_deps = []
+
+		# Init from a dictionary
 		if data is not None:
 			self.__dict__.update(data)
 
+		# Parsing of .PKGINFO files from tarballs
 		if isinstance(pkginfo, str):
 			for i in pkginfo.splitlines():
 				m = re.match('(.*) = (.*)', i)
@@ -54,6 +61,7 @@ class PacmanPackage(object):
 		elif pkginfo is not None:
 			raise TypeError("argument 'pkginfo' must be a string")
 
+		# Parsing of database entries or parsepkgbuild output
 		if isinstance(db, str):
 			attrname = None
 			for line in db.split('\n'):
@@ -65,6 +73,9 @@ class PacmanPackage(object):
 					self.__dict__.setdefault(attrname, []).append(line)
 		elif db is not None:
 			raise TypeError("argument 'pkginfo' must be a string")
+
+		# Cleanup
+		self.process()
 
 	def process_strings(self):
 		"""

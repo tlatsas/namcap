@@ -43,7 +43,6 @@ def load(package, root=None):
 		info_f.close()
 		ret = PacmanPackage(pkginfo = info)
 		pkgtar.close()
-		ret.process()
 		return ret
 
 	# Ooooo, it's a PKGBUILD
@@ -65,8 +64,6 @@ def load(package, root=None):
 		pkgbuild = open(package, errors="ignore")
 		ret.pkgbuild = pkgbuild.read().replace("\\\n", " ").splitlines()
 		pkgbuild.close()
-
-		ret.process()
 
 		return ret
 
@@ -103,7 +100,6 @@ def loadfromdir(directory):
 			dbfile.close()
 
 	ret = PacmanPackage(db = data)
-	ret.process()
 	return ret
 
 def getprovides(provides):
