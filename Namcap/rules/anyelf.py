@@ -37,6 +37,7 @@ class package(TarballRule):
 			f = tar.extractfile(entry)
 			if f.read(4) == b"\x7fELF":
 				found_elffiles.append(entry.name)
+			f.close()
 
 		if pkginfo.arch and pkginfo.arch[0] == 'any':
 			self.errors = [("elffile-in-any-package %s", i)
