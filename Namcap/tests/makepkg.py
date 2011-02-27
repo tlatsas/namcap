@@ -25,6 +25,7 @@ import subprocess
 import unittest
 import shutil
 import tarfile
+import sys
 
 from ..package import PacmanPackage
 
@@ -66,11 +67,15 @@ class MakepkgTest(unittest.TestCase):
 	def run_makepkg(self):
 		pwd = os.getcwd()
 		os.chdir(self.tmpdir)
-		ret = subprocess.call(["makepkg", "-f", "-d"],
+		p = subprocess.Popen(["makepkg", "-f", "-d"],
 				env = { "MAKEPKG_CONF": "./makepkg.conf" },
 				stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+		out1, out2 = p.communicate()
+		if p.returncode != 0:
+			sys.stderr.buffer.write(out1)
+			sys.stderr.buffer.write(out2)
+			raise RuntimeError("makepkg returned an error")
 		os.chdir(pwd)
-		self.assertEqual(ret, 0)
 
 	def run_rule_on_tarball(self, filename, rule):
 		ret = subprocess.call(["unxz", filename + ".xz"])
