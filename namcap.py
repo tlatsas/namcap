@@ -37,10 +37,12 @@ def usage():
 	print("Usage: " + sys.argv[0] + " [OPTIONS] packages")
 	print("")
 	print("Options are:")
-	print("    -i                               : prints information responses from rules")
+	print("    -L, --list                       : list available rules")
+	print("    -i                               : prints information (debug) responses from rules")
 	print("    -m                               : makes the output parseable (machine-readable)")
 	print("    -e rulelist, --exclude=rulelist  : don't apply RULELIST rules to the package")
 	print("    -r rulelist, --rules=rulelist    : only apply RULELIST rules to the package")
+	print("    -t tags                          : use a custom tag file")
 
 	sys.exit(2)
 
@@ -179,12 +181,13 @@ filename = None
 
 # get our options and process them
 try:
-	optlist, args = getopt.getopt(sys.argv[1:], "ihmr:e:t:",
-			["info", "help", "machine-readable", "rules=", "exclude=", "tags="])
+	optlist, args = getopt.getopt(sys.argv[1:], "ihmr:e:t:L",
+			["info", "help", "machine-readable", "rules=",
+				"exclude=", "tags=", "list"])
 except getopt.GetoptError:
 	usage()
 
-active_modules = []
+active_modules = {}
 
 # Verifying if we are using the -r and -r options at same time
 if check_rules_exclude(optlist) > 1:
@@ -192,13 +195,13 @@ if check_rules_exclude(optlist) > 1:
 	usage()
 
 for i, k in optlist:
-	if i in ('-r', '--rules') and active_modules == []:
-		if k == 'list':
-			print("-"*20 + " Namcap rule list " + "-"*20)
-			for j in modules:
-				print(string.ljust(j, 20) + ": " + modules[j].description)
-			sys.exit(2)
+	if i in ('-L', '--list'):
+		print("-"*20 + " Namcap rule list " + "-"*20)
+		for j in sorted(modules):
+			print("%-20s: %s" % (j, modules[j].description))
+		sys.exit(2)
 
+	if i in ('-r', '--rules'):
 		module_list = k.split(',')
 		for j in module_list:
 			if j in modules:
@@ -208,7 +211,7 @@ for i, k in optlist:
 				usage()
 
 	# Used to exclude some rules from the check
-	if i in ('-e', '--exclude') and active_modules == []:
+	if i in ('-e', '--exclude'):
 		module_list = k.split(',')
 		active_modules.update(modules)
 		for j in module_list:
@@ -237,7 +240,7 @@ m = process_tags(filename=filename, machine=machine_readable)
 packages = args
 
 # No rules selected?  Then select them all!
-if active_modules == []:
+if len(active_modules) == 0:
 	active_modules = modules
 
 # Go through each package, get the info, and apply the rules
