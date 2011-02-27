@@ -44,6 +44,7 @@ package() {
 }
 """
 	def test_info_slash_dir_exists(self):
+		"Package with a file /usr/share/info/dir left"
 		pkgfile = "__namcap_test_infodirectory-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)

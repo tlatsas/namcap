@@ -43,6 +43,7 @@ package() {
 }
 """
 	def test_nonfhs(self):
+		"Package with files in /weird"
 		pkgfile = "__namcap_test_nonfhs-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
@@ -78,6 +79,7 @@ package() {
 }
 """
 	def test_nonfhsman(self):
+		"Package with man pages in /usr/man"
 		pkgfile = "__namcap_test_nonfhs-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_man)
@@ -110,6 +112,7 @@ package() {
 }
 """
 	def test_nonfhsinfo(self):
+		"Package with info pages in /usr/info"
 		pkgfile = "__namcap_test_nonfhs-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild_info)

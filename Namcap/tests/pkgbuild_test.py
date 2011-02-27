@@ -65,7 +65,7 @@ class PkgbuildTest(unittest.TestCase):
 		return r
 
 	def valid_tests(self):
-		# Valid PKGBUILDS
+		"Valid PKGBUILDS"
 		for p in valid_pkgbuilds:
 			r = self.run_on_pkg(p)
 			self.assertEqual(r.errors, [])

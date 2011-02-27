@@ -46,6 +46,7 @@ package() {
 }
 """
 	def test_mimefiles_file_exists(self):
+		"Packge with mimefiles but cache is not updated"
 		pkgfile = "__namcap_test_mimefiles-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
@@ -60,6 +61,7 @@ package() {
 		self.assertEqual(r.infos, [])
 
 	def test_mimetype_in_desktop(self):
+		"Package with desktop files and MIME associations not updated"
 		pkgfile = "__namcap_test_mimefiles-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)

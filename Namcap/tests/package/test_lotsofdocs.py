@@ -44,6 +44,7 @@ package() {
 }
 """
 	def test_lotsofdocs(self):
+		"Empty package with a 500kB file in /usr/share/doc"
 		pkgfile = "__namcap_test_lotsofdocs-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)

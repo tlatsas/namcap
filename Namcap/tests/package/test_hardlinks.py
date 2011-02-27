@@ -45,6 +45,7 @@ package() {
 }
 """
 	def test_crossdir_hardlink(self):
+		"Package with hard links crossing directories"
 		pkgfile = "__namcap_test_hardlinks-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
 			f.write(self.pkgbuild)
