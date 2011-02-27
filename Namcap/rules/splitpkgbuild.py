@@ -20,6 +20,7 @@
 "This module contains rules that check coherence of split PKGBUILDs."
 
 from Namcap.ruleclass import PkgbuildRule
+import Namcap.depends
 
 class PackageFunctionsRule(PkgbuildRule):
 	"""
@@ -52,14 +53,18 @@ class SplitPkgMakedepsRule(PkgbuildRule):
 	def analyze(self, pkginfo, pkgbuild):
 		if not pkginfo.is_split:
 			return
+		# Find dependencies specified in makedepends
 		global_deps = set()
-		local_deps = set()
 		global_deps.update(pkginfo["names"])
 		if "depends" in pkginfo:
 			global_deps.update(pkginfo["depends"])
 		if "makedepends" in pkginfo:
 			global_deps.update(pkginfo["makedepends"])
 
+		global_deps |= Namcap.depends.getcovered(global_deps)
+
+		# Read dependencies specified in subpackages
+		local_deps = set()
 		for s in pkginfo.subpackages:
 			if "depends" in s:
 				local_deps.update(s["depends"])

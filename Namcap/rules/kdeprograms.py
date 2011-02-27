@@ -19,15 +19,19 @@
 # 
 
 from Namcap.ruleclass import *
-
+import Namcap.depends
 class package(TarballRule):
 	name = "kdeprograms"
 	description = "Checks that KDE programs have kdebase-runtime as a dependency"
 	def analyze(self, pkginfo, tar):
-		if "depends" in pkginfo and 'kdelibs' in pkginfo["depends"]:
-			binaries = [ f.name for f in tar
-					if f.name.startswith("usr/bin") and f.isfile() ]
-			if len(binaries) > 0:
-				self.warnings.append(("kdebase-runtime-missing-dep %s", binaries))
+		binaries = [ f.name for f in tar
+				if f.name.startswith("usr/bin") and f.isfile() ]
+		if len(binaries) == 0:
+			return
+		# If there are binaries, check for a kdelibs dependency
+		if "depends" in pkginfo:
+			if 'kdelibs' in pkginfo["depends"] or 'kdelibs' in Namcap.depends.getcovered(pkginfo["depends"]):
+				self.infos.append(("kdebase-runtime-needed-dep %s", binaries))
+				pkginfo.detected_deps.append("kdebase-runtime")
 
 # vim: set ts=4 sw=4 noet:
