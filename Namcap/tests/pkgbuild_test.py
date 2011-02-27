@@ -25,6 +25,7 @@ import tempfile
 import shutil
 
 import pacman
+import Namcap.ruleclass
 
 class PkgbuildTest(unittest.TestCase):
 	"""
@@ -53,7 +54,14 @@ class PkgbuildTest(unittest.TestCase):
 			f.write(p)
 		pkginfo = pacman.load(self.tmpname)
 		r = self.rule()
-		r.analyze(pkginfo, self.tmpname)
+		if isinstance(r, Namcap.ruleclass.PkgInfoRule):
+			if pkginfo.is_split:
+				for p in pkginfo.subpackages:
+					r.analyze(p, self.tmpname)
+			else:
+				r.analyze(pkginfo, self.tmpname)
+		if isinstance(r, Namcap.ruleclass.PkgbuildRule):
+			r.analyze(pkginfo, self.tmpname)
 		return r
 
 	def valid_tests(self):

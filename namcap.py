@@ -147,21 +147,12 @@ def process_realpackage(package, modules):
 	if extracted:
 		shutil.rmtree(sandbox_directory)
 
-def process_pkgbuild(package, modules):
-	"""Runs namcap checks over a PKGBUILD"""
-	# We might want to do some verifying in here... but really... isn't that what pacman.load is for?
-	pkginfo = pacman.load(package)
-
-	if pkginfo == None:
-		print("Error: " + package + " is not a valid PKGBUILD")
-		return 1
-
+def process_pkginfo(pkginfo, modules):
+	"""Runs namcap checks of a single, non-split PacmanPackage object"""
 	for i in modules:
 		rule = get_modules()[i]()
 		if isinstance(rule, Namcap.ruleclass.PkgInfoRule):
 			ret = rule.analyze(pkginfo, None)
-		if isinstance(rule, Namcap.ruleclass.PkgbuildRule):
-			ret = rule.analyze(pkginfo, package)
 
 		# Output the messages
 		if "base" in pkginfo:
@@ -172,6 +163,35 @@ def process_pkgbuild(package, modules):
 		show_messages(name, 'W', rule.warnings)
 		if info_reporting:
 			show_messages(name, 'I', rule.infos)
+
+
+def process_pkgbuild(package, modules):
+	"""Runs namcap checks over a PKGBUILD"""
+	# We might want to do some verifying in here... but really... isn't that what pacman.load is for?
+	pkginfo = pacman.load(package)
+
+	if pkginfo == None:
+		print("Error: " + package + " is not a valid PKGBUILD")
+		return 1
+
+	# apply global PKGBUILD rules
+	for i in modules:
+		rule = get_modules()[i]()
+		if isinstance(rule, Namcap.ruleclass.PkgbuildRule):
+			ret = rule.analyze(pkginfo, package)
+		# Output the messages
+		if "base" in pkginfo:
+			name = "PKGBUILD (" + pkginfo["base"] + ")"
+		else:
+			name = "PKGBUILD (" + pkginfo["name"] + ")"
+		show_messages(name, 'E', rule.errors)
+		show_messages(name, 'W', rule.warnings)
+		if info_reporting:
+			show_messages(name, 'I', rule.infos)
+	# apply per pkginfo rule
+	for subpkg in (pkginfo.subpackages
+			if pkginfo.is_split else [pkginfo]):
+		process_pkginfo(subpkg, modules)
 
 # Main
 modules = get_modules()
