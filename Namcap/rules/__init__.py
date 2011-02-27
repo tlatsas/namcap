@@ -58,7 +58,8 @@ from . import (
   missingvars,
   pkginfo,
   pkgnameindesc,
-  sfurl
+  sfurl,
+  splitpkgbuild
 )
 
 all_rules = {}

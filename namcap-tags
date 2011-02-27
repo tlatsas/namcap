@@ -57,6 +57,8 @@ missing-license :: Missing license
 missing-maintainer :: Missing Maintainer tag
 missing-checksums :: Missing checksums
 missing-url :: Missing url
+missing-pkgfunction %s :: Child package %s does not have a valid package() function
+missing-makedeps %s :: Split PKGBUILD needs additional makedepends %s to work properly
 no-elffiles-not-any-package :: No ELF files and not an "any" package
 non-fhs-info-page %s :: Non-FHS info page (%s) found. Use /usr/share/info instead
 non-fhs-man-page %s :: Non-FHS man page (%s) found. Use /usr/share/man instead
