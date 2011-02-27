@@ -35,7 +35,9 @@ def strip_depend_info(value):
 	return m.group(1)
 
 class PacmanPackage(collections.MutableMapping):
-	strings = ['name', 'version', 'desc', 'url', 'builddate', 'packager', 'install', 'filename', 'csize', 'isize', ]
+	strings = ['base', 'name', 'version', 'desc', 'url', 'builddate',
+			'packager', 'install', 'filename', 'csize', 'isize',
+			'pkgfunction']
 	equiv_vars = {
 		'pkgname': 'name',
 		'md5sum': 'md5sums',
@@ -86,12 +88,15 @@ class PacmanPackage(collections.MutableMapping):
 		# Parsing of database entries or parsepkgbuild output
 		if isinstance(db, str):
 			attrname = None
+			if '\0' in db:
+				self.is_split = True
+				parts = db.split("\0")
+				self.subpackages = [PacmanPackage(db = s) for s in parts[1:]]
+				db = parts[0]
 			for line in db.split('\n'):
 				if line.startswith('%'):
 					attrname = line.strip('%').lower()
-				elif line.strip() == '':
-					attrname = None
-				elif attrname != None:
+				elif line.strip() != '':
 					self.setdefault(attrname, []).append(line)
 		elif db is not None:
 			raise TypeError("argument 'pkginfo' must be a string")
@@ -153,5 +158,13 @@ class PacmanPackage(collections.MutableMapping):
 		"""
 		self.process_strings()
 		self.clean_depends()
+
+	def __repr__(self):
+		if not self.is_split:
+			return "PacmanPackage(%s)" % repr(self._data)
+		else:
+			children = ','.join(repr(p) for p in self.subpackages)
+			return ("PacmanPackage(%s,[%s])" %
+					(repr(self._data), children))
 
 # vim: set ts=4 sw=4 noet:
