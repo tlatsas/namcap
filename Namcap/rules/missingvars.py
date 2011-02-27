@@ -48,7 +48,7 @@ class ChecksumsRule(PkgbuildRule):
 						          (sumname, len(pkginfo["source"]))))
 				elif len(pkginfo["source"]) < len(pkginfo[sumname]):
 					self.errors.append(("too-many-checksums %s %i needed",
-						          (sumname, len(pkginfo.source))))
+						          (sumname, len(pkginfo["source"]))))
 				for sum in pkginfo[sumname]:
 					if len(sum) != sumlen or not RE_IS_HEXNUMBER.match(sum):
 						self.errors.append(("improper-checksum %s %s", (sumname, sum)))

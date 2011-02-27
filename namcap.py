@@ -125,21 +125,21 @@ def process_realpackage(package, modules):
 		elif isinstance(rule, Namcap.ruleclass.TarballRule):
 			rule.analyze(pkginfo, pkgtar)
 		else:
-			show_messages(pkginfo.name, 'E',
+			show_messages(pkginfo["name"], 'E',
 			              [('error-running-rule %s', i)])
 
 		# Output the three types of messages
-		show_messages(pkginfo.name, 'E', rule.errors)
-		show_messages(pkginfo.name, 'W', rule.warnings)
+		show_messages(pkginfo["name"], 'E', rule.errors)
+		show_messages(pkginfo["name"], 'W', rule.warnings)
 		if info_reporting:
-			show_messages(pkginfo.name, 'I', rule.infos)
+			show_messages(pkginfo["name"], 'I', rule.infos)
 	
 	# dependency analysis
 	errs, warns, infos = Namcap.depends.analyze_depends(pkginfo)
-	show_messages(pkginfo.name, 'E', errs)
-	show_messages(pkginfo.name, 'W', warns)
+	show_messages(pkginfo["name"], 'E', errs)
+	show_messages(pkginfo["name"], 'W', warns)
 	if info_reporting:
-		show_messages(pkginfo.name, 'I', infos)
+		show_messages(pkginfo["name"], 'I', infos)
 
 	# Clean up if we extracted anything
 	if extracted:
@@ -161,8 +161,11 @@ def process_pkgbuild(package, modules):
 		if isinstance(rule, Namcap.ruleclass.PkgbuildRule):
 			ret = rule.analyze(pkginfo, package)
 
-		# Output the ruleBUILD messages
-		name = "PKGBUILD (" + pkginfo.name + ")"
+		# Output the messages
+		if "base" in pkginfo:
+			name = "PKGBUILD (" + pkginfo["base"] + ")"
+		else:
+			name = "PKGBUILD (" + pkginfo["name"] + ")"
 		show_messages(name, 'E', rule.errors)
 		show_messages(name, 'W', rule.warnings)
 		if info_reporting:
