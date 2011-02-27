@@ -272,7 +272,7 @@ for package in packages:
 
 	if os.path.isfile(package) and tarfile.is_tarfile(package):
 		process_realpackage(package, active_modules)
-	elif package[-8:] == 'PKGBUILD':
+	elif package.endswith('PKGBUILD'):
 		process_pkgbuild(package, active_modules)
 	else:
 		print("Error: Cannot process %s" % package)

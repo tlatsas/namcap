@@ -47,7 +47,7 @@ def load(package, root=None):
 		return ret
 
 	# Ooooo, it's a PKGBUILD
-	elif package[-8:] == 'PKGBUILD':
+	elif package.endswith('PKGBUILD'):
 		# Load all the data like we normally would
 		workingdir = os.path.dirname(package)
 		if workingdir == '':
