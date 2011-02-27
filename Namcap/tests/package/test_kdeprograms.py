@@ -96,11 +96,14 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.kdeprograms.package
 				)
-		self.assertEqual(r.errors, [])
-		self.assertEqual(r.warnings, [
-			("kdebase-runtime-missing-dep %s", ["usr/bin/kfoobar"])
-		])
-		self.assertEqual(r.infos, [])
+		e, w, i = Namcap.depends.analyze_depends(pkg)
+		self.assertEqual(e + r.errors,
+				[('dependency-detected-not-included %s',
+					'kdebase-runtime')])
+		self.assertEqual(r.warnings, [])
+		self.assertTrue(
+			("kdebase-runtime-needed-dep %s", ["usr/bin/kfoobar"])
+			in r.infos)
 
 	def test_kdeprograms_files_b(self):
 		pkgfile = "__namcap_test_kdeprograms-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
@@ -111,11 +114,15 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.kdeprograms.package
 				)
-		self.assertEqual(r.errors, [])
-		self.assertEqual(r.warnings, [
-			("kdebase-runtime-missing-dep %s", ["usr/bin/kfoobar"])
-		])
-		self.assertEqual(r.infos, [])
+		e, w, i = Namcap.depends.analyze_depends(pkg)
+		self.assertEqual(e + r.errors,
+				[('dependency-detected-not-included %s',
+					'kdebase-runtime')])
+		self.assertEqual(w + r.warnings,
+				[('dependency-not-needed %s', 'kdegraphics-libs')])
+		self.assertTrue(
+			("kdebase-runtime-needed-dep %s", ["usr/bin/kfoobar"])
+			in r.infos)
 
 	def test_kdeprograms_files_c(self):
 		pkgfile = "__namcap_test_kdeprograms-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
@@ -126,9 +133,12 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.kdeprograms.package
 				)
-		self.assertEqual(r.errors, [])
+		e, w, i = Namcap.depends.analyze_depends(pkg)
+		self.assertEqual(e + r.errors, [])
 		self.assertEqual(r.warnings, [])
-		self.assertEqual(r.infos, [])
+		self.assertTrue(
+			("kdebase-runtime-needed-dep %s", ["usr/bin/kfoobar"])
+			in r.infos)
 
 
 

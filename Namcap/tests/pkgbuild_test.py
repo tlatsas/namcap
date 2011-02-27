@@ -114,7 +114,7 @@ pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.example.com/"
 license=('GPL')
-makedepends=('buildtool1' 'buildtool2' 'lib1' 'lib2')
+makedepends=('make' 'gtk2')
 options=('!libtool')
 source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz)
 md5sums=('abcdefabcdef12345678901234567890')
@@ -127,14 +127,14 @@ build() {
 
 package_mypackage1() {
   pkgdesc="Package 1"
-  depends=("lib1")
+  depends=("gtk2")
   cd "${srcdir}"/${pkgbase}-${pkgver}
   make DESTDIR="${pkgdir}" install1
 }
 
 package_mypackage2() {
   pkgdesc="Package 2"
-  depends=("lib2" "mypackage1")
+  depends=("glib2" "mypackage1")
   cd "${srcdir}"/${pkgbase}-${pkgver}
   ./configure --prefix=/usr
   make DESTDIR="${pkgdir}" install2
@@ -142,7 +142,7 @@ package_mypackage2() {
 
 package_mypackage3() {
   pkgdesc="Package 3"
-  depends=("lib2")
+  depends=("glib2")
   optdepends=("mypackage1: for foobar functionality")
   install=somescript.install
   cd "${srcdir}"/${pkgname}-${pkgver}
