@@ -1,13 +1,13 @@
 namcap (3.0)
 	- switch to Python 3
 	- rework dependency analysis
-	- add split package parsing capabilities to parsepkgbuild
+	- add split package parsing capabilities
 	- new rule checking whether info files are installed (FS#23003)
 	- new rule checking that glib schemas and gio modules are
 	  registered (FS#22881)
 	- new rule checking update-desktop-database is run (FS#22929)
-	- the permissions rule warns against setuid/setgid files
-	  (FS#18852)
+	- the permissions rule warns against setuid/setgid files (FS#18852)
+	- new rules for basic coherence of split packages (FS#15027)
 	- API: rework the implementation of rules
 	- API: give PacmanPackage a mapping-like interface
 	- fix: test suite ran with i686 architecture set
@@ -109,3 +109,5 @@ namcap (2.3)
     - Script detection generalised, supports more scripts (FS#15160)
     - Documentation updates (manual page, AUTHORS, README)
     - Add a option to exclude some rules from the checks
+
+vim: set ts=4 sw=4 noet:
