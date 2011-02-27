@@ -103,7 +103,7 @@ def process_realpackage(package, modules):
 	pkgtar = verify_package(package)
 
 	if not pkgtar:
-		print("Error: " + package + " is empty or is not a valid package")
+		print("Error: %s is empty or is not a valid package" % package)
 		return 1
 
 	pkginfo = pacman.load(package)
@@ -167,11 +167,12 @@ def process_pkginfo(pkginfo, modules):
 
 def process_pkgbuild(package, modules):
 	"""Runs namcap checks over a PKGBUILD"""
-	# We might want to do some verifying in here... but really... isn't that what pacman.load is for?
+	# We might want to do some verifying in here... but really... isn't that
+	# what pacman.load is for?
 	pkginfo = pacman.load(package)
 
 	if pkginfo == None:
-		print("Error: " + package + " is not a valid PKGBUILD")
+		print("Error: %s is not a valid PKGBUILD" % package)
 		return 1
 
 	# apply global PKGBUILD rules
@@ -227,7 +228,7 @@ for i, k in optlist:
 			if j in modules:
 				active_modules[j] = modules[j]
 			else:
-				print("Error: Rule '" + j + "' does not exist")
+				print("Error: Rule '%s' does not exist" % j)
 				usage()
 
 	# Used to exclude some rules from the check
@@ -238,7 +239,7 @@ for i, k in optlist:
 			if j in modules:
 				active_modules.pop(j)
 			else:
-				print("Error: Rule '" + j + "' does not exist")
+				print("Error: Rule '%s' does not exist" % j)
 				usage()
 
 	if i in ('-i', '--info'):
@@ -266,7 +267,7 @@ if len(active_modules) == 0:
 # Go through each package, get the info, and apply the rules
 for package in packages:
 	if not os.access(package, os.R_OK):
-		print("Error: Problem reading " + package)
+		print("Error: Problem reading %s" % package)
 		usage()
 
 	if os.path.isfile(package) and tarfile.is_tarfile(package):

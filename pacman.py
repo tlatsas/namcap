@@ -18,6 +18,7 @@
 # 
 
 import tarfile, os, re, subprocess
+import sys
 from Namcap.package import PacmanPackage
 
 pacmandb = '/var/lib/pacman/local/'
@@ -52,11 +53,15 @@ def load(package, root=None):
 		if workingdir == '':
 			workingdir = None
 		filename = os.path.basename(package)
-		process = subprocess.Popen(['parsepkgbuild',filename],
+		process = subprocess.Popen(['parsepkgbuild', filename],
 				stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=workingdir)
 		data = process.communicate()
 		# this means parsepkgbuild returned an error, so we are not valid
 		if process.returncode > 0:
+			if data[0]:
+				print("Error:", data[0].decode("utf-8", "ignore"))
+			if data[1]:
+				print("Error:", data[1].decode("utf-8", "ignore"), file=sys.stdout)
 			return None
 		ret = PacmanPackage(db = data[0].decode('utf-8', 'ignore'))
 
