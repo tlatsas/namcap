@@ -30,26 +30,28 @@ from Namcap.ruleclass import *
 pkgcache = {}
 
 def load(name, path=None):
+	global pkgcache
 	if name not in pkgcache:
 		pkgcache[name] = pacman.load(name)
 	return pkgcache[name]
 
-def getcovered(current, dependlist, covereddepend):
-	if current == None:
-		for i in dependlist:
-			pac = load(i)
-			if pac != None and "depends" in pac:
-				for j in pac["depends"]:
-					if j != None and not j in covereddepend:
-						covereddepend[j] = 1
-						getcovered(j, dependlist, covereddepend)
-	else:
-		pac = load(current)
+def getcovered(dependlist, covereddepend = None):
+	"""
+	Fills covereddepend with the full dependency tree
+	of dependlist (iterable of package names)
+	"""
+	if covereddepend is None:
+		covereddepend = set()
+
+	for i in dependlist:
+		pac = load(i)
 		if pac != None and "depends" in pac:
-			for i in pac["depends"]:
-				if i != None and not i in covereddepend:
-					covereddepend[i] = 1
-					getcovered(i, dependlist, covereddepend)
+			newdeps = [j for j in pac["depends"]
+					if j != None and j not in covereddepend]
+			covereddepend.update(newdeps)
+			getcovered(newdeps, covereddepend)
+
+	return covereddepend
 
 def getprovides(depends, provides):
 	for i in depends:
@@ -60,34 +62,27 @@ def getprovides(depends, provides):
 
 def analyze_depends(pkginfo):
 	errors, warnings, infos = [], [], []
+
+	# compute needed dependencies + recursive
 	dependlist = pkginfo.detected_deps
-	smartdepend = {}
-	smartprovides = {}
-	covereddepend = {}
-	pkgcovered = {}
+	covereddepend = getcovered(dependlist)
+	for i in covereddepend:
+		infos.append(("dependency-covered-by-link-dependence %s", i))
 
 	# Find all the covered dependencies from the PKGBUILD
 	pkginfo.setdefault("depends", [])
-	pkginfo.setdefault("optdepends", [])
-
-	pkgdepend = dict( (dep, 1) for dep in pkginfo["depends"] )
-
+	pkgdepend = set(pkginfo["depends"])
 	# Include the optdepends from the PKGBUILD
-	pkgdepend.update( (dep, 1) for dep in pkginfo["optdepends"] )
+	pkginfo.setdefault("optdepends", [])
+	pkgdepend |= set(pkginfo["optdepends"])
 
-	getcovered(None, pkgdepend, pkgcovered)
+	pkgcovered = getcovered(pkgdepend)
 
-	# Do tree walking to find all the non-leaves (branches?)
-	getcovered(None, dependlist, covereddepend)
-	for i in covereddepend.keys():
-		infos.append(("dependency-covered-by-link-dependence %s", i))
-
-	# Set difference them to find the leaves
-	for i in dependlist:
-		if not i in covereddepend:
-			smartdepend[i] = 1
+	# Our detected dependencies not covered by PKGBUILD
+	smartdepend = set(dependlist) - covereddepend
 
 	# Get the provides so we can reference them later
+	smartprovides = {}
 	getprovides(dependlist, smartprovides)
 
 	# The set of all provides for detected dependencies
@@ -96,7 +91,7 @@ def analyze_depends(pkginfo):
 		allprovides |= set(plist)
 
 	# Do the actual message outputting stuff
-	for i in smartdepend.keys():
+	for i in smartdepend:
 		# If (i is not in the PKGBUILD's dependencies
 		# and i isn't the package name
 		# and (if (there are provides for i) then
@@ -115,7 +110,7 @@ def analyze_depends(pkginfo):
 		# and it's not in any of the provides from said depends
 		elif i not in smartdepend and i not in allprovides:
 			warnings.append(("dependency-not-needed %s", i))
-	infos.append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend.keys()) ))
+	infos.append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend) ))
 
 	return errors, warnings, infos
 
