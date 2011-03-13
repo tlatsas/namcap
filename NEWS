@@ -1,3 +1,7 @@
+namcap (3.0.1)
+	- fix the ChecksumsRule behaviour with no source array (FS#23258)
+	- correct old PacmanPackage interface usage (FS#23259, FS#23260)
+
 namcap (3.0)
 	- switch to Python 3
 	- rework dependency analysis
