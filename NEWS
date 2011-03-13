@@ -11,6 +11,7 @@ namcap (3.0)
 	- API: rework the implementation of rules
 	- API: give PacmanPackage a mapping-like interface
 	- fix: test suite ran with i686 architecture set
+	- fix: kdeprograms rule not seeing indirect dependencies
 	- fix: FS#15591 consistent hicolor-icon-theme messages
 	- fix: FS#17166 consistent shared-mime-info messages
 	- test: add unit test for the rpath rule

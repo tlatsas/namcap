@@ -1,3 +1,4 @@
 include namcap.1
+include parsepkgbuild.sh
 include namcap-tags
 include COPYING README AUTHORS TODO
