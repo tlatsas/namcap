@@ -39,6 +39,8 @@ class ChecksumsRule(PkgbuildRule):
 					haschecksums = True
 			if not haschecksums:
 				self.errors.append(("missing-checksums", ()))
+		else:
+			pkginfo["source"] = []
 
 		for sumname, sumlen in checksums:
 			sumname += 'sums'

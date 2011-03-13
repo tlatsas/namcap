@@ -73,6 +73,36 @@ package() {
 }
 """
 
+	# packages with no sources (FS#23258)
+	pkgbuild_no_sources = """
+# Maintainer: Arch Linux <archlinux@example.com>
+# Contributor: Arch Linux <archlinux@example.com>
+
+pkgname=mypackage
+pkgver=1.0
+pkgrel=1
+pkgdesc="A package"
+arch=('i686' 'x86_64')
+url="http://www.example.com/"
+license=('GPL')
+depends=('glibc' 'pacman')
+options=('!libtool')
+md5sums=('1234567890abcdef1234567890abcdef')
+
+build() {
+wget http://www.example.com/sources.tar.gz
+cd "${srcdir}"/${pkgname}-${pkgver}
+./configure --prefix=/usr
+make
+}
+
+package() {
+cd "${srcdir}"/${pkgname}-${pkgver}
+make DESTDIR="${pkgdir}" install
+}
+"""
+
+
 	test_valid = PkgbuildTest.valid_tests
 
 	def preSetUp(self):
@@ -96,6 +126,16 @@ package() {
 		])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])
+
+	def test_example_no_sources(self):
+		# Example with no sources (FS #23259)
+		r = self.run_on_pkg(self.pkgbuild_no_sources)
+		self.assertEqual(r.errors, [
+			("too-many-checksums %s %i needed", ("md5sums", 0))
+		])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
+
 
 class NamcapMaintainerTagTest(PkgbuildTest):
 	pkgbuild1 = """
