@@ -172,8 +172,8 @@ class SharedLibsRule(TarballRule):
 		if os.path.isdir('/var/lib/pacman/sync/testing'):
 			for i in dependlist.keys():
 				p = pacman.load(i, '/var/lib/pacman/sync/testing/')
-				q = load(i)
-				if p != None and q != None and p.version == q.version:
+				q = pacman.load(i)
+				if p != None and q != None and p["version"] == q["version"]:
 					self.warnings.append(("dependency-is-testing-release %s", i))
 
 # vim: set ts=4 sw=4 noet:
