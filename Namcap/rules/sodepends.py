@@ -125,6 +125,7 @@ def finddepends(liblist):
 
 def filllibcache():
 	var = subprocess.Popen('ldconfig -p', 
+			env = {"LANG": "C"},
 			shell=True,
 			stdout=subprocess.PIPE,
 			stderr=subprocess.PIPE).communicate()
