@@ -124,31 +124,31 @@ if [ -n "$install" ]; then
 	echo -e "%INSTALL%\n$install\n"
 fi
 
+unset i
+echo "%SETVARS%"
+compgen -A variable
 }
 
 # is it a split pkgbuild ?
 if [ -n "${pkgbase}" ]; then
-	pkgnames=(${pkgname[@]})
+	_namcap_pkgnames=(${pkgname[@]})
 	unset pkgname
 	echo -e "%SPLIT%\n1\n"
 	echo -e "%BASE%\n${pkgbase}\n"
 	echo "%NAMES%"
-	for i in ${pkgnames[@]}; do echo $i; done
+	for i in ${_namcap_pkgnames[@]}; do echo $i; done
 	echo ""
 	pkginfo
-fi
-
-# print per package information
-if [ -n "${pkgbase}" ]; then
-	for subpkg in ${pkgnames[@]}
+	# print per package information
+	for _namcap_subpkg in ${_namcap_pkgnames[@]}
 	do
 		echo -e '\0'
-		pkgname=$subpkg
-		package_$subpkg
+		pkgname=$_namcap_subpkg
+		package_$_namcap_subpkg
 		pkginfo
 		# did the function actually exist?
 		echo "%PKGFUNCTION%"
-		type -t package_$subpkg || echo undefined
+		type -t package_$_namcap_subpkg || echo undefined
 		echo ""
 	done
 else
@@ -156,4 +156,3 @@ else
 fi
 
 # vim: set noet ts=4 sw=4:
-

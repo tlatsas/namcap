@@ -42,6 +42,7 @@ source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz)
 md5sums=('abcdefabcdef12345678901234567890')
 
 mycustomvar="something"
+_legalvar="something else"
 
 build() {
   cd "${srcdir}"/${pkgname}-${pkgver}
@@ -106,7 +107,6 @@ package() {
 		self.assertEqual(r.errors, [])
 		self.assertEqual(set(r.warnings), set([
 			("extra-var-begins-without-underscore %s", "mycustomvar"),
-			("extra-var-begins-without-underscore %s", "hello")
 		]))
 		self.assertEqual(r.infos, [])
 
@@ -114,10 +114,7 @@ package() {
 		"a tricky PKGBUILD with custom variables without underscore"
 		r = self.run_on_pkg(self.pkgbuild2)
 		self.assertEqual(r.errors, [])
-		self.assertEqual(set(r.warnings), set([
-			("extra-var-begins-without-underscore %s", "mycustomvar"),
-			("extra-var-begins-without-underscore %s", "hello")
-		]))
+		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])
 
 
