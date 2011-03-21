@@ -1,3 +1,7 @@
+namcap (3.0.3)
+	- fix: extravars rule having unstable behaviour
+	- fix: symlink rule not handling particular symlinks
+
 namcap (3.0.2)
 	- extravars rule: reduce the amount of false positives
 	- fix crashes when running in non-English locales

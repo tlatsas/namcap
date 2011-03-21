@@ -29,13 +29,10 @@ class package(TarballRule):
 				self.infos.append(("symlink-found %s points to %s", (i.name, i.linkname)))
 				linktarget = i.linkname
 				linklead = os.path.dirname(i.name)
-				while linktarget[:3] == "../":
-					linktarget = linktarget[3:]
-					linklead = linklead.rpartition("/")[0]
-				link = linklead + "/" + linktarget
-				if link[0] == "/": link = link[1:]
-				if i.linkname[0] == "/": link = i.linkname[1:]
-				if link not in filenames:
+				# os.path.join drops the 1st arg if the 2nd one is absolute
+				linkdest = os.path.join(linklead, linktarget)
+				linkdest = os.path.normpath(linkdest).lstrip('/')
+				if linkdest not in filenames:
 					self.errors.append(("dangling-symlink %s points to %s", (i.name, i.linkname)))
 			if i.islnk():
 				self.infos.append(("hardlink-found %s points to %s", (i.name, i.linkname)))

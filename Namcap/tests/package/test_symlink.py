@@ -43,7 +43,9 @@ package() {
   mkdir -p "${pkgdir}/usr/share"
   touch "${pkgdir}/usr/share/somedata"
   ln -s nofile "${pkgdir}/usr/share/somelink"
+  ln -s ../nofile "${pkgdir}/usr/share/somelink2"
   ln -s //usr/share/somedata "${pkgdir}/usr/share/validlink"
+  ln -s ../share/somedata "${pkgdir}/usr/share/validlink2"
 }
 """
 	def test_symlink_files(self):
@@ -56,15 +58,23 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.symlink.package
 				)
-		self.assertEqual(r.errors, [
+		self.assertEqual(set(r.errors), set([
 			("dangling-symlink %s points to %s",
-				("usr/share/somelink", "nofile"))
-		])
+				("usr/share/somelink", "nofile")),
+			("dangling-symlink %s points to %s",
+				("usr/share/somelink2", "../nofile"))
+		]))
 		self.assertEqual(r.warnings, [])
-		self.assertEqual(r.infos, [
+		self.assertEqual(set(r.infos), set([
 			("symlink-found %s points to %s",
-				("usr/share/somelink", "nofile"))
-		])
+				("usr/share/somelink", "nofile")),
+			("symlink-found %s points to %s",
+				("usr/share/somelink2", "../nofile")),
+			("symlink-found %s points to %s",
+				("usr/share/validlink", "//usr/share/somedata")),
+			("symlink-found %s points to %s",
+				("usr/share/validlink2", "../share/somedata")),
+		]))
 
 # vim: set ts=4 sw=4 noet:
 
