@@ -41,7 +41,9 @@ build() {
 }
 package() {
   mkdir -p "${pkgdir}/usr/share"
+  touch "${pkgdir}/usr/share/somedata"
   ln -s nofile "${pkgdir}/usr/share/somelink"
+  ln -s //usr/share/somedata "${pkgdir}/usr/share/validlink"
 }
 """
 	def test_symlink_files(self):
