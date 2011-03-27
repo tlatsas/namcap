@@ -27,14 +27,7 @@ import tempfile
 from Namcap.util import is_elf, script_type
 from Namcap.ruleclass import *
 import Namcap.tags
-
-pkgcache = {}
-
-def load(name, path=None):
-	global pkgcache
-	if name not in pkgcache:
-		pkgcache[name] = pacman.load(name)
-	return pkgcache[name]
+from Namcap import package
 
 def getcovered(dependlist, covereddepend = None):
 	"""
@@ -45,7 +38,7 @@ def getcovered(dependlist, covereddepend = None):
 		covereddepend = set()
 
 	for i in dependlist:
-		pac = load(i)
+		pac = package.load_from_db(i)
 		if pac != None and "depends" in pac:
 			newdeps = [j for j in pac["depends"]
 					if j != None and j not in covereddepend]
@@ -56,9 +49,9 @@ def getcovered(dependlist, covereddepend = None):
 
 def getprovides(depends, provides):
 	for i in depends:
-		pac = load(i)
+		pac = package.load_from_db(i)
 
-		if pac != None and "provides" in pac and pac["provides"] != None:
+		if pac != None and "provides" in pac and pac["provides"] != None and len(pac["provides"]) > 0:
 			provides[i] = pac["provides"]
 		else:
 			provides[i] = []
