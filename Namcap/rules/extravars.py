@@ -30,7 +30,7 @@ class package(PkgbuildRule):
 				 'sha256sums', 'sha384sums', 'sha512sums', 'pkgname',
 				 'pkgbase', 'pkgver', 'pkgrel', 'pkgdesc', 'groups',
 				 'url', 'install', 'changelog',
-				 'options', 'optdepends']
+				 'options', 'optdepends', 'checkdepends']
 		for varname in pkginfo["setvars"]:
 			if varname.islower() and varname not in stdvars \
 					and not varname.startswith('_'):

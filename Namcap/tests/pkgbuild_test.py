@@ -115,6 +115,7 @@ arch=('i686' 'x86_64')
 url="http://www.example.com/"
 license=('GPL')
 makedepends=('make' 'gtk2')
+checkdepends=('perl')
 options=('!libtool')
 source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz)
 md5sums=('abcdefabcdef12345678901234567890')
@@ -123,6 +124,11 @@ build() {
   cd "${srcdir}"/${pkgbase}-${pkgver}
   ./configure --prefix=/usr
   make
+}
+
+check() {
+  cd "${srcdir}"/${pkgbase}-${pkgver}
+  make check
 }
 
 package_mypackage1() {
