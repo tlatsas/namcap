@@ -24,15 +24,13 @@
 import re, os, pacman
 import tempfile
 import subprocess
+import pyalpm
 from Namcap.util import is_elf, script_type
 from Namcap.ruleclass import *
 
-pkgcache = {}
-
-def load(name, path=None):
-	if name not in pkgcache:
-		pkgcache[name] = pacman.load(name)
-	return pkgcache[name]
+if not pyalpm.checkinit():
+	pyalpm.initialize()
+	pyalpm.options.dbpath = "/var/lib/pacman"
 
 def scanshebangs(fileobj, filename, scripts):
 	"""
@@ -79,18 +77,11 @@ def findowners(scriptlist):
 			continue
 
 		# strip leading slash
-		scriptpath = out.strip()[1:]
-
-		pacmandb = '/var/lib/pacman/local'
-		for i in os.listdir(pacmandb):
-			iname = i.split("-")[0]
-			if os.path.isfile(pacmandb+'/'+i+'/files'):
-				file = open(pacmandb+'/'+i+'/files', 'rb')
-				for j in file:
-					if scriptpath == j.strip():
-						pkglist.setdefault(iname, set()).add(s)
-						scriptfound.add(s)
-				file.close()
+		scriptpath = out.strip()[1:].decode('utf-8', 'surrogateescape')
+		for pkg in pyalpm.get_localdb().pkgcache:
+			if scriptpath in pkg.files:
+				pkglist.setdefault(pkg.name, set()).add(s)
+				scriptfound.add(s)
 
 	orphans = list(set(scriptlist) - scriptfound)
 	return pkglist, orphans
