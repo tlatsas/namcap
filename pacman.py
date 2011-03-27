@@ -45,33 +45,6 @@ def load(package, root=None):
 		ret = PacmanPackage(pkginfo = info)
 		pkgtar.close()
 		return ret
-
-	# Ooooo, it's a PKGBUILD
-	elif package.endswith('PKGBUILD'):
-		# Load all the data like we normally would
-		workingdir = os.path.dirname(package)
-		if workingdir == '':
-			workingdir = None
-		filename = os.path.basename(package)
-		process = subprocess.Popen(['parsepkgbuild', filename],
-				stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=workingdir)
-		data = process.communicate()
-		# this means parsepkgbuild returned an error, so we are not valid
-		if process.returncode > 0:
-			if data[0]:
-				print("Error:", data[0].decode("utf-8", "ignore"))
-			if data[1]:
-				print("Error:", data[1].decode("utf-8", "ignore"), file=sys.stdout)
-			return None
-		ret = PacmanPackage(db = data[0].decode('utf-8', 'ignore'))
-
-		# Add a nice little .pkgbuild surprise
-		pkgbuild = open(package, errors="ignore")
-		ret.pkgbuild = pkgbuild.read().replace("\\\n", " ").splitlines()
-		pkgbuild.close()
-
-		return ret
-
 	else:
 		searchstr = re.compile('(.*)-([^-]*)-([^-]*)')
 		for i in os.listdir(root):

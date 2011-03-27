@@ -155,7 +155,7 @@ def process_pkgbuild(package, modules):
 	"""Runs namcap checks over a PKGBUILD"""
 	# We might want to do some verifying in here... but really... isn't that
 	# what pacman.load is for?
-	pkginfo = pacman.load(package)
+	pkginfo = Namcap.package.load_from_pkgbuild(package)
 
 	if pkginfo == None:
 		print("Error: %s is not a valid PKGBUILD" % package)

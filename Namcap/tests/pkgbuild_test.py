@@ -24,7 +24,7 @@ import unittest
 import tempfile
 import shutil
 
-import pacman
+import Namcap.package
 import Namcap.ruleclass
 
 class PkgbuildTest(unittest.TestCase):
@@ -52,7 +52,7 @@ class PkgbuildTest(unittest.TestCase):
 	def run_on_pkg(self, p):
 		with open(self.tmpname, 'w', encoding = 'utf-8') as f:
 			f.write(p)
-		pkginfo = pacman.load(self.tmpname)
+		pkginfo = Namcap.package.load_from_pkgbuild(self.tmpname)
 		r = self.rule()
 		if isinstance(r, Namcap.ruleclass.PkgInfoRule):
 			if pkginfo.is_split:

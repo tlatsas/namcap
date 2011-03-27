@@ -3,7 +3,7 @@ import unittest
 import tempfile
 import shutil
 
-import pacman
+import Namcap.package
 
 pkgbuild = """
 # Maintainer: Arch Linux <archlinux@example.com>
@@ -42,7 +42,7 @@ class PkgbuildLoaderTests(unittest.TestCase):
 		tmpname = os.path.join(self.tmpdir, "PKGBUILD")
 		with open(tmpname, 'w') as f:
 			f.write(pkgbuild)
-		self.pkginfo = pacman.load(tmpname)
+		self.pkginfo = Namcap.package.load_from_pkgbuild(tmpname)
 
 	def tearDown(self):
 		shutil.rmtree(self.tmpdir)

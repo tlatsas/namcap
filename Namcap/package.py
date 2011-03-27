@@ -19,6 +19,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
+import os
+import subprocess
 import re
 import collections
 
@@ -167,5 +169,32 @@ class PacmanPackage(collections.MutableMapping):
 			children = ','.join(repr(p) for p in self.subpackages)
 			return ("PacmanPackage(%s,[%s])" %
 					(repr(self._data), children))
+
+def load_from_pkgbuild(path):
+	# Load all the data like we normally would
+	workingdir = os.path.dirname(path)
+	if workingdir == '':
+		workingdir = None
+	filename = os.path.basename(path)
+	process = subprocess.Popen(['parsepkgbuild', filename],
+			stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=workingdir)
+	out, err = process.communicate()
+	out = out.decode('utf-8', 'ignore')
+	err = err.decode('utf-8', 'ignore')
+	# this means parsepkgbuild returned an error, so we are not valid
+	if process.returncode > 0:
+		if out:
+			print("Error:", out)
+		if err:
+			print("Error:", err, file=sys.stdout)
+		return None
+	ret = PacmanPackage(db = out)
+
+	# Add a nice little .pkgbuild surprise
+	pkgbuild = open(path, errors="ignore")
+	ret.pkgbuild = pkgbuild.read().replace("\\\n", " ").splitlines()
+	pkgbuild.close()
+
+	return ret
 
 # vim: set ts=4 sw=4 noet:
