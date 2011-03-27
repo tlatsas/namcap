@@ -24,6 +24,10 @@ import subprocess
 import re
 import collections
 
+import pyalpm
+pyalpm.initialize()
+pyalpm.options.dbpath = "/var/lib/pacman/local"
+
 DEPENDS_RE = re.compile("([^<>=:]+)([<>]?=.*)?(: .*)?")
 
 def strip_depend_info(value):
