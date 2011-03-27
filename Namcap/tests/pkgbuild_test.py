@@ -50,7 +50,7 @@ class PkgbuildTest(unittest.TestCase):
 		self.tmpname = os.path.join(self.tmpdir, "PKGBUILD")
 
 	def run_on_pkg(self, p):
-		with open(self.tmpname, 'w') as f:
+		with open(self.tmpname, 'w', encoding = 'utf-8') as f:
 			f.write(p)
 		pkginfo = pacman.load(self.tmpname)
 		r = self.rule()
