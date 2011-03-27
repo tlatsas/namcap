@@ -26,7 +26,7 @@ import collections
 
 import pyalpm
 pyalpm.initialize()
-pyalpm.options.dbpath = "/var/lib/pacman/local"
+pyalpm.options.dbpath = "/var/lib/pacman"
 
 DEPENDS_RE = re.compile("([^<>=:]+)([<>]?=.*)?(: .*)?")
 
@@ -202,23 +202,39 @@ def load_from_pkgbuild(path):
 
 	return ret
 
+def load_from_alpm(pmpkg):
+	variables = ['name', 'version', 'conflicts', 'url',
+			'depends', 'desc', 'files', 'groups',
+			'has_scriptlet', 'size', 'licenses',
+			'optdepends', 'packager', 'provides', 'replaces']
+	values = dict((v, getattr(pmpkg, v)) for v in variables)
+
+	# arch is a list for PKGBUILDs, we do the same for tarball packages
+	values['arch'] = [pmpkg.arch]
+	# also drop md5sums for backed up files
+	values['backup'] = [name for (name, md5) in pmpkg.backup]
+
+	return PacmanPackage(data = values)
+
 def load_from_tarball(path):
 	try:
 		p = pyalpm.load_pkg(path)
 	except pyalpm.error:
 		return None
 
-	variables = ['name', 'version', 'conflicts', 'url',
-			'depends', 'desc', 'files', 'groups',
-			'has_scriptlet', 'size', 'licenses',
-			'optdepends', 'packager', 'provides', 'replaces']
-	values = dict((v, getattr(p, v)) for v in variables)
+	return load_from_alpm(p)
 
-	# arch is a list for PKGBUILDs, we do the same for tarball packages
-	values['arch'] = [p.arch]
-	# also drop md5sums for backed up files
-	values['backup'] = [name for (name, md5) in p.backup]
+def load_from_db(pkgname):
+	p = pyalpm.get_localdb().get_pkg(pkgname)
+	if p is None:
+		p = lookup_provider(pkgname)
+	if p is not None:
+		p = load_from_alpm(p)
+	return p
 
-	return PacmanPackage(data = values)
+def lookup_provider(pkgname):
+	for pkg in pyalpm.get_localdb().pkgcache:
+		if pkgname in pkg.provides:
+			return pkg
 
 # vim: set ts=4 sw=4 noet:
