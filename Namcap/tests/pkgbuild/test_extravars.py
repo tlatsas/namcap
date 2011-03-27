@@ -19,6 +19,7 @@
 #   USA
 # 
 
+import os
 from Namcap.tests.pkgbuild_test import PkgbuildTest
 import Namcap.rules.extravars
 
@@ -103,6 +104,7 @@ package() {
 
 	def test_example1(self):
 		"PKGBUILD with custom variables without underscore"
+		os.putenv("environment_pollution", "yes")
 		r = self.run_on_pkg(self.pkgbuild1)
 		self.assertEqual(r.errors, [])
 		self.assertEqual(set(r.warnings), set([
