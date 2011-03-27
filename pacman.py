@@ -34,17 +34,7 @@ def load(package, root=None):
 		root = pacmandb
 	# We know it's a local package
 	if os.path.isfile(package) and tarfile.is_tarfile(package):
-		pkgtar = tarfile.open(package, "r")
-		if not pkgtar:
-			return None
-		if not '.PKGINFO' in pkgtar.getnames():
-			return None
-		info_f = pkgtar.extractfile('.PKGINFO')
-		info = info_f.read().decode("utf-8", "ignore")
-		info_f.close()
-		ret = PacmanPackage(pkginfo = info)
-		pkgtar.close()
-		return ret
+		return None
 	else:
 		searchstr = re.compile('(.*)-([^-]*)-([^-]*)')
 		for i in os.listdir(root):

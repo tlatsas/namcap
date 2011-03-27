@@ -93,7 +93,7 @@ def process_realpackage(package, modules):
 		print("Error: %s is empty or is not a valid package" % package)
 		return 1
 
-	pkginfo = pacman.load(package)
+	pkginfo = Namcap.package.load_from_tarball(package)
 	# Loop through each one, load them apply if possible
 	for i in modules:
 		rule = get_modules()[i]()

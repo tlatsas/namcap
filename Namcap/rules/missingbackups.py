@@ -26,8 +26,8 @@ class package(TarballRule):
 		if 'backup' not in pkginfo or len(pkginfo["backup"]) == 0:
 			return
 		known_backups = set(pkginfo["backup"])
-		found_backups = [x for x in tar.getnames() if x in known_backups]
-		missing_backups = known_backups - set(found_backups)
+		found_files = set(tar.getnames())
+		missing_backups = known_backups - found_files
 		for backup in missing_backups:
 			self.errors.append(("missing-backup-file %s", backup))
 

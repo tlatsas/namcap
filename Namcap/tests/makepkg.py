@@ -27,7 +27,7 @@ import shutil
 import tarfile
 import sys
 
-from ..package import PacmanPackage
+import Namcap.package
 
 makepkg_conf = """
 DLAGENTS=('ftp::/usr/bin/wget -c --passive-ftp -t 3 --waitretry=3 -O %%o %%u'
@@ -84,12 +84,7 @@ class MakepkgTest(unittest.TestCase):
 		self.assertEqual(ret, 0)
 
 		# process PKGINFO
-		tar = tarfile.open(filename)
-		info = tar.extractfile('.PKGINFO')
-		pkg = PacmanPackage(pkginfo =
-				info.read().decode("utf-8", "ignore"))
-		info.close()
-		tar.close()
+		pkg = Namcap.package.load_from_tarball(filename)
 
 		tar = tarfile.open(filename)
 		r = rule()

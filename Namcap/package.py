@@ -52,6 +52,7 @@ class PacmanPackage(collections.MutableMapping):
 		'pkgdesc': 'desc',
 		'size': 'isize',
 		'optdepend': 'optdepends',
+		'license': 'licenses'
 		}
 
 	@classmethod
@@ -200,5 +201,24 @@ def load_from_pkgbuild(path):
 	pkgbuild.close()
 
 	return ret
+
+def load_from_tarball(path):
+	try:
+		p = pyalpm.load_pkg(path)
+	except pyalpm.error:
+		return None
+
+	variables = ['name', 'version', 'conflicts', 'url',
+			'depends', 'desc', 'files', 'groups',
+			'has_scriptlet', 'size', 'licenses',
+			'optdepends', 'packager', 'provides', 'replaces']
+	values = dict((v, getattr(p, v)) for v in variables)
+
+	# arch is a list for PKGBUILDs, we do the same for tarball packages
+	values['arch'] = [p.arch]
+	# also drop md5sums for backed up files
+	values['backup'] = [name for (name, md5) in p.backup]
+
+	return PacmanPackage(data = values)
 
 # vim: set ts=4 sw=4 noet:
