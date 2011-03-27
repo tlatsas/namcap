@@ -44,7 +44,7 @@ package() {
 """
 	def test_nonascii(self):
 		pkgfile = "__namcap_test_nonascii-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
-		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
+		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w", encoding = 'utf-8') as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
 		pkg, r = self.run_rule_on_tarball(
@@ -52,7 +52,11 @@ package() {
 				Namcap.rules.filenames.package
 				)
 		self.assertEqual(r.errors, [])
-		self.assertEqual(r.warnings, [("invalid-filename", "usr/bin/Arch·Linux")])
+		tag, value = r.warnings[0]
+		self.assertEqual(tag, "invalid-filename")
+		self.assertEqual(
+				value.encode(errors="surrogateescape"),
+				"usr/bin/Arch·Linux".encode())
 		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:
