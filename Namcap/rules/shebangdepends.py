@@ -21,10 +21,12 @@
 
 """Checks dependencies on programs specified in shebangs."""
 
-import re, os, pacman
+import re
+import os
 import tempfile
 import subprocess
 import pyalpm
+import Namcap.package
 from Namcap.util import is_elf, script_type
 from Namcap.ruleclass import *
 
@@ -94,7 +96,7 @@ def getprovides(depends, provides):
 			provides[i] = pac["provides"]
 
 class ShebangDependsRule(TarballRule):
-	name = "depends"
+	name = "shebangdepends"
 	description = "Checks dependencies semi-smartly."
 	def analyze(self, pkginfo, tar):
 		scriptlist = {}
@@ -128,11 +130,10 @@ class ShebangDependsRule(TarballRule):
 			for i in orphans])
 
 		# Check for packages in testing
-		if os.path.isdir('/var/lib/pacman/sync/testing'):
-			for i in scriptlist:
-				p = pacman.load(i, '/var/lib/pacman/sync/testing/')
-				q = pacman.load(i)
-				if p != None and q != None and p["version"] == q["version"]:
-					self.warnings.append(("dependency-is-testing-release %s", i))
+		for i in scriptlist:
+			p = Namcap.package.load_from_db(i, 'testing')
+			q = Namcap.package.load_from_db(i)
+			if p != None and q != None and p["version"] == q["version"]:
+				self.warnings.append(("dependency-is-testing-release %s", i))
 
 # vim: set ts=4 sw=4 noet:

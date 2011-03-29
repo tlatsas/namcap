@@ -23,12 +23,12 @@ import os
 import unittest
 import tempfile
 import shutil
-import pacman
 import Namcap.depends
+import Namcap.package
 
 class DependsTests(unittest.TestCase):
 	def setUp(self):
-		self.pkginfo = pacman.PacmanPackage({'name': 'package'})
+		self.pkginfo = Namcap.package.PacmanPackage({'name': 'package'})
 
 	def test_missing(self):
 		self.pkginfo.detected_deps = {"pkg1": []}

@@ -26,7 +26,14 @@ import collections
 
 import pyalpm
 pyalpm.initialize()
+
+# read pacman.conf
 pyalpm.options.dbpath = "/var/lib/pacman"
+for i in open('/etc/pacman.conf'):
+	m = re.match('\s*DBPath\s*=\s*([\S^#]+)', i)
+	if m != None:
+		pyalpm.options.dbpath = m.group(1)
+		break
 
 DEPENDS_RE = re.compile("([^<>=:]+)([<>]?=.*)?(: .*)?")
 
@@ -224,8 +231,14 @@ def load_from_tarball(path):
 
 	return load_from_alpm(p)
 
-def load_from_db(pkgname):
-	p = pyalpm.get_localdb().get_pkg(pkgname)
+def load_from_db(pkgname, dbname = None):
+	if dbname is None:
+		# default is loading local database
+		db = pyalpm.get_localdb()
+	else:
+		db = pyalpm.register_syncdb(dbname)
+	p = db.get_pkg(pkgname)
+
 	if p is None:
 		p = lookup_provider(pkgname)
 	if p is not None:

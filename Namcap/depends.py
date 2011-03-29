@@ -21,7 +21,7 @@
 
 """Checks dependencies semi-smartly."""
 
-import re, os, os.path, pacman
+import re, os, os.path
 import subprocess
 import tempfile
 from Namcap.util import is_elf, script_type

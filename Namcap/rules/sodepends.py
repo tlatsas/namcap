@@ -21,9 +21,11 @@
 
 """Checks dependencies resulting from linking of shared libraries."""
 
-import re, os, pacman
+import re
+import os
 import subprocess
 import tempfile
+import Namcap.package
 from Namcap.ruleclass import *
 
 libcache = {'i686': {}, 'x86-64': {}}
@@ -184,11 +186,10 @@ class SharedLibsRule(TarballRule):
 				self.infos.append(("link-level-dependence %s in %s", (pkg, str(files))))
 
 		# Check for packages in testing
-		if os.path.isdir('/var/lib/pacman/sync/testing'):
-			for i in dependlist.keys():
-				p = pacman.load(i, '/var/lib/pacman/sync/testing/')
-				q = pacman.load(i)
-				if p != None and q != None and p["version"] == q["version"]:
-					self.warnings.append(("dependency-is-testing-release %s", i))
+		for i in dependlist.keys():
+			p = Namcap.package.load_from_db(i, 'testing')
+			q = Namcap.package.load_from_db(i)
+			if p != None and q != None and p["version"] == q["version"] :
+				self.warnings.append(("dependency-is-testing-release %s", i))
 
 # vim: set ts=4 sw=4 noet:

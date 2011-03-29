@@ -20,7 +20,11 @@
 # 
 
 # System wide global stuff
-import sys, os, os.path, imp, getopt, types, tarfile, re, string, Namcap, pacman
+import sys
+import os
+import imp
+import getopt
+import types, tarfile, re, string, Namcap
 import shutil
 import Namcap.depends
 import Namcap.tags
