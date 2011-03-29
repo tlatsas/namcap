@@ -1,3 +1,7 @@
+namcap (3.0.5)
+	- fix: depends rule unreadable and broken
+	- added a warning when a rule needs a dependency declared optional
+
 namcap (3.0.4)
 	- run parsepkgbuild with a clean environment
 	- added checkdepends to the list of legit PKGBUILD variables
