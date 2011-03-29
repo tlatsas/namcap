@@ -16,6 +16,7 @@ dconf-schemas-not-compiled :: Files in /usr/share/glib-2.0/schemas but no call f
 dependency-already-satisfied %s :: Dependency included but already satisfied ('%s')
 dependency-covered-by-link-dependence %s :: Dependency covered by dependencies from link dependence (%s)
 dependency-detected-not-included %s :: Dependency detected and not included ('%s')
+dependency-detected-but-optional %s :: Dependency detected but optional ('%s')
 dependency-detected-not-included %s from files %s :: Dependency detected and not included (%s) from files %s
 dependency-is-testing-release %s :: Dependency '%s' on your system is a testing release
 dependency-not-needed %s :: Dependency included and not needed ('%s')

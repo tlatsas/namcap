@@ -64,26 +64,31 @@ def analyze_depends(pkginfo):
 	errors, warnings, infos = [], [], []
 
 	# compute needed dependencies + recursive
-	dependlist = pkginfo.detected_deps
-	covereddepend = getcovered(dependlist)
-	for i in covereddepend:
+	dependlist = set(pkginfo.detected_deps)
+	indirectdependlist = getcovered(dependlist)
+	for i in indirectdependlist:
 		infos.append(("dependency-covered-by-link-dependence %s", i))
+	needed_depend = dependlist | indirectdependlist
+	# the minimal set of needed dependencies
+	smartdepend = set(dependlist) - indirectdependlist
 
 	# Find all the covered dependencies from the PKGBUILD
 	pkginfo.setdefault("depends", [])
-	pkgdepend = set(pkginfo["depends"])
+	explicitdepend = set(pkginfo["depends"])
+	implicitdepend = getcovered(explicitdepend)
+	pkgbuild_depend = explicitdepend | implicitdepend
+
 	# Include the optdepends from the PKGBUILD
 	pkginfo.setdefault("optdepends", [])
-	pkgdepend |= set(pkginfo["optdepends"])
-
-	pkgcovered = getcovered(pkgdepend)
-
-	# Our detected dependencies not covered by PKGBUILD
-	smartdepend = set(dependlist) - covereddepend
+	optdepend = set(pkginfo["optdepends"])
+	optdepend |= getcovered(optdepend)
 
 	# Get the provides so we can reference them later
+	# smartprovides : depend => (packages provided by depend)
 	smartprovides = {}
-	getprovides(dependlist, smartprovides)
+	getprovides(explicitdepend, smartprovides)
+	getprovides(implicitdepend, smartprovides)
+	getprovides(optdepend, smartprovides)
 
 	# The set of all provides for detected dependencies
 	allprovides = set()
@@ -92,24 +97,45 @@ def analyze_depends(pkginfo):
 
 	# Do the actual message outputting stuff
 	for i in smartdepend:
-		# If (i is not in the PKGBUILD's dependencies
-		# and i isn't the package name
-		# and (if (there are provides for i) then
-		#      (those provides aren't included in the package's dependencies))
-		# )
-		all_dependencies = pkginfo['depends'] + pkginfo['optdepends'] + list(pkgcovered)
-		if (i not in all_dependencies and i != pkginfo["name"]
-				and ((i not in smartprovides)
-					or len([c for c in smartprovides[i] if c in pkgcovered]) == 0)):
-			errors.append(("dependency-detected-not-included %s", i))
+		# if the needed package is itself:
+		if i == pkginfo["name"]:
+			continue
+		# if the dependency is satisfied
+		if i in pkgbuild_depend:
+			continue
+		# if the dependency is actually provided
+		found = False
+		for depend, provides in smartprovides.items():
+			if i in provides and depend in pkgbuild_depend:
+				found = True
+				continue
+		if found:
+			continue
+		# still not found, maybe it is specified as optional
+		if i in optdepend:
+			warnings.append(("dependency-detected-but-optional %s", i))
+			continue
+		# maybe, worse, it is provided by an optdepend
+		for depend, provides in smartprovides.items():
+			if i in provides and depend in optdepend:
+				found = True
+		if found:
+			warnings.append(("dependency-detected-but-optional %s", i))
+			continue
+		# now i'm pretty sure i didn't find it.
+		errors.append(("dependency-detected-not-included %s", i))
 
 	for i in pkginfo["depends"]:
-		if i in covereddepend and i in dependlist:
+		# a needed dependency is superfluous it is implicitly satisfied
+		if i in implicitdepend and (i in smartdepend or i in indirectdependlist):
 			warnings.append(("dependency-already-satisfied %s", i))
-		# if i is not in the depends as we see them
-		# and it's not in any of the provides from said depends
-		elif i not in smartdepend and i not in allprovides:
-			warnings.append(("dependency-not-needed %s", i))
+		# a dependency is unneeded if:
+		#   it is not in the depends as we see them
+		#   it's not a provider for some needed dependency
+		elif i not in needed_depend:
+			needed_provides = set(smartprovides.get(i, [])) & needed_depend
+			if len(needed_provides) == 0:
+				warnings.append(("dependency-not-needed %s", i))
 	infos.append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend) ))
 
 	return errors, warnings, infos
