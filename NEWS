@@ -1,5 +1,5 @@
 namcap (3.0.5)
-	- fix: depends rule unreadable and broken
+	- fix: depends rule unreadable and broken (FS#23489)
 	- added a warning when a rule needs a dependency declared optional
 
 namcap (3.0.4)
