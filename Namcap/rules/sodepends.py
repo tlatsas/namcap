@@ -176,7 +176,7 @@ class SharedLibsRule(TarballRule):
 		for i, v in dependlist.items():
 			if isinstance(v, set):
 				files = list(v)
-				pkginfo.detected_deps.append(i)
+				pkginfo.detected_deps.setdefault(i, [])
 				self.infos.append(("link-level-dependence %s in %s", (i, str(files))))
 
 		# Check for packages in testing

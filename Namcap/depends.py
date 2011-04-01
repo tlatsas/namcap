@@ -64,7 +64,7 @@ def analyze_depends(pkginfo):
 	errors, warnings, infos = [], [], []
 
 	# compute needed dependencies + recursive
-	dependlist = set(pkginfo.detected_deps)
+	dependlist = set(pkginfo.detected_deps.keys())
 	indirectdependlist = getcovered(dependlist)
 	for i in indirectdependlist:
 		infos.append(("dependency-covered-by-link-dependence %s", i))

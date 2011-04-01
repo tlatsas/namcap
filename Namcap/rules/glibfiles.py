@@ -28,7 +28,7 @@ class GlibSchemasRule(TarballRule):
 		for entry in tar:
 			if 'usr/share/glib-2.0/schemas' in entry.name and not flag:
 				flag = True
-				pkginfo.detected_deps.append("dconf")
+				pkginfo.detected_deps.setdefault("dconf", [])
 			if ".INSTALL" in entry.name:
 				f = tar.extractfile(".INSTALL")
 				if b"glib-compile-schemas" in f.read():
@@ -46,7 +46,7 @@ class GioModulesRule(TarballRule):
 		for entry in tar:
 			if 'usr/lib/gio/modules' in entry.name and not flag:
 				flag = True
-				pkginfo.detected_deps.append("glib2")
+				pkginfo.detected_deps.setdefault("glib2", [])
 			if ".INSTALL" in entry.name:
 				f = tar.extractfile(".INSTALL")
 				if b"gio-querymodules" in f.read():

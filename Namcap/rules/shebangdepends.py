@@ -106,7 +106,8 @@ class ShebangDependsRule(TarballRule):
 
 		# find packages owning interpreters
 		pkglist, orphans = findowners(scriptlist)
-		pkginfo.detected_deps.extend(pkglist)
+		for dep in pkglist:
+			pkginfo.detected_deps.setdefault(dep, [])
 
 		# Do the script handling stuff
 		for i, v in scriptlist.items():
