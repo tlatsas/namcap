@@ -43,7 +43,10 @@ def figurebitsize(line):
 def scanlibs(fileobj, filename, sharedlibs):
 	"""
 	Run "readelf -d" on a file-like object (e.g. a TarFile)
+
 	If it depends on a library, store that library's path.
+
+	sharedlibs: a dictionary { library => set(ELF files using that library) }
 	"""
 	shared = re.compile('Shared library: \[(.*)\]')
 
@@ -73,20 +76,27 @@ def scanlibs(fileobj, filename, sharedlibs):
 				try:
 					libpath = os.path.abspath(
 							libcache[architecture][n.group(1)])[1:]
-					sharedlibs.setdefault(libpath, {})[filename] = 1
+					sharedlibs.setdefault(libpath, set()).add(filename)
 				except KeyError:
 					# We didn't know about the library, so add it for fail later
-					sharedlibs.setdefault(n.group(1), {})[filename] = 1
+					sharedlibs.setdefault(n.group(1), set()).add(filename)
 	finally:
 		os.unlink(tmp.name)
 
 def finddepends(liblist):
+	"""
+	Find packages owning a list of libraries
+
+	Returns:
+	  dependlist -- a dictionary { package => set(libraries) }
+	  orphans -- the list of libraries without owners
+	"""
 	dependlist = {}
 
 	somatches = {}
 	actualpath = {}
 
-	knownlibs = set(liblist.keys())
+	knownlibs = set(liblist)
 	foundlibs = set()
 
 	for j in knownlibs:
@@ -114,9 +124,9 @@ def finddepends(liblist):
 					if j == actualpath[k] or (j.startswith(actualpath[k]) and so_end.match(j[len(actualpath[k]):])):
 						n = re.match('(.*)-([^-]*)-([^-]*)', i)
 						if n.group(1) not in dependlist:
-							dependlist[n.group(1)] = {}
+							dependlist[n.group(1)] = set()
 						for x in liblist[k]:
-							dependlist[n.group(1)][x] = 1
+							dependlist[n.group(1)].add(x)
 						foundlibs.add(k)
 			file.close()
 
@@ -164,8 +174,8 @@ class SharedLibsRule(TarballRule):
 
 		# Print link-level deps
 		for i, v in dependlist.items():
-			if type(v) == dict:
-				files = list(v.keys())
+			if isinstance(v, set):
+				files = list(v)
 				pkginfo.detected_deps.append(i)
 				self.infos.append(("link-level-dependence %s in %s", (i, str(files))))
 
