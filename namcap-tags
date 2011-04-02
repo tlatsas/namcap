@@ -82,3 +82,11 @@ dependency-detected-but-optional %s (%s) :: Dependency %s detected but optional 
 dependency-is-testing-release %s :: Dependency '%s' on your system is a testing release
 dependency-not-needed %s :: Dependency included and not needed ('%s')
 depends-by-namcap-sight depends=(%s) :: Depends as namcap sees them: depends=(%s)
+
+# dependency reasons
+dconf-needed-for-glib-schemas :: needed for glib schemas
+glib2-needed-for-gio-modules :: needed for GIO modules
+hicolor-icon-theme-needed-for-hicolor-dir :: needed for hicolor theme hierarchy
+shared-mime-info-needed :: needed for update-mime-database
+desktop-file-utils-needed :: needed for update-desktop-database
+kdebase-runtime-needed %s :: needed for programs %s

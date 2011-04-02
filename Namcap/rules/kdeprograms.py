@@ -32,6 +32,7 @@ class package(TarballRule):
 		if "depends" in pkginfo:
 			if 'kdelibs' in pkginfo["depends"] or 'kdelibs' in Namcap.depends.getcovered(pkginfo["depends"]):
 				self.infos.append(("kdebase-runtime-needed-dep %s", binaries))
-				pkginfo.detected_deps.setdefault("kdebase-runtime", [])
+				reasons = pkginfo.detected_deps.setdefault("kdebase-runtime", [])
+				reasons.append( ('kdebase-runtime-needed %s', str(binaries)) )
 
 # vim: set ts=4 sw=4 noet:

@@ -53,7 +53,9 @@ package() {
 				Namcap.rules.hicoloricons.package
 				)
 		e, w, i = Namcap.depends.analyze_depends(pkg)
-		self.assertEqual(pkg.detected_deps, ["hicolor-icon-theme"])
+		self.assertEqual(pkg.detected_deps, {
+			"hicolor-icon-theme": [('hicolor-icon-theme-needed-for-hicolor-dir',())]
+			})
 		self.assertEqual(set(r.errors + e), set([
 			('dependency-detected-not-included %s (%s)',
 			 ('hicolor-icon-theme', '')
@@ -94,7 +96,9 @@ package() {
 				Namcap.rules.hicoloricons.package
 				)
 		e, w, i = Namcap.depends.analyze_depends(pkg)
-		self.assertEqual(pkg.detected_deps, ["hicolor-icon-theme"])
+		self.assertEqual(pkg.detected_deps, {
+			"hicolor-icon-theme": [('hicolor-icon-theme-needed-for-hicolor-dir',())]
+			})
 		self.assertEqual(r.errors + e, [
 			("hicolor-icon-cache-not-updated", ())
 			])

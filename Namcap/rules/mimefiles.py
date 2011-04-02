@@ -25,7 +25,8 @@ class MimeInfoRule(TarballRule):
 	description = "Check for files in /usr/share/mime"
 	def analyze(self, pkginfo, tar):
 		if 'usr/share/mime' in tar.getnames():
-			pkginfo.detected_deps.setdefault("shared-mime-info", [])
+			reasons = pkginfo.detected_deps.setdefault("shared-mime-info", [])
+			reasons.append( ('shared-mime-info-needed',()) )
 			if ".INSTALL" not in tar.getnames():
 				self.errors.append(("mime-cache-not-updated", ()))
 			else:
@@ -55,7 +56,8 @@ class MimeDesktopRule(TarballRule):
 				f.close()
 
 		if has_mime_desktop:
-			pkginfo.detected_deps.setdefault("desktop-file-utils", [])
+			reasons = pkginfo.detected_deps.setdefault("desktop-file-utils", [])
+			reasons.append( ('desktop-file-utils-needed',()) )
 			if not desktop_db_updated:
 				self.errors.append(("desktop-database-not-updated", ()))
 

@@ -55,7 +55,9 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.mimefiles.MimeInfoRule
 				)
-		self.assertEqual(pkg.detected_deps, ["shared-mime-info"])
+		self.assertEqual(pkg.detected_deps,
+				{"shared-mime-info": [('shared-mime-info-needed', ())] }
+				)
 		self.assertEqual(r.errors, [("mime-cache-not-updated", ())])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])
@@ -70,7 +72,9 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.mimefiles.MimeDesktopRule
 				)
-		self.assertEqual(pkg.detected_deps, ["desktop-file-utils"])
+		self.assertEqual(pkg.detected_deps,
+				{"desktop-file-utils": [('desktop-file-utils-needed', ())] }
+				)
 		self.assertEqual(r.errors, [("desktop-database-not-updated", ())])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])

@@ -55,7 +55,9 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.glibfiles.GlibSchemasRule
 				)
-		self.assertEqual(pkg.detected_deps, ["dconf"])
+		self.assertEqual(pkg.detected_deps,
+				{'dconf': [('dconf-needed-for-glib-schemas', ())] }
+				)
 		self.assertEqual(r.errors, [])
 		self.assertEqual(r.warnings, [("dconf-schemas-not-compiled", ())])
 		self.assertEqual(r.infos, [])
@@ -69,7 +71,9 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.glibfiles.GioModulesRule
 				)
-		self.assertEqual(pkg.detected_deps, ["glib2"])
+		self.assertEqual(pkg.detected_deps,
+				{'glib2': [('glib2-needed-for-gio-modules', ())] }
+				)
 		self.assertEqual(r.errors, [])
 		self.assertEqual(r.warnings, [("gio-modules-not-registered", ())])
 		self.assertEqual(r.infos, [])
