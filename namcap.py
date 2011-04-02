@@ -23,6 +23,7 @@
 import sys, os, os.path, imp, getopt, types, tarfile, re, string, Namcap, pacman
 import shutil
 import Namcap.depends
+import Namcap.tags
 
 sandbox_directory = '/tmp/namcap.' + str(os.getpid())
 
@@ -68,20 +69,6 @@ def verify_package(filename):
 		return 0
 	return tar
 
-def process_tags(filename=None, machine=False):
-	if machine:
-		return lambda s: s
-	tags = {}
-	if not filename:
-		filename="/usr/share/namcap/namcap-tags"
-	f = open(filename)
-	for i in f.readlines():
-		if i[0] == "#" or i.strip() == "": continue
-		tagdata = i[:-1].split("::")
-		tags[tagdata[0].strip()] = tagdata[1].strip()
-
-	return lambda s: tags[s]
-
 def check_rules_exclude(optlist):	
 	'''Check if the -r (--rules) and the -r (--exclude) options
 	are being used at same time'''
@@ -95,7 +82,7 @@ def check_rules_exclude(optlist):
 
 def show_messages(name, key, messages):
 	for msg in messages:
-		print("%s %s: %s" % (name, key, m(msg[0]) % msg[1]))
+		print("%s %s: %s" % (name, key, Namcap.tags.format_message(msg, machine_readable)))
 
 def process_realpackage(package, modules):
 	"""Runs namcap checks over a package tarball"""
@@ -256,7 +243,8 @@ for i, k in optlist:
 if (args == []):
 	usage()
 
-m = process_tags(filename=filename, machine=machine_readable)
+Namcap.tags.load_tags(filename = filename)
+
 packages = args
 
 # No rules selected?  Then select them all!
