@@ -77,8 +77,8 @@ variable-not-array %s :: Variable %s is not an array.
 # dependency tags
 dependency-already-satisfied %s :: Dependency %s included but already satisfied
 dependency-covered-by-link-dependence %s :: Dependency covered by dependencies from link dependence (%s)
-dependency-detected-not-included %s :: Dependency detected and not included (%s)
-dependency-detected-but-optional %s :: Dependency detected but optional (%s)
+dependency-detected-not-included %s (%s) :: Dependency %s detected and not included (%s)
+dependency-detected-but-optional %s (%s) :: Dependency %s detected but optional (%s)
 dependency-is-testing-release %s :: Dependency '%s' on your system is a testing release
 dependency-not-needed %s :: Dependency included and not needed ('%s')
 depends-by-namcap-sight depends=(%s) :: Depends as namcap sees them: depends=(%s)

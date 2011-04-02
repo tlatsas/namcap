@@ -98,8 +98,9 @@ package() {
 				)
 		e, w, i = Namcap.depends.analyze_depends(pkg)
 		self.assertEqual(e + r.errors,
-				[('dependency-detected-not-included %s',
-					'kdebase-runtime')])
+				[('dependency-detected-not-included %s (%s)',
+				  ('kdebase-runtime', '')
+				 )])
 		self.assertEqual(r.warnings, [])
 		self.assertTrue(
 			("kdebase-runtime-needed-dep %s", ["usr/bin/kfoobar"])
@@ -116,8 +117,9 @@ package() {
 				)
 		e, w, i = Namcap.depends.analyze_depends(pkg)
 		self.assertEqual(e + r.errors,
-				[('dependency-detected-not-included %s',
-					'kdebase-runtime')])
+				[('dependency-detected-not-included %s (%s)',
+				  ('kdebase-runtime', '')
+				 )])
 		self.assertEqual(w + r.warnings,
 				[('dependency-not-needed %s', 'kdegraphics-libs')])
 		self.assertTrue(

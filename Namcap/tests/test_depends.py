@@ -33,7 +33,7 @@ class DependsTests(unittest.TestCase):
 	def test_missing(self):
 		self.pkginfo.detected_deps = ["pkg1"]
 		e, w, i = Namcap.depends.analyze_depends(self.pkginfo)
-		expected_e = [("dependency-detected-not-included %s", "pkg1")]
+		expected_e = [("dependency-detected-not-included %s (%s)", ("pkg1",''))]
 		self.assertEqual(e, expected_e)
 		self.assertEqual(w, [])
 		self.assertEqual(i,

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # 
 # namcap rules - glibfiles
 # Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>

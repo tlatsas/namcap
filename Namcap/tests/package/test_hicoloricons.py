@@ -55,8 +55,9 @@ package() {
 		e, w, i = Namcap.depends.analyze_depends(pkg)
 		self.assertEqual(pkg.detected_deps, ["hicolor-icon-theme"])
 		self.assertEqual(set(r.errors + e), set([
-			('dependency-detected-not-included %s',
-				'hicolor-icon-theme'),
+			('dependency-detected-not-included %s (%s)',
+			 ('hicolor-icon-theme', '')
+			),
 			("hicolor-icon-cache-not-updated", ())
 		]))
 		self.assertEqual(r.warnings + w, [])

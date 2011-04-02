@@ -113,17 +113,17 @@ def analyze_depends(pkginfo):
 			continue
 		# still not found, maybe it is specified as optional
 		if i in optdepend:
-			warnings.append(("dependency-detected-but-optional %s", i))
+			warnings.append(("dependency-detected-but-optional %s (%s)", (i, '')))
 			continue
 		# maybe, worse, it is provided by an optdepend
 		for depend, provides in smartprovides.items():
 			if i in provides and depend in optdepend:
 				found = True
 		if found:
-			warnings.append(("dependency-detected-but-optional %s", i))
+			warnings.append(("dependency-detected-but-optional %s (%s)", (i, '')))
 			continue
 		# now i'm pretty sure i didn't find it.
-		errors.append(("dependency-detected-not-included %s", i))
+		errors.append(("dependency-detected-not-included %s (%s)", (i, '')))
 
 	for i in pkginfo["depends"]:
 		# a needed dependency is superfluous it is implicitly satisfied
