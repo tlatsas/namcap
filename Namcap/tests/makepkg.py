@@ -67,8 +67,10 @@ class MakepkgTest(unittest.TestCase):
 	def run_makepkg(self):
 		pwd = os.getcwd()
 		os.chdir(self.tmpdir)
+		environment = os.environ
+		environment.update({ "MAKEPKG_CONF": os.path.join(self.tmpdir, "makepkg.conf") })
 		p = subprocess.Popen(["makepkg", "-f", "-d"],
-				env = { "MAKEPKG_CONF": "./makepkg.conf" },
+				env = environment,
 				stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 		out1, out2 = p.communicate()
 		if p.returncode != 0:
@@ -78,7 +80,7 @@ class MakepkgTest(unittest.TestCase):
 		os.chdir(pwd)
 
 	def run_rule_on_tarball(self, filename, rule):
-		ret = subprocess.call(["unxz", filename + ".xz"])
+		ret = subprocess.call(["unxz", '-f', filename + ".xz"])
 		self.assertEqual(ret, 0)
 
 		# process PKGINFO
