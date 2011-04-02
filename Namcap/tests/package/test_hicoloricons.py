@@ -58,7 +58,7 @@ package() {
 			})
 		self.assertEqual(set(r.errors + e), set([
 			('dependency-detected-not-included %s (%s)',
-			 ('hicolor-icon-theme', '')
+			 ('hicolor-icon-theme', 'needed for hicolor theme hierarchy')
 			),
 			("hicolor-icon-cache-not-updated", ())
 		]))

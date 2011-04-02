@@ -26,6 +26,7 @@ import subprocess
 import tempfile
 from Namcap.util import is_elf, script_type
 from Namcap.ruleclass import *
+import Namcap.tags
 
 pkgcache = {}
 
@@ -106,16 +107,20 @@ def analyze_depends(pkginfo):
 		# if the dependency is pulled as a provider for some explicit dep
 		if len(set(smartprovides[i]) & pkgbuild_depend) > 0:
 			continue
+		# compute dependency reason
+		reasons = pkginfo.detected_deps[i]
+		reason_strings = [Namcap.tags.format_message(reason) for reason in reasons]
+		reason = ', '.join(reason_strings)
 		# still not found, maybe it is specified as optional
 		if i in optdepend:
-			warnings.append(("dependency-detected-but-optional %s (%s)", (i, '')))
+			warnings.append(("dependency-detected-but-optional %s (%s)", (i, reason)))
 			continue
 		# maybe, it is pulled as a provider for an optdepend
 		if len(set(smartprovides[i]) & optdepend) > 0:
-			warnings.append(("dependency-detected-but-optional %s (%s)", (i, '')))
+			warnings.append(("dependency-detected-but-optional %s (%s)", (i, reason)))
 			continue
 		# now i'm pretty sure i didn't find it.
-		errors.append(("dependency-detected-not-included %s (%s)", (i, '')))
+		errors.append(("dependency-detected-not-included %s (%s)", (i, reason)))
 
 	for i in pkginfo["depends"]:
 		# a needed dependency is superfluous it is implicitly satisfied

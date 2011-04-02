@@ -61,7 +61,8 @@ package() {
 		)
 		e, w, i = Namcap.depends.analyze_depends(pkg)
 		self.assertEqual(e, [
-			('dependency-detected-not-included %s (%s)', ('pacman', ''))
+			('dependency-detected-not-included %s (%s)',
+				('pacman', "libraries ['usr/lib/libalpm.so.6'] needed in files ['usr/bin/main']"))
 		])
 		self.assertEqual(w, [])
 
