@@ -82,7 +82,7 @@ def check_rules_exclude(optlist):
 
 def show_messages(name, key, messages):
 	for msg in messages:
-		print("%s %s: %s" % (name, key, Namcap.tags.format_message(msg, machine_readable)))
+		print("%s %s: %s" % (name, key, Namcap.tags.format_message(msg)))
 
 def process_realpackage(package, modules):
 	"""Runs namcap checks over a package tarball"""
@@ -243,7 +243,7 @@ for i, k in optlist:
 if (args == []):
 	usage()
 
-Namcap.tags.load_tags(filename = filename)
+Namcap.tags.load_tags(filename = filename, machine = machine_readable)
 
 packages = args
 

@@ -20,12 +20,16 @@
 #
 # 
 
+import os
+
 tags = {}
 
 DEFAULT_TAGS = "/usr/share/namcap/namcap-tags"
 
-def load_tags(filename = None):
+def load_tags(filename = None, machine = False):
 	"Loads tags from the given filename"
+	global tags
+	tags = {}
 	if filename is None:
 		filename = DEFAULT_TAGS
 
@@ -34,23 +38,27 @@ def load_tags(filename = None):
 		line = line.strip()
 		if line.startswith("#") or line == "":
 			continue
-		tagdata = line.split("::")
-		tags[tagdata[0].strip()] = tagdata[1].strip()
+		machinetag, humantag = line.split("::")
+		machinetag = machinetag.strip()
+		humantag = humantag.strip()
 
-def process_tags(machine = False):
-	if machine:
-		return lambda s: s
-	else:
-		return lambda s: tags[s]
+		if machine:
+			tags[machinetag] = machinetag
+		else:
+			tags[machinetag] = humantag
 
-def format_message(msg, machine = False):
+def format_message(msg):
 	"""
 	Formats a tuple (tag, data)
 	"""
 	tag, data = msg
-	if machine:
-		return (tag % data)
-	else:
-		return (tags[tag] % data)
+	return (tags[tag] % data)
+
+# Try to load tags by default
+if os.path.exists(DEFAULT_TAGS):
+	load_tags(DEFAULT_TAGS)
+elif os.path.exists("namcap-tags"):
+	load_tags("namcap-tags")
+
 
 # vim: set ts=4 sw=4 noet:
