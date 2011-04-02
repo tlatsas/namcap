@@ -59,6 +59,8 @@ def getprovides(depends, provides):
 
 		if pac != None and "provides" in pac and pac["provides"] != None:
 			provides[i] = pac["provides"]
+		else:
+			provides[i] = []
 
 def analyze_depends(pkginfo):
 	errors, warnings, infos = [], [], []
@@ -86,9 +88,7 @@ def analyze_depends(pkginfo):
 	# Get the provides so we can reference them later
 	# smartprovides : depend => (packages provided by depend)
 	smartprovides = {}
-	getprovides(explicitdepend, smartprovides)
-	getprovides(implicitdepend, smartprovides)
-	getprovides(optdepend, smartprovides)
+	getprovides(smartdepend, smartprovides)
 
 	# The set of all provides for detected dependencies
 	allprovides = set()
@@ -103,23 +103,15 @@ def analyze_depends(pkginfo):
 		# if the dependency is satisfied
 		if i in pkgbuild_depend:
 			continue
-		# if the dependency is actually provided
-		found = False
-		for depend, provides in smartprovides.items():
-			if i in provides and depend in pkgbuild_depend:
-				found = True
-				continue
-		if found:
+		# if the dependency is pulled as a provider for some explicit dep
+		if len(set(smartprovides[i]) & pkgbuild_depend) > 0:
 			continue
 		# still not found, maybe it is specified as optional
 		if i in optdepend:
 			warnings.append(("dependency-detected-but-optional %s (%s)", (i, '')))
 			continue
-		# maybe, worse, it is provided by an optdepend
-		for depend, provides in smartprovides.items():
-			if i in provides and depend in optdepend:
-				found = True
-		if found:
+		# maybe, it is pulled as a provider for an optdepend
+		if len(set(smartprovides[i]) & optdepend) > 0:
 			warnings.append(("dependency-detected-but-optional %s (%s)", (i, '')))
 			continue
 		# now i'm pretty sure i didn't find it.
@@ -131,11 +123,9 @@ def analyze_depends(pkginfo):
 			warnings.append(("dependency-already-satisfied %s", i))
 		# a dependency is unneeded if:
 		#   it is not in the depends as we see them
-		#   it's not a provider for some needed dependency
-		elif i not in needed_depend:
-			needed_provides = set(smartprovides.get(i, [])) & needed_depend
-			if len(needed_provides) == 0:
-				warnings.append(("dependency-not-needed %s", i))
+		#   it does not pull some needed dependency which provides it
+		elif i not in needed_depend and i not in allprovides:
+			warnings.append(("dependency-not-needed %s", i))
 	infos.append(("depends-by-namcap-sight depends=(%s)", ' '.join(smartdepend) ))
 
 	return errors, warnings, infos
