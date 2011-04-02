@@ -1,3 +1,9 @@
+namcap (3.0.6)
+	- depends check now prints reasons why a dependency is needed
+	- fix: inverted treatment of provides introduced by 3.0.5
+	- test: basic unit test for sodepends rule
+	- factored out tag formatting code
+
 namcap (3.0.5)
 	- fix: depends rule unreadable and broken (FS#23489)
 	- added a warning when a rule needs a dependency declared optional
