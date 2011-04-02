@@ -37,6 +37,9 @@ def load(name, path=None):
 def scanshebangs(fileobj, filename, scripts):
 	"""
 	Scan a file for shebang and stores the interpreter name.
+
+	Stores
+	  scripts -- a dictionary { program => set(scripts) }
 	"""
 
 	# test magic bytes
@@ -52,12 +55,20 @@ def scanshebangs(fileobj, filename, scripts):
 		cmd = script_type(tmp.name)
 		if cmd != None:
 			assert(isinstance(cmd, str))
-			scripts.setdefault(cmd, {})[filename] = 1
+			scripts.setdefault(cmd, set()).add(filename)
 	finally:
 		os.unlink(tmp.name)
 
 def findowners(scriptlist):
-	pkglist = set()
+	"""
+	Find owners for executables.
+
+	Returns:
+	  pkglist -- a dictionary { package => set(programs) }
+	  orphans -- a set of scripts not found
+	"""
+
+	pkglist = {}
 	scriptfound = set()
 
 	for s in scriptlist:
@@ -77,7 +88,7 @@ def findowners(scriptlist):
 				file = open(pacmandb+'/'+i+'/files', 'rb')
 				for j in file:
 					if scriptpath == j.strip():
-						pkglist.add(iname)
+						pkglist.setdefault(iname, set()).add(s)
 						scriptfound.add(s)
 				file.close()
 
@@ -106,12 +117,19 @@ class ShebangDependsRule(TarballRule):
 
 		# find packages owning interpreters
 		pkglist, orphans = findowners(scriptlist)
-		for dep in pkglist:
-			pkginfo.detected_deps.setdefault(dep, [])
+		for dep, progs in pkglist.items():
+			if not isinstance(progs, set):
+				continue
+			needing = set().union(*[scriptlist[prog] for prog in progs])
+			reasons = pkginfo.detected_deps.setdefault(dep, [])
+			reasons.append((
+				'programs-needed %s %s',
+				(str(list(progs)), str(list(needing)))
+				))
 
 		# Do the script handling stuff
 		for i, v in scriptlist.items():
-			files = list(v.keys())
+			files = list(v)
 			self.infos.append(("script-link-detected %s in %s", (i, str(files))))
 
 		# Handle "no package associated" errors

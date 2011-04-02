@@ -125,8 +125,7 @@ def finddepends(liblist):
 						n = re.match('(.*)-([^-]*)-([^-]*)', i)
 						if n.group(1) not in dependlist:
 							dependlist[n.group(1)] = set()
-						for x in liblist[k]:
-							dependlist[n.group(1)].add(x)
+						dependlist[n.group(1)].add(k)
 						foundlibs.add(k)
 			file.close()
 
@@ -173,11 +172,16 @@ class SharedLibsRule(TarballRule):
 			for i in orphans])
 
 		# Print link-level deps
-		for i, v in dependlist.items():
-			if isinstance(v, set):
-				files = list(v)
-				pkginfo.detected_deps.setdefault(i, [])
-				self.infos.append(("link-level-dependence %s in %s", (i, str(files))))
+		for pkg, libraries in dependlist.items():
+			if isinstance(libraries, set):
+				files = list(libraries)
+				needing = set().union(*[liblist[lib] for lib in libraries])
+				reasons = pkginfo.detected_deps.setdefault(pkg, [])
+				reasons.append((
+					"libraries-needed %s %s",
+					(str(files), str(list(needing)))
+					))
+				self.infos.append(("link-level-dependence %s in %s", (pkg, str(files))))
 
 		# Check for packages in testing
 		if os.path.isdir('/var/lib/pacman/sync/testing'):
