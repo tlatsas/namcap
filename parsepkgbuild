@@ -5,7 +5,7 @@ mkdir -p /tmp/parsepkgbuild
 source /etc/makepkg.conf
 export CARCH
 
-export PATH=/tmp/parsepkgbuild
 PARSE_PKGBUILD_PATH=${PARSE_PKGBUILD_PATH:-/usr/share/namcap}
 
-exec /usr/bin/env -i /bin/bash --noprofile --norc -r "$PARSE_PKGBUILD_PATH"/parsepkgbuild.sh $1
+exec </dev/null
+exec /usr/bin/env -i PATH=/dummy /bin/bash --norc --noprofile -r "$PARSE_PKGBUILD_PATH"/parsepkgbuild.sh $1
