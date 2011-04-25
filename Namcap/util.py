@@ -62,16 +62,17 @@ def is_elf(path):
 
 def script_type(path):
 	firstline = read_carefully(path, lambda fd: fd.readline())
+	firstline = firstline.decode('ascii', 'ignore')
 	if not firstline:
 		return None
-	script = re.compile(b'#!.*/(.*)')
+	script = re.compile('#!.*/(.*)')
 	m = script.match(firstline)
 	if m != None:
 		cmd = m.group(1).split()
 		name = cmd[0]
 		if name == 'env':
 			name = cmd[1]
-		return name.decode('ascii')
+		return name
 	return None
 
 clean_filename = lambda s: re.search(r"/tmp/namcap\.[0-9]*/(.*)", s).group(1)
