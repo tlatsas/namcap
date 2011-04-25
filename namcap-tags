@@ -22,6 +22,7 @@ empty-directory %s :: Directory (%s) is empty
 error-running-rule %s :: Error running rule '%s'
 extra-var-begins-without-underscore %s :: Non standard variable '%s' doesn't start with an underscore
 file-in-non-standard-dir %s :: File (%s) exists in a non-standard directory.
+file-in-temporary-dir %s :: File (%s) is in a temporary directory.
 file-not-world-readable %s :: File (%s) does not have the world readable bit set.
 file-referred-in-startdir :: File referenced in $startdir
 file-setugid %s :: File (%s) is setuid or setgid.

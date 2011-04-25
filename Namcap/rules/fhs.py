@@ -30,21 +30,34 @@ class FHSRule(TarballRule):
 				'usr/bin/', 'usr/include/', 'usr/lib/', 'usr/lib32/',
 				'usr/sbin/', 'usr/share/',
 				'var/cache/', 'var/lib/', 'var/lock/', 'var/log/', 'var/opt/',
-				'var/run/', 'var/spool/', 'var/state/',
+				'var/spool/', 'var/state/',
 				'.PKGINFO', '.INSTALL', '.CHANGELOG',
 		]
-		for i in tar.getnames():
-			# Replace multiple /'s at the end of a string with a single /
-			# Not sure if this is a python bug or a makepkg bug
-			if i.endswith('/'):
-				i = i.rstrip('/') + '/'
-			fileok = 0
-			for j in valid_paths:
-				# matches directory names (j, filename) or parent directories (filename, j)
-				if i[0:len(j)] == j or j[0:len(i)] == i:
-					fileok = 1
-			if not fileok:
-				self.warnings.append(("file-in-non-standard-dir %s", i))
+		forbidden_paths = [
+				'tmp/', 'var/tmp/',
+				'run/', 'var/run/',
+				'var/lock/'
+		]
+		for entry in tar.getmembers():
+			name = os.path.normpath(entry.name)
+			if entry.isdir():
+				name += '/'
+
+			# check for files in wrong dirs, directory itself will be
+			# catched by emptydirs rule
+			if name in forbidden_paths:
+				continue
+			bad_dirs = [dirname for dirname in forbidden_paths
+					if name.startswith(dirname)]
+			if len(bad_dirs) > 0:
+				self.errors.append(('file-in-temporary-dir %s',	name))
+				continue
+
+			# matches directory names or parent directories
+			good_dirs = [dirname for dirname in valid_paths
+				if name.startswith(dirname) or dirname.startswith(name)]
+			if len(good_dirs) == 0:
+				self.warnings.append(("file-in-non-standard-dir %s", name))
 
 class FHSManpagesRule(TarballRule):
 	name = "fhs-manpages"

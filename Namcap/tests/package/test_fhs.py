@@ -40,6 +40,8 @@ build() {
 package() {
   mkdir -p ${pkgdir}/weird/directory
   touch ${pkgdir}/weird/directory/file
+  mkdir -p ${pkgdir}/run
+  touch ${pkgdir}/run/program.pid
 }
 """
 	def test_nonfhs(self):
@@ -52,10 +54,12 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				fhs.FHSRule
 				)
-		self.assertEqual(r.errors, [])
+		self.assertEqual(set(r.errors), set([
+			("file-in-temporary-dir %s", 'run/program.pid')
+			]))
 		self.assertEqual(set(r.warnings), set([
-			("file-in-non-standard-dir %s", "weird"),
-			("file-in-non-standard-dir %s", "weird/directory"),
+			("file-in-non-standard-dir %s", "weird/"),
+			("file-in-non-standard-dir %s", "weird/directory/"),
 			("file-in-non-standard-dir %s", "weird/directory/file")
 			]))
 		self.assertEqual(r.infos, [])
