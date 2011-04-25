@@ -1,3 +1,8 @@
+namcap (3.1)
+	- add checks for files in temp. folders in fhs rule (FS#23539)
+	- fix: parsepkgbuild executing arbitrary commands from PKGBUILD (FS#23902)
+	- fix: bug in script interpreter detection
+
 namcap (3.0.6)
 	- depends check now prints reasons why a dependency is needed
 	- fix: inverted treatment of provides introduced by 3.0.5
