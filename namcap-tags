@@ -91,5 +91,6 @@ hicolor-icon-theme-needed-for-hicolor-dir :: needed for hicolor theme hierarchy
 shared-mime-info-needed :: needed for update-mime-database
 desktop-file-utils-needed :: needed for update-desktop-database
 kdebase-runtime-needed %s :: needed for programs %s
+java-environment-needed %s :: found class files %s
 libraries-needed %s %s :: libraries %s needed in files %s
 programs-needed %s %s :: programs %s needed in scripts %s

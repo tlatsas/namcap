@@ -1,5 +1,6 @@
 namcap (3.1)
 	- add checks for files in temp. folders in fhs rule (FS#23539)
+	- add rule javafiles detecting Java class/jar files (FS#23521)
 	- fix: parsepkgbuild executing arbitrary commands from PKGBUILD (FS#23902)
 	- fix: bug in script interpreter detection
 

@@ -33,6 +33,7 @@ from . import (
   hardlinks,
   hicoloricons,
   infodirectory,
+  javafiles,
   kdeprograms,
   libtool,
   licensepkg,
