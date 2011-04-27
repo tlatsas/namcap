@@ -28,7 +28,7 @@ class package(PkgbuildRule):
 				 'provides', 'conflicts' , 'replaces', 'backup',
 				 'source', 'noextract', 'md5sums', 'sha1sums',
 				 'sha256sums', 'sha384sums', 'sha512sums', 'pkgname',
-				 'pkgbase', 'pkgver', 'pkgrel', 'pkgdesc', 'groups',
+				 'pkgbase', 'pkgver', 'pkgrel', 'epoch', 'pkgdesc', 'groups',
 				 'url', 'install', 'changelog',
 				 'options', 'optdepends', 'checkdepends']
 		for varname in pkginfo["setvars"]:
