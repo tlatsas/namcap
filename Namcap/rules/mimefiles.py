@@ -41,6 +41,8 @@ class MimeDesktopRule(TarballRule):
 		desktop_db_updated = False
 		has_mime_desktop = False
 		for entry in tar:
+			if entry.issym():
+				continue
 			if (entry.name.startswith("usr/share/applications")
 					and entry.name.endswith(".desktop")):
 				f = tar.extractfile(entry)
