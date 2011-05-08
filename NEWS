@@ -5,6 +5,7 @@ namcap (3.1)
 	- fix: extravars not knowing about $epoch (FS#23966)
 	- fix: mimedesktop rule crashing on packages with symlinks (FS#23952)
 	- fix: bug in script interpreter detection
+	- uses pyalpm to access pacman database
 
 namcap (3.0.6)
 	- depends check now prints reasons why a dependency is needed
