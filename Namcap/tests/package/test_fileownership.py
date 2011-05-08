@@ -52,7 +52,7 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.fileownership.package
 				)
-		self.assertEqual(r.errors, [("incorrect-permissions %s (%s/%s)",
+		self.assertEqual(r.errors, [("incorrect-owner %s (%s:%s)",
 			("usr/bin/program", "root", "storage"))])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])

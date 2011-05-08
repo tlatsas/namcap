@@ -13,7 +13,7 @@ setup(name="namcap",
 	author_email="pacman-dev@archlinux.org",
 	url="http://www.archlinux.org/",
 
-	py_modules=["namcap", "pacman"],
+	py_modules=["namcap"],
 	packages = find_packages(),
 	scripts=["namcap", 'parsepkgbuild'],
 	test_suite = "Namcap.tests",
