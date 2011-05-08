@@ -73,7 +73,7 @@ def findowners(scriptlist):
 
 	for s in scriptlist:
 		p = subprocess.Popen(["which", s],
-				stdout = subprocess.PIPE)
+				stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 		out, _ = p.communicate()
 		if p.returncode != 0:
 			continue
