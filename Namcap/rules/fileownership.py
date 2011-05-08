@@ -35,6 +35,6 @@ class package(TarballRule):
 					gname = str(i.gid)
 				else:
 					gname = i.gname
-				self.errors.append(("incorrect-permissions %s (%s/%s)", (i.name, uname, gname)))
+				self.errors.append(("incorrect-owner %s (%s:%s)", (i.name, uname, gname)))
 
 # vim: set ts=4 sw=4 noet:
