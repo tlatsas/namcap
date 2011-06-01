@@ -23,7 +23,7 @@ import os
 from Namcap.tests.makepkg import MakepkgTest
 import Namcap.rules.mimefiles
 
-class mimefilesTest(MakepkgTest):
+class MimeFilesTest(MakepkgTest):
 	pkgbuild = """
 pkgname=__namcap_test_mimefiles
 pkgver=1.0

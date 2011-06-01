@@ -24,7 +24,7 @@ from Namcap.tests.makepkg import MakepkgTest
 import Namcap.depends
 import Namcap.rules.hicoloricons
 
-class hicoloriconsTest(MakepkgTest):
+class HiColorIconsTest(MakepkgTest):
 	pkgbuild = """
 pkgname=__namcap_test_hicoloricons
 pkgver=1.0

@@ -23,7 +23,7 @@ import os
 from Namcap.tests.makepkg import MakepkgTest
 import Namcap.rules.gnomemime
 
-class gnomemimeTest(MakepkgTest):
+class GnomeMimeTest(MakepkgTest):
 	pkgbuild = """
 pkgname=__namcap_test_gnomemime
 pkgver=1.0

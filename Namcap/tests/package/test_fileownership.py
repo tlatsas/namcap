@@ -23,7 +23,7 @@ import os
 from Namcap.tests.makepkg import MakepkgTest
 import Namcap.rules.fileownership
 
-class fileownershipTest(MakepkgTest):
+class FileOwnershipTest(MakepkgTest):
 	pkgbuild = """
 pkgname=__namcap_test_fileownership
 pkgver=1.0

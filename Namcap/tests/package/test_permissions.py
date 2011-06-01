@@ -23,7 +23,7 @@ import os
 from Namcap.tests.makepkg import MakepkgTest
 import Namcap.rules.permissions
 
-class permissionsTest(MakepkgTest):
+class PermissionsTest(MakepkgTest):
 	pkgbuild = """
 pkgname=__namcap_test_permissions
 pkgver=1.0

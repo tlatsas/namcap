@@ -23,7 +23,7 @@ import os
 from Namcap.tests.makepkg import MakepkgTest
 import Namcap.rules.kdeprograms
 
-class kdeprogramsTest(MakepkgTest):
+class KdeProgramsTest(MakepkgTest):
 	pkgbuild = """
 pkgname=__namcap_test_kdeprograms
 pkgver=1.0
@@ -143,6 +143,4 @@ package() {
 			in r.infos)
 
 
-
 # vim: set ts=4 sw=4 noet:
-
