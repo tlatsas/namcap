@@ -19,13 +19,16 @@
 #
 # 
 
-# System wide global stuff
-import sys
-import os
-import imp
 import getopt
-import types, tarfile, re, string, Namcap
+import imp
+import os
+import re
 import shutil
+import string
+import sys
+import tarfile
+import types
+
 import Namcap.depends
 import Namcap.tags
 
@@ -51,26 +54,16 @@ def usage():
 
 	sys.exit(2)
 
-def verify_package(filename):
-	"""Checks if a tarball is a valid package"""
-	if not os.path.isfile(filename):
-		return 0
-	if not tarfile.is_tarfile(filename):
-		return 0
+def open_package(filename):
 	try:
-		tar = tarfile.open(package, "r")
-		if not tar:
-			return 0		
-		if not len(tar.getmembers()) > 0:
+		tar = tarfile.open(filename, "r")
+		if '.PKGINFO' not in tar.getnames():
 			tar.close()
-			return 0
-		if not '.PKGINFO' in tar.getnames():
-			tar.close()
-			return 0
+			return None
 	except IOError:
 		if tar:
 			tar.close()
-		return 0
+		return None
 	return tar
 
 def check_rules_exclude(optlist):	
@@ -91,7 +84,7 @@ def show_messages(name, key, messages):
 def process_realpackage(package, modules):
 	"""Runs namcap checks over a package tarball"""
 	extracted = 0
-	pkgtar = verify_package(package)
+	pkgtar = open_package(package)
 
 	if not pkgtar:
 		print("Error: %s is empty or is not a valid package" % package)
@@ -105,7 +98,7 @@ def process_realpackage(package, modules):
 		if isinstance(rule, Namcap.ruleclass.PkgInfoRule):
 			rule.analyze(pkginfo, None)
 		elif isinstance(rule, Namcap.ruleclass.PkgdirRule):
-			# If it's not extracted, then extract it and then analyze the package
+			# If it's not extracted, extract it and then analyze the package
 			if not extracted:
 				os.mkdir(sandbox_directory)
 				for j in pkgtar.getmembers():

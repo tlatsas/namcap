@@ -24,7 +24,7 @@ This module defines the base classes from which Namcap rules are derived
 and how they are meant to be used.
 """
 
-# pacman 3 does not need classes to derive from object
+# python 3 does not need classes to derive from object
 class AbstractRule(object):
 	"The parent class of all rules"
 	def __init__(self):
