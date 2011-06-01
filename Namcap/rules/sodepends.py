@@ -21,9 +21,11 @@
 
 """Checks dependencies resulting from linking of shared libraries."""
 
+from collections import defaultdict
 import re
 import os
 import subprocess
+import pyalpm
 import tempfile
 import Namcap.package
 from Namcap.ruleclass import *
@@ -93,7 +95,7 @@ def finddepends(liblist):
 	  dependlist -- a dictionary { package => set(libraries) }
 	  orphans -- the list of libraries without owners
 	"""
-	dependlist = {}
+	dependlist = defaultdict(set)
 
 	somatches = {}
 	actualpath = {}
@@ -101,8 +103,7 @@ def finddepends(liblist):
 	knownlibs = set(liblist)
 	foundlibs = set()
 
-	for j in knownlibs:
-		actualpath[j] = os.path.realpath('/'+j)[1:]
+	actualpath = dict((j, os.path.realpath('/' + j)[1:]) for j in knownlibs)
 
 	# Sometimes packages don't include all so .so, .so.1, .so.1.13, .so.1.13.19 files
 	# They rely on ldconfig to create all the symlinks
@@ -111,25 +112,18 @@ def finddepends(liblist):
 	# Whether we should even look at a particular file
 	is_so = re.compile('\.so')
 
-	pacmandb = '/var/lib/pacman/local'
-	for i in os.listdir(pacmandb):
-		if os.path.isfile(pacmandb+'/'+i+'/files'):
-			file = open(pacmandb+'/'+i+'/files', errors='ignore')
-			for j in file:
-				if not is_so.search(j):
-					continue
+	for pkg in pyalpm.get_localdb().pkgcache:
+		for j in pkg.files:
+			if not is_so.search(j):
+				continue
 
-				for k in knownlibs:
-					# File must be an exact match or have the right .so ending numbers
-					# i.e. gpm includes libgpm.so and libgpm.so.1.19.0, but everything links to libgpm.so.1
-					# We compare find libgpm.so.1.19.0 startswith libgpm.so.1 and .19.0 matches the regexp
-					if j == actualpath[k] or (j.startswith(actualpath[k]) and so_end.match(j[len(actualpath[k]):])):
-						n = re.match('(.*)-([^-]*)-([^-]*)', i)
-						if n.group(1) not in dependlist:
-							dependlist[n.group(1)] = set()
-						dependlist[n.group(1)].add(k)
-						foundlibs.add(k)
-			file.close()
+			for k in knownlibs:
+				# File must be an exact match or have the right .so ending numbers
+				# i.e. gpm includes libgpm.so and libgpm.so.1.19.0, but everything links to libgpm.so.1
+				# We compare find libgpm.so.1.19.0 startswith libgpm.so.1 and .19.0 matches the regexp
+				if j == actualpath[k] or (j.startswith(actualpath[k]) and so_end.match(j[len(actualpath[k]):])):
+					dependlist[pkg.name].add(k)
+					foundlibs.add(k)
 
 	orphans = list(knownlibs - foundlibs)
 	return dependlist, orphans
@@ -147,6 +141,7 @@ def filllibcache():
 			if g.group(2).startswith('libc6,x86-64'):
 				libcache['x86-64'][g.group(1)] = g.group(3)
 			else:
+				# TODO: This is bogus; what do non x86-architectures print?
 				libcache['i686'][g.group(1)] = g.group(3)
 
 
