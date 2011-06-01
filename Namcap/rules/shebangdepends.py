@@ -27,12 +27,8 @@ import tempfile
 import subprocess
 import pyalpm
 import Namcap.package
-from Namcap.util import is_elf, script_type
+from Namcap.util import script_type
 from Namcap.ruleclass import *
-
-if not pyalpm.checkinit():
-	pyalpm.initialize()
-	pyalpm.options.dbpath = "/var/lib/pacman"
 
 def scanshebangs(fileobj, filename, scripts):
 	"""
