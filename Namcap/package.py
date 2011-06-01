@@ -240,13 +240,13 @@ def load_from_db(pkgname, dbname = None):
 	p = db.get_pkg(pkgname)
 
 	if p is None:
-		p = lookup_provider(pkgname)
+		p = lookup_provider(pkgname, db)
 	if p is not None:
 		p = load_from_alpm(p)
 	return p
 
-def lookup_provider(pkgname):
-	for pkg in pyalpm.get_localdb().pkgcache:
+def lookup_provider(pkgname, db):
+	for pkg in db.pkgcache:
 		if pkgname in pkg.provides:
 			return pkg
 
