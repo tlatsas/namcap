@@ -25,15 +25,21 @@ import re
 import collections
 
 import pyalpm
-pyalpm.initialize()
+_pyalpm_version_tuple = tuple(int(n)
+		for n in pyalpm.version().split('.'))
+if _pyalpm_version_tuple < (0, 5):
+	pyalpm.initialize()
 
-# read pacman.conf
-pyalpm.options.dbpath = "/var/lib/pacman"
-for i in open('/etc/pacman.conf'):
-	m = re.match('\s*DBPath\s*=\s*([\S^#]+)', i)
-	if m != None:
-		pyalpm.options.dbpath = m.group(1)
-		break
+	# read pacman.conf
+	pyalpm.options.dbpath = "/var/lib/pacman"
+	for i in open('/etc/pacman.conf'):
+		m = re.match('\s*DBPath\s*=\s*([\S^#]+)', i)
+		if m != None:
+			pyalpm.options.dbpath = m.group(1)
+			break
+else:
+	import pycman.config
+	pyalpm_handle = pycman.config.init_with_config('/etc/pacman.conf')
 
 DEPENDS_RE = re.compile("([^<>=:]+)([<>]?=.*)?(: .*)?")
 
