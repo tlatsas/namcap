@@ -25,21 +25,12 @@ import re
 import collections
 
 import pyalpm
-_pyalpm_version_tuple = tuple(int(n)
-		for n in pyalpm.version().split('.'))
+_pyalpm_version_tuple = tuple(int(n) for n in pyalpm.version().split('.'))
 if _pyalpm_version_tuple < (0, 5):
-	pyalpm.initialize()
+	raise DeprecationWarning("pyalpm versions <0.5 are no longer supported")
 
-	# read pacman.conf
-	pyalpm.options.dbpath = "/var/lib/pacman"
-	for i in open('/etc/pacman.conf'):
-		m = re.match('\s*DBPath\s*=\s*([\S^#]+)', i)
-		if m != None:
-			pyalpm.options.dbpath = m.group(1)
-			break
-else:
-	import pycman.config
-	pyalpm_handle = pycman.config.init_with_config('/etc/pacman.conf')
+import pycman.config
+pyalpm_handle = pycman.config.init_with_config('/etc/pacman.conf')
 
 DEPENDS_RE = re.compile("([^<>=:]+)([<>]?=.*)?(: .*)?")
 
@@ -231,7 +222,7 @@ def load_from_alpm(pmpkg):
 
 def load_from_tarball(path):
 	try:
-		p = pyalpm.load_pkg(path)
+		p = pyalpm_handle.load_pkg(path)
 	except pyalpm.error:
 		return None
 
@@ -240,9 +231,9 @@ def load_from_tarball(path):
 def load_from_db(pkgname, dbname = None):
 	if dbname is None:
 		# default is loading local database
-		db = pyalpm.get_localdb()
+		db = pyalpm_handle.get_localdb()
 	else:
-		db = pyalpm.register_syncdb(dbname)
+		db = pyalpm_handle.register_syncdb(dbname, 0)
 	p = db.get_pkg(pkgname)
 
 	if p is None:
@@ -250,6 +241,9 @@ def load_from_db(pkgname, dbname = None):
 	if p is not None:
 		p = load_from_alpm(p)
 	return p
+
+def get_installed_packages():
+	return pyalpm_handle.get_localdb().pkgcache
 
 def lookup_provider(pkgname, db):
 	for pkg in db.pkgcache:

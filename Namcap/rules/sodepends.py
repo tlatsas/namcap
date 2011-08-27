@@ -25,7 +25,6 @@ from collections import defaultdict
 import re
 import os
 import subprocess
-import pyalpm
 import tempfile
 import Namcap.package
 from Namcap.ruleclass import *
@@ -112,8 +111,8 @@ def finddepends(liblist):
 	# Whether we should even look at a particular file
 	is_so = re.compile('\.so')
 
-	for pkg in pyalpm.get_localdb().pkgcache:
-		for j in pkg.files:
+	for pkg in Namcap.package.get_installed_packages():
+		for j, fsize, fmode in pkg.files:
 			if not is_so.search(j):
 				continue
 

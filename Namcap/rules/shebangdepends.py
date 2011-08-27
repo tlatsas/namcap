@@ -76,8 +76,9 @@ def findowners(scriptlist):
 
 		# strip leading slash
 		scriptpath = out.strip()[1:].decode('utf-8', 'surrogateescape')
-		for pkg in pyalpm.get_localdb().pkgcache:
-			if scriptpath in pkg.files:
+		for pkg in Namcap.package.get_installed_packages():
+			pkg_files = [fname for fname, fsize, fmode in pkg.files]
+			if scriptpath in pkg_files:
 				pkglist.setdefault(pkg.name, set()).add(s)
 				scriptfound.add(s)
 
