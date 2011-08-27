@@ -1,3 +1,10 @@
+namcap (3.2)
+    - requires pacman 4 / pyalpm 0.5
+
+namcap (3.1.1)
+	- fix: carch rule behavior
+	- various code cleanups
+
 namcap (3.1)
 	- add checks for files in temp. folders in fhs rule (FS#23539)
 	- add rule javafiles detecting Java class/jar files (FS#23521)
