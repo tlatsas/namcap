@@ -32,8 +32,6 @@ import types
 import Namcap.depends
 import Namcap.tags
 
-sandbox_directory = '/tmp/namcap.' + str(os.getpid())
-
 # Functions
 def get_modules():
 	"""Return all possible modules (rules)"""
@@ -97,14 +95,6 @@ def process_realpackage(package, modules):
 
 		if isinstance(rule, Namcap.ruleclass.PkgInfoRule):
 			rule.analyze(pkginfo, None)
-		elif isinstance(rule, Namcap.ruleclass.PkgdirRule):
-			# If it's not extracted, extract it and then analyze the package
-			if not extracted:
-				os.mkdir(sandbox_directory)
-				for j in pkgtar.getmembers():
-					pkgtar.extract(j, sandbox_directory)
-				extracted = 1
-			rule = pkg.analyze(pkginfo, sandbox_directory)
 		elif isinstance(rule, Namcap.ruleclass.PkgbuildRule):
 			pass
 		elif isinstance(rule, Namcap.ruleclass.TarballRule):
@@ -125,10 +115,6 @@ def process_realpackage(package, modules):
 	show_messages(pkginfo["name"], 'W', warns)
 	if info_reporting:
 		show_messages(pkginfo["name"], 'I', infos)
-
-	# Clean up if we extracted anything
-	if extracted:
-		shutil.rmtree(sandbox_directory)
 
 def process_pkginfo(pkginfo, modules):
 	"""Runs namcap checks of a single, non-split PacmanPackage object"""

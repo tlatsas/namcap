@@ -84,7 +84,6 @@ defined in Namcap.rules.all_rules :
 	* PkgInfoRule classes process any pkginfo object
 	* PkgbuildRule classes process only PKGBUILDs
 	* TarballRule classes process binary packages
-	* PkgdirRule classes (unused) process uncompressed binary packages
 
 Put the new rule in a module and make sure it is imported in
 Namcap/rules/__init__.py
