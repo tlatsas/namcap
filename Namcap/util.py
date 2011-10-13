@@ -21,7 +21,7 @@ import os
 import re
 import stat
 
-def read_carefully(path, readcall):
+def _read_carefully(path, readcall):
 	if not os.path.isfile(path):
 		return False
 	reset_perms = False
@@ -51,7 +51,7 @@ def is_elf(path):
 	Given a file path, ensure it exists and peek at the first few bytes
 	to determine if it is an ELF file.
 	"""
-	bytes = read_carefully(path, lambda fd: fd.read(4))
+	bytes = _read_carefully(path, lambda fd: fd.read(4))
 	if not bytes:
 		return False
 	# magic elf header, present in binaries and libraries
@@ -61,7 +61,7 @@ def is_elf(path):
 		return False
 
 def script_type(path):
-	firstline = read_carefully(path, lambda fd: fd.readline())
+	firstline = _read_carefully(path, lambda fd: fd.readline())
 	firstline = firstline.decode('ascii', 'ignore')
 	if not firstline:
 		return None
