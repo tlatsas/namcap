@@ -1,5 +1,7 @@
 namcap (3.2)
     - requires pacman 4 / pyalpm 0.5
+    - fix: consider archive files as binaries in anyelf (FS#24854)
+    - fix: refine glibfiles rules to avoid warnings in glib2 (FS#25829)
 
 namcap (3.1.1)
 	- fix: carch rule behavior
