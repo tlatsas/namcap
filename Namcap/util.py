@@ -51,11 +51,11 @@ def is_elf(path):
 	Given a file path, ensure it exists and peek at the first few bytes
 	to determine if it is an ELF file.
 	"""
-	bytes = _read_carefully(path, lambda fd: fd.read(4))
-	if not bytes:
+	magic = _read_carefully(path, lambda fd: fd.read(4))
+	if not magic:
 		return False
 	# magic elf header, present in binaries and libraries
-	if bytes == b"\x7FELF":
+	if magic == b"\x7FELF":
 		return True
 	else:
 		return False
