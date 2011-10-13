@@ -18,6 +18,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
 # 
 
+import os
 from Namcap.ruleclass import *
 
 class GlibSchemasRule(TarballRule):
@@ -27,7 +28,9 @@ class GlibSchemasRule(TarballRule):
 		flag = False
 		ok = False
 		for entry in tar:
-			if 'usr/share/glib-2.0/schemas' in entry.name and not flag:
+			if ('usr/share/glib-2.0/schemas' in entry.name
+					and os.path.basename(entry.name).endswith(".schemas")
+					and not flag):
 				flag = True
 				reasons = pkginfo.detected_deps.setdefault("dconf", [])
 				reasons.append( ('dconf-needed-for-glib-schemas',()) )
@@ -46,7 +49,9 @@ class GioModulesRule(TarballRule):
 		flag = False
 		ok = False
 		for entry in tar:
-			if 'usr/lib/gio/modules' in entry.name and not flag:
+			if ('usr/lib/gio/modules' in entry.name
+					and os.path.basename(entry.name) not in ('', 'modules')
+					and not flag):
 				flag = True
 				reasons = pkginfo.detected_deps.setdefault("glib2", [])
 				reasons.append( ('glib2-needed-for-gio-modules',()) )
