@@ -35,7 +35,8 @@ class package(TarballRule):
 			if not entry.isfile():
 				continue
 			f = tar.extractfile(entry)
-			if f.read(4) == b"\x7fELF":
+			# Archive files are considered as ELF (FS#24854)
+			if f.read(4) in (b"\x7fELF", b"!<ar"):
 				found_elffiles.append(entry.name)
 			f.close()
 

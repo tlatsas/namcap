@@ -61,6 +61,28 @@ package() {
   install -m755 -D /bin/ls ${pkgdir}/usr/bin/ls
 }
 """
+
+	pkgbuild_static = """
+pkgname=__namcap_test_anyelf
+pkgver=1.0
+pkgrel=1
+pkgdesc="A package"
+arch=('any')
+url="http://www.example.com/"
+license=('GPL')
+depends=('glibc')
+options=(emptydirs)
+source=()
+build() {
+  echo "void function() { return; }" > main.c
+  gcc -c main.c
+  ar cru library.a main.o
+}
+package() {
+  install -m644 -D ${srcdir}/library.a ${pkgdir}/usr/lib/library.a
+}
+"""
+
 	def test_not_any_no_elf(self):
 		pkgfile = "__namcap_test_anyelf-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
@@ -83,8 +105,22 @@ package() {
 				os.path.join(self.tmpdir, pkgfile),
 				Namcap.rules.anyelf.package
 				)
-		self.assertEqual(r.errors, 
+		self.assertEqual(r.errors,
 				[("elffile-in-any-package %s", "usr/bin/ls")])
+		self.assertEqual(r.warnings, [])
+		self.assertEqual(r.infos, [])
+
+	def test_static(self):
+		pkgfile = "__namcap_test_anyelf-1.0-1-any.pkg.tar"
+		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
+			f.write(self.pkgbuild_static)
+		self.run_makepkg()
+		pkg, r = self.run_rule_on_tarball(
+				os.path.join(self.tmpdir, pkgfile),
+				Namcap.rules.anyelf.package
+				)
+		self.assertEqual(r.errors,
+				[("elffile-in-any-package %s", "usr/lib/library.a")])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])
 
