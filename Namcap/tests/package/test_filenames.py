@@ -40,11 +40,12 @@ build() {
 package() {
   mkdir -p "${pkgdir}/usr/bin/Arch Linux"
   mkdir -p ${pkgdir}/usr/bin/Arch·Linux
+  mkdir -p ${pkgdir}/usr/bin/$'Arch\\xb7Linux'
 }
 """
 	def test_nonascii(self):
 		pkgfile = "__namcap_test_nonascii-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
-		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w", encoding = 'utf-8') as f:
+		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w", encoding='utf-8') as f:
 			f.write(self.pkgbuild)
 		self.run_makepkg()
 		pkg, r = self.run_rule_on_tarball(
@@ -52,11 +53,14 @@ package() {
 				Namcap.rules.filenames.package
 				)
 		self.assertEqual(r.errors, [])
-		tag, value = r.warnings[0]
+		tag, value1 = r.warnings[0]
+		tag, value2 = r.warnings[1]
 		self.assertEqual(tag, "invalid-filename")
 		self.assertEqual(
-				value.encode(errors="surrogateescape"),
-				"usr/bin/Arch·Linux".encode())
+				set((value1.encode(errors="surrogateescape"),
+					value2.encode(errors="surrogateescape"))),
+				set((b"usr/bin/Arch\xc2\xb7Linux", b"usr/bin/Arch\xb7Linux"))
+				)
 		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:
