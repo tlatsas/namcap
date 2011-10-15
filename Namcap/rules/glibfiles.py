@@ -29,7 +29,7 @@ class GlibSchemasRule(TarballRule):
 		ok = False
 		for entry in tar:
 			if ('usr/share/glib-2.0/schemas' in entry.name
-					and os.path.basename(entry.name).endswith(".schemas")
+					and os.path.basename(entry.name).endswith(".gschema.xml")
 					and not flag):
 				flag = True
 				reasons = pkginfo.detected_deps.setdefault("dconf", [])

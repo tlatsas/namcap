@@ -40,7 +40,7 @@ build() {
 }
 package() {
   mkdir -p "${pkgdir}/usr/share/glib-2.0/schemas"
-  touch "${pkgdir}/usr/share/glib-2.0/schemas/something.schema"
+  touch "${pkgdir}/usr/share/glib-2.0/schemas/org.test.gschema.xml"
 
   mkdir -p "${pkgdir}/usr/lib/gio/modules"
   touch "${pkgdir}/usr/lib/gio/modules/something.so"
