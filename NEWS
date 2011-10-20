@@ -1,3 +1,9 @@
+namcap (3.2.1)
+    - fix: glibfiles rules ineffective because of wrong schema
+      filename pattern
+    - fix: incorrect warning about permissions for symbolic links to
+      static libraries (FS#26536)
+
 namcap (3.2)
     - requires pacman 4 / pyalpm 0.5
     - fix: consider archive files as binaries in anyelf (FS#24854)
