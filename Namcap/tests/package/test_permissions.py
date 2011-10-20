@@ -50,6 +50,9 @@ package() {
   chmod u+rwxs ${pkgdir}/usr/bin/unsafe
 
   install -d -m 744 ${pkgdir}/usr/share/broken
+
+  install -d -m 755 ${pkgdir}/usr/lib/libstatic.a
+  ln -s libstatic.a ${pkgdir}/usr/lib/libstaticlink.a
 }
 """
 	def test_nonrootowner(self):
@@ -66,7 +69,8 @@ package() {
 			("file-world-writable %s", "usr/bin/program"),
 			("file-not-world-readable %s", "usr/bin/secret"),
 			("file-setugid %s", "usr/bin/unsafe"),
-			("directory-not-world-executable %s", "usr/share/broken")
+			("directory-not-world-executable %s", "usr/share/broken"),
+			("incorrect-library-permissions %s", "usr/lib/libstatic.a")
 			]))
 		self.assertEqual(r.infos, [])
 
