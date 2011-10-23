@@ -18,6 +18,7 @@ desktop-database-not-updated :: Mime type handler found. Add "update-desktop-dat
 directory-not-world-executable %s :: Directory (%s) does not have the world executable bit set.
 elffile-in-any-package %s :: ELF file ('%s') found in an 'any' package.
 elffile-not-in-allowed-dirs %s :: ELF file ('%s') outside of a valid path.
+elffile-with-textrel %s :: ELF file ('%s') has text relocations.
 empty-directory %s :: Directory (%s) is empty
 error-running-rule %s :: Error running rule '%s'
 extra-var-begins-without-underscore %s :: Non standard variable '%s' doesn't start with an underscore

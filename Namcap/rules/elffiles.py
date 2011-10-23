@@ -1,6 +1,7 @@
 #
 # namcap rules - elffiles
 # Copyright (C) 2009 Hugo Doria <hugo@archlinux.org>
+# Copyright (C) 2011 Rémy Oudompheng <remy@archlinux.org>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -18,6 +19,9 @@
 #
 
 import os
+import tempfile
+import subprocess
+
 from Namcap.util import is_elf, clean_filename
 from Namcap.ruleclass import *
 
@@ -25,8 +29,8 @@ from Namcap.ruleclass import *
 valid_dirs = ['bin/', 'sbin/', 'usr/bin/', 'usr/sbin/', 'lib/',
 		'usr/lib/', 'usr/lib32/']
 
-class package(TarballRule):
-	name = "elffiles"
+class ELFPaths(TarballRule):
+	name = "elfpaths"
 	description = "Check about ELF files outside some standard paths."
 	def analyze(self, pkginfo, tar):
 		invalid_elffiles = []
@@ -50,5 +54,46 @@ class package(TarballRule):
 
 		self.errors = [("elffile-not-in-allowed-dirs %s", i)
 				for i in invalid_elffiles]
+
+class ELFTextRelocationRule(TarballRule):
+	"""
+	Check for text relocations in ELF files.
+
+	Introduced by FS#26434. Text relocations are detected by the
+	eu-findtextrel utility from elfutils. eu-findtextrel returns 0
+	whenever the input file has a text relocation section.
+	"""
+
+	name = "elftextrel"
+	description = "Check for text relocations in ELF files."
+
+	def analyze(self, pkginfo, tar):
+		files_with_textrel = []
+
+		for entry in tar:
+			if not entry.isfile():
+				continue
+			f = tar.extractfile(entry)
+			magic = f.read(4)
+			if magic != b"\x7fELF":
+				continue
+
+			# read the rest of file
+			tmp = tempfile.NamedTemporaryFile(delete=False)
+			tmp.write(magic + f.read())
+			tmp.close()
+
+			try:
+				ret = subprocess.call(["eu-findtextrel", tmp.name],
+					stdout=open(os.devnull, 'w'),
+					stderr=open(os.devnull, 'w'))
+				if ret == 0:
+					files_with_textrel.append(entry.name)
+			finally:
+				os.unlink(tmp.name)
+
+		if files_with_textrel:
+			self.warnings = [("elffile-with-textrel %s", i)
+					for i in files_with_textrel]
 
 # vim: set ts=4 sw=4 noet:

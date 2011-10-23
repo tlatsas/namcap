@@ -49,7 +49,7 @@ package() {
 		self.run_makepkg()
 		pkg, r = self.run_rule_on_tarball(
 				os.path.join(self.tmpdir, pkgfile),
-				Namcap.rules.elffiles.package
+				Namcap.rules.elffiles.ELFPaths
 				)
 		self.assertEqual(r.errors, [
 			("elffile-not-in-allowed-dirs %s",
