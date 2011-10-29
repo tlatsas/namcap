@@ -1,6 +1,7 @@
 namcap (3.2.2)
     - rename elffiles rule to elfpaths
     - add elftextrel rule to detect text relocations (FS#26434)
+    - add elfexecstack rule to detect executable stacks (FS#26458)
 
 namcap (3.2.1)
     - fix: glibfiles rules ineffective because of wrong schema

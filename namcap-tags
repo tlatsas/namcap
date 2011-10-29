@@ -19,6 +19,7 @@ directory-not-world-executable %s :: Directory (%s) does not have the world exec
 elffile-in-any-package %s :: ELF file ('%s') found in an 'any' package.
 elffile-not-in-allowed-dirs %s :: ELF file ('%s') outside of a valid path.
 elffile-with-textrel %s :: ELF file ('%s') has text relocations.
+elffile-with-execstack %s :: ELF file ('%s') has executable stack.
 empty-directory %s :: Directory (%s) is empty
 error-running-rule %s :: Error running rule '%s'
 extra-var-begins-without-underscore %s :: Non standard variable '%s' doesn't start with an underscore

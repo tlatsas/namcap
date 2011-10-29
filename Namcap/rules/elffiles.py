@@ -55,6 +55,21 @@ class ELFPaths(TarballRule):
 		self.errors = [("elffile-not-in-allowed-dirs %s", i)
 				for i in invalid_elffiles]
 
+def _test_elf_and_extract(tar, entry):
+	"Tests whether a Tar entry is an ELF file and returns the name of a temp file."
+	if not entry.isfile():
+		return
+	f = tar.extractfile(entry)
+	magic = f.read(4)
+	if magic != b"\x7fELF":
+		return
+
+	# read the rest of file
+	tmp = tempfile.NamedTemporaryFile(delete=False)
+	tmp.write(magic + f.read())
+	tmp.close()
+	return tmp.name
+
 class ELFTextRelocationRule(TarballRule):
 	"""
 	Check for text relocations in ELF files.
@@ -71,29 +86,54 @@ class ELFTextRelocationRule(TarballRule):
 		files_with_textrel = []
 
 		for entry in tar:
-			if not entry.isfile():
+			tmpname = _test_elf_and_extract(tar, entry)
+			if not tmpname:
 				continue
-			f = tar.extractfile(entry)
-			magic = f.read(4)
-			if magic != b"\x7fELF":
-				continue
-
-			# read the rest of file
-			tmp = tempfile.NamedTemporaryFile(delete=False)
-			tmp.write(magic + f.read())
-			tmp.close()
 
 			try:
-				ret = subprocess.call(["eu-findtextrel", tmp.name],
+				ret = subprocess.call(["eu-findtextrel", tmpname],
 					stdout=open(os.devnull, 'w'),
 					stderr=open(os.devnull, 'w'))
 				if ret == 0:
 					files_with_textrel.append(entry.name)
 			finally:
-				os.unlink(tmp.name)
+				os.unlink(tmpname)
 
 		if files_with_textrel:
 			self.warnings = [("elffile-with-textrel %s", i)
 					for i in files_with_textrel]
+
+class ELFExecStackRule(TarballRule):
+	"""
+	Check for executable stacks in ELF files.
+
+	Introduced by FS#26458. This uses the execstack utility from
+	the prelink package.
+	"""
+
+	name = "elfexecstack"
+	description = "Check for executable stacks in ELF files."
+
+	def analyze(self, pkginfo, tar):
+		exec_stacks = []
+
+		for entry in tar:
+			tmpname = _test_elf_and_extract(tar, entry)
+			if not tmpname:
+				continue
+
+			try:
+				proc = subprocess.Popen(["execstack", tmpname],
+					stdout=subprocess.PIPE,
+					stderr=subprocess.PIPE)
+				out, err = proc.communicate()
+				if out.startswith(b'X'):
+					exec_stacks.append(entry.name)
+			finally:
+				os.unlink(tmpname)
+
+		if exec_stacks:
+			self.warnings = [("elffile-with-execstack %s", i)
+					for i in exec_stacks]
 
 # vim: set ts=4 sw=4 noet:
