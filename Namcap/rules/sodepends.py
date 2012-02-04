@@ -181,9 +181,9 @@ class SharedLibsRule(TarballRule):
 
 		# Check for packages in testing
 		for i in dependlist.keys():
-			p = Namcap.package.load_from_db(i, 'testing')
+			p = Namcap.package.load_testing_package(i)
 			q = Namcap.package.load_from_db(i)
-			if p != None and q != None and p["version"] == q["version"] :
+			if p is not None and q is not None and p["version"] == q["version"] :
 				self.warnings.append(("dependency-is-testing-release %s", i))
 
 # vim: set ts=4 sw=4 noet:

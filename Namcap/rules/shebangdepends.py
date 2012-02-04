@@ -128,7 +128,7 @@ class ShebangDependsRule(TarballRule):
 
 		# Check for packages in testing
 		for i in scriptlist:
-			p = Namcap.package.load_from_db(i, 'testing')
+			p = Namcap.package.load_testing_package(i)
 			q = Namcap.package.load_from_db(i)
 			if p != None and q != None and p["version"] == q["version"]:
 				self.warnings.append(("dependency-is-testing-release %s", i))

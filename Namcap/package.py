@@ -242,6 +242,16 @@ def load_from_db(pkgname, dbname = None):
 		p = load_from_alpm(p)
 	return p
 
+def load_testing_package(pkgname):
+	"Loads the testing version of a package, None if not found."
+	testing_dbs = [db
+			for db in pyalpm_handle.get_syncdbs()
+			if db.name in ('testing', 'multilib-testing', 'community-testing')]
+	for db in testing_dbs:
+		p = db.get_pkg(pkgname)
+		if p is not None:
+			return load_from_alpm(p)
+
 def get_installed_packages():
 	return pyalpm_handle.get_localdb().pkgcache
 
