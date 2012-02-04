@@ -1,7 +1,9 @@
 namcap (3.2.2)
-    - rename elffiles rule to elfpaths
-    - add elftextrel rule to detect text relocations (FS#26434)
-    - add elfexecstack rule to detect executable stacks (FS#26458)
+	- fix: unwanted warning when testing database is not found (FS#27973)
+	- fix: Creative Commons licenses not recognized (FS#27489)
+	- rename elffiles rule to elfpaths
+	- add elftextrel rule to detect text relocations (FS#26434)
+	- add elfexecstack rule to detect executable stacks (FS#26458)
 
 namcap (3.2.1)
     - fix: glibfiles rules ineffective because of wrong schema
@@ -166,4 +168,4 @@ namcap (2.3)
     - Documentation updates (manual page, AUTHORS, README)
     - Add a option to exclude some rules from the checks
 
-vim: set ts=4 sw=4 noet:
+# vim: set ts=4 sw=4 noet:
