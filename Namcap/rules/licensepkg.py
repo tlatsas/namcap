@@ -32,7 +32,7 @@ class package(TarballRule):
 			licensefiles = [os.path.split(x)[1] for x in licensepaths]
 			# Check all licenses for validity
 			for license in pkginfo["license"]:
-				lowerlicense = license.lower()
+				lowerlicense, _, sublicense = license.lower().partition(':')
 				if lowerlicense.startswith('custom') or lowerlicense in ("bsd", "mit", "isc", "python", "zlib", "libpng"):
 					if pkginfo["name"] not in licensedirs:
 						self.errors.append(("missing-custom-license-dir usr/share/licenses/%s", pkginfo["name"]))
