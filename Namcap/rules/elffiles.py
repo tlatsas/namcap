@@ -22,6 +22,8 @@ import os
 import tempfile
 import subprocess
 
+from elftools.elf.elffile import ELFFile
+
 from Namcap.util import is_elf, clean_filename
 from Namcap.ruleclass import *
 
@@ -107,8 +109,9 @@ class ELFExecStackRule(TarballRule):
 	"""
 	Check for executable stacks in ELF files.
 
-	Introduced by FS#26458. This uses the execstack utility from
-	the prelink package.
+	Introduced by FS#26458. Uses pyelftools to read the GNU_STACK
+	program header and ensure it does not have the executable bit
+	set.
 	"""
 
 	name = "elfexecstack"
@@ -123,12 +126,16 @@ class ELFExecStackRule(TarballRule):
 				continue
 
 			try:
-				proc = subprocess.Popen(["execstack", tmpname],
-					stdout=subprocess.PIPE,
-					stderr=subprocess.PIPE)
-				out, err = proc.communicate()
-				if out.startswith(b'X'):
-					exec_stacks.append(entry.name)
+				fp = open(tmpname, 'rb')
+				elffile = ELFFile(fp)
+
+				for segment in elffile.iter_segments():
+					if segment['p_type'] != 'PT_GNU_STACK': continue
+
+					mode = segment['p_flags']
+					if mode & 1: exec_stacks.append(entry.name)
+
+				fp.close()
 			finally:
 				os.unlink(tmpname)
 
