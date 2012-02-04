@@ -20,6 +20,8 @@
 # 
 
 import os
+import unittest
+
 from Namcap.tests.makepkg import MakepkgTest
 import Namcap.rules.kdeprograms
 
@@ -106,6 +108,7 @@ package() {
 			("kdebase-runtime-needed-dep %s", ["usr/bin/kfoobar"])
 			in r.infos)
 
+	@unittest.expectedFailure
 	def test_kdeprograms_files_b(self):
 		pkgfile = "__namcap_test_kdeprograms-1.0-1-%(arch)s.pkg.tar" % { "arch": self.arch }
 		with open(os.path.join(self.tmpdir, "PKGBUILD"), "w") as f:
