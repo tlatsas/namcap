@@ -1,3 +1,9 @@
+namcap (3.2.3)
+	- add pyelftools as a dependency, drop prelink.
+	- add rubypaths rule warning against use of site_ruby
+	- modify elfexecstack rule to use elftools
+	- add test case for elfexecstack
+
 namcap (3.2.2)
 	- fix: unwanted warning when testing database is not found (FS#27973)
 	- fix: Creative Commons licenses not recognized (FS#27489)

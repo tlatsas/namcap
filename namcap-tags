@@ -68,6 +68,7 @@ potential-non-fhs-info-page %s :: Potential non-FHS info page (%s) found.
 potential-non-fhs-man-page %s :: Potential non-FHS man page (%s) found.
 script-link-detected %s in %s :: Script link detected (%s) in file %s
 scrollkeeper-dir-exists %s :: Scrollkeeper directory exists (%s). Remember to not run scrollkeeper till post_{install,upgrade,remove}.
+site-ruby :: Found usr/lib/ruby/site_ruby in package, usr/lib/ruby/vendor_ruby should be used instead.
 specific-host-type-used %s :: Reference to %s should be changed to $CARCH
 specific-sourceforge-mirror :: Attempting to use specific sourceforge mirror, use downloads.sourceforge.net instead
 symlink-found %s points to %s :: Symlink (%s) found that points to %s

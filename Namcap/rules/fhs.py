@@ -90,4 +90,13 @@ class FHSInfoPagesRule(TarballRule):
 					if part == "info":
 						self.warnings.append(("potential-non-fhs-info-page %s", i.name))
 
+class RubyPathsRule(TarballRule):
+	name = "rubypaths"
+	description = "Verifies correct usage of folders by ruby packages"
+	def analyze(self, pkginfo, tar):
+		for i in tar.getmembers():
+			if i.name.startswith('usr/lib/ruby/site_ruby'):
+				self.warnings.append(("site-ruby", ()))
+				return
+
 # vim: set ts=4 sw=4 noet:
