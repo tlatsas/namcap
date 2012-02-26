@@ -57,7 +57,7 @@ SRCEXT='.src.tar.gz'
 class MakepkgTest(unittest.TestCase):
 	def setUp(self):
 		self.tmpdir = tempfile.mkdtemp()
-		self.arch = subprocess.getoutput("arch")
+		self.arch = os.uname()[-1]
 		with open(os.path.join(self.tmpdir, "makepkg.conf"), "w") as f:
 			f.write(makepkg_conf % {"arch": self.arch})
 
