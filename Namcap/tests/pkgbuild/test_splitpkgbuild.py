@@ -97,7 +97,7 @@ package_prog1() {
 }
 
 package_prog2() {
-  depends=("qt" "glibc")
+  depends=("lib1" "lib2")
   cd "${srcdir}"/${pkgname}-${pkgver}
   ./configure --prefix=/usr
   make DESTDIR="${pkgdir}" install1
@@ -110,10 +110,10 @@ package_prog2() {
 		self.rule = module.SplitPkgMakedepsRule
 
 	def test_example1(self):
-		"Example 1 : missing makedepend"
+		"Example 1: missing makedepend"
 		r = self.run_on_pkg(self.pkgbuild1)
 		self.assertEqual(r.errors, [("missing-makedeps %s",
-			str(["qt"]))])
+			str(["lib1", "lib2"]))])
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])
 

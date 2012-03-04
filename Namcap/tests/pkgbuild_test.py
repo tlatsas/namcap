@@ -116,7 +116,7 @@ epoch=2
 arch=('i686' 'x86_64')
 url="http://www.example.com/"
 license=('GPL')
-makedepends=('make' 'gtk2')
+makedepends=('make' 'python')
 checkdepends=('perl')
 options=('!libtool')
 source=(ftp://ftp.example.com/pub/mypackage-0.1.tar.gz)
@@ -135,14 +135,14 @@ check() {
 
 package_mypackage1() {
   pkgdesc="Package 1"
-  depends=("gtk2")
+  depends=("python")
   cd "${srcdir}"/${pkgbase}-${pkgver}
   make DESTDIR="${pkgdir}" install1
 }
 
 package_mypackage2() {
   pkgdesc="Package 2"
-  depends=("glib2" "mypackage1")
+  depends=("zlib" "mypackage1")
   cd "${srcdir}"/${pkgbase}-${pkgver}
   ./configure --prefix=/usr
   make DESTDIR="${pkgdir}" install2
@@ -150,7 +150,7 @@ package_mypackage2() {
 
 package_mypackage3() {
   pkgdesc="Package 3"
-  depends=("glib2")
+  depends=("zlib")
   optdepends=("mypackage1: for foobar functionality")
   install=somescript.install
   cd "${srcdir}"/${pkgname}-${pkgver}

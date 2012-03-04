@@ -73,6 +73,6 @@ class SplitPkgMakedepsRule(PkgbuildRule):
 
 		if not local_deps.issubset(global_deps):
 			missing = list(local_deps - global_deps)
-			self.errors.append(("missing-makedeps %s", str(missing)))
+			self.errors.append(("missing-makedeps %s", str(sorted(missing))))
 
 # vim: set ts=4 sw=4 noet:
