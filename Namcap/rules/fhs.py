@@ -26,10 +26,11 @@ class FHSRule(TarballRule):
 	description = "Checks for standard directories."
 	def analyze(self, pkginfo, tar):
 		valid_paths = [
-				'bin/', 'etc/', 'lib/', 'sbin/', 'opt/', 'srv/',
+				'etc/', 'opt/',
+				'lib/modules',
 				'usr/bin/', 'usr/include/', 'usr/lib/', 'usr/lib32/',
 				'usr/sbin/', 'usr/share/',
-				'var/cache/', 'var/lib/', 'var/lock/', 'var/log/', 'var/opt/',
+				'var/cache/', 'var/lib/', 'var/log/', 'var/opt/',
 				'var/spool/', 'var/state/',
 				'.PKGINFO', '.INSTALL', '.CHANGELOG',
 		]
