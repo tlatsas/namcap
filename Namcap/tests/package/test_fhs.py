@@ -40,6 +40,8 @@ build() {
 package() {
   mkdir -p ${pkgdir}/weird/directory
   touch ${pkgdir}/weird/directory/file
+  mkdir -p ${pkgdir}/srv
+  touch ${pkgdir}/srv/index.html
   mkdir -p ${pkgdir}/run
   touch ${pkgdir}/run/program.pid
 }
@@ -58,6 +60,8 @@ package() {
 			("file-in-temporary-dir %s", 'run/program.pid')
 			]))
 		self.assertEqual(set(r.warnings), set([
+			("file-in-non-standard-dir %s", "srv/"),
+			("file-in-non-standard-dir %s", "srv/index.html"),
 			("file-in-non-standard-dir %s", "weird/"),
 			("file-in-non-standard-dir %s", "weird/directory/"),
 			("file-in-non-standard-dir %s", "weird/directory/file")
