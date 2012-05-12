@@ -1,3 +1,6 @@
+namcap (3.2.4)
+	- update fhs rules for new guidelines (/usr move).
+
 namcap (3.2.3)
 	- add pyelftools as a dependency, drop prelink.
 	- add rubypaths rule warning against use of site_ruby
