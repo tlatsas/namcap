@@ -102,6 +102,30 @@ make DESTDIR="${pkgdir}" install
 }
 """
 
+	# package using CARCH (FS#32568)
+	pkgbuild_sha512 = """
+pkgname=chromium-libpdf
+pkgver=24.0.1312.5
+pkgrel=1
+pkgdesc="PDF Viewer for Chromium"
+url="http://wiki.archlinux.org/index.php/Chromium#libpdf.so"
+arch=("i686" "x86_64")
+license=('custom:chrome')
+makedepends=('lynx')
+depends=('chromium')
+if [ "$CARCH" = "i686" ]; then
+	_arch="i386"
+	sha512sums=('31f63cd859203071e3b2a9b608bc80c67cac22f56c7de31d809f8c07cba6e076701c9649107db28a2fbef5ce1bf843e93b343a132058c3784d13a98492aa7bec')
+elif [ "$CARCH" = "x86_64" ]; then
+	_arch="amd64"
+	sha512sums=('1989976e6ca93099c92957e44948d7b73a6f9594304b9fe5313ff44c28c5261852919f2b5dacb49724c77d98667cc3991f8aaef9d3d9b2277eb375293c4a0395')
+fi
+source=(https://dl.google.com/linux/direct/google-chrome-unstable_current_$_arch.deb)
+
+build() {
+}
+"""
+
 	# package using "SKIP", new in pacman 4.1 (FS#34647)
 	pkgbuild_skip = """
 pkgname=youtube-dl
@@ -154,7 +178,7 @@ package() {
 		self.assertEqual(r.infos, [])
 
 	def test_example_valid(self):
-		for p in [self.pkgbuild_skip]:
+		for p in [self.pkgbuild_sha512, self.pkgbuild_skip]:
 			r = self.run_on_pkg(p)
 			self.assertEqual(r.errors, [])
 			self.assertEqual(r.warnings, [])
