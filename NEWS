@@ -1,3 +1,8 @@
+namcap (3.2.5)
+	- support "SKIP" in checksums (FS#34647)
+	- export CARCH correctly to parsepkgbuild (FS#32568)
+	- recognize .MTREE as package metadata (FS#34591)
+
 namcap (3.2.4)
 	- update fhs rules for new guidelines (/usr move).
 
