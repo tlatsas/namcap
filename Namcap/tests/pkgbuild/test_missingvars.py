@@ -102,6 +102,23 @@ make DESTDIR="${pkgdir}" install
 }
 """
 
+	# package using "SKIP", new in pacman 4.1 (FS#34647)
+	pkgbuild_skip = """
+pkgname=youtube-dl
+pkgver=2013.02.25
+pkgrel=1
+pkgdesc="A small command-line program to download videos from YouTube.com and a few more sites"
+arch=('any')
+url="http://rg3.github.com/youtube-dl/"
+license=('custom')
+depends=('python')
+makedepends=('python-distribute')
+source=(http://youtube-dl.org/downloads/${pkgver}/${pkgname}-${pkgver}.tar.gz{,.sig})
+sha1sums=('SKIP' 'SKIP')
+
+package() {
+}
+"""
 
 	test_valid = PkgbuildTest.valid_tests
 
@@ -136,6 +153,12 @@ make DESTDIR="${pkgdir}" install
 		self.assertEqual(r.warnings, [])
 		self.assertEqual(r.infos, [])
 
+	def test_example_valid(self):
+		for p in [self.pkgbuild_skip]:
+			r = self.run_on_pkg(p)
+			self.assertEqual(r.errors, [])
+			self.assertEqual(r.warnings, [])
+			self.assertEqual(r.infos, [])
 
 class NamcapMaintainerTagTest(PkgbuildTest):
 	pkgbuild1 = """

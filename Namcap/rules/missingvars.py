@@ -51,9 +51,11 @@ class ChecksumsRule(PkgbuildRule):
 				elif len(pkginfo["source"]) < len(pkginfo[sumname]):
 					self.errors.append(("too-many-checksums %s %i needed",
 						          (sumname, len(pkginfo["source"]))))
-				for sum in pkginfo[sumname]:
-					if len(sum) != sumlen or not RE_IS_HEXNUMBER.match(sum):
-						self.errors.append(("improper-checksum %s %s", (sumname, sum)))
+				for csum in pkginfo[sumname]:
+					if csum == "SKIP":
+						continue
+					if len(csum) != sumlen or not RE_IS_HEXNUMBER.match(csum):
+						self.errors.append(("improper-checksum %s %s", (sumname, csum)))
 
 class TagsRule(PkgbuildRule):
 	name = "tags"
