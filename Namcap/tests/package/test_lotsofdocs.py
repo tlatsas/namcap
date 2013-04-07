@@ -56,7 +56,7 @@ package() {
 		self.assertEqual(r.errors, [])
 		tag, value = r.warnings[0]
 		self.assertEqual(tag, "lots-of-docs %f")
-		self.assertGreater(value, 99.9)
+		self.assertGreater(value, 99)
 		self.assertEqual(r.infos, [])
 
 # vim: set ts=4 sw=4 noet:

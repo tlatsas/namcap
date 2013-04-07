@@ -56,13 +56,13 @@ package() {
 				)
 		self.assertEqual(pkg.detected_deps['pacman'], [
 			('libraries-needed %s %s',
-			 (str(['usr/lib/libalpm.so.7']), str(["usr/bin/main"]))
+			 (str(['usr/lib/libalpm.so.8']), str(["usr/bin/main"]))
 			)]
 		)
 		e, w, i = Namcap.depends.analyze_depends(pkg)
 		self.assertEqual(e, [
 			('dependency-detected-not-included %s (%s)',
-				('pacman', "libraries ['usr/lib/libalpm.so.7'] needed in files ['usr/bin/main']"))
+				('pacman', "libraries ['usr/lib/libalpm.so.8'] needed in files ['usr/bin/main']"))
 		])
 		self.assertEqual(w, [])
 
